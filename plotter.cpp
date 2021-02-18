@@ -95,18 +95,36 @@ void Plotter:: drawAxes(QPainter *painter)
 
     // Изображаем единичные засечки
     // Засечки на горизонтальной оси
-    for(int x = gridCellWidth; x <= width(); x += gridCellWidth*unitSegment)
+    // В направлении положительных координат
+    for(int xcoord = origin->x()+gridCellWidth*unitSegment; xcoord <= width(); xcoord += gridCellWidth*unitSegment)
     {
-        QPoint bottomPoint(x, origin -> y() + gridCellWidth / 3);
-        QPoint topPoint(x, origin -> y() - gridCellWidth / 3);
+        QPoint bottomPoint(xcoord, origin -> y() + gridCellWidth / 3);
+        QPoint topPoint(xcoord, origin -> y() - gridCellWidth / 3);
+        painter -> drawLine(bottomPoint, topPoint);
+    }
+    // В направлении отрицательных координат
+    for(int xcoord = origin->x()-gridCellWidth*unitSegment; xcoord > 0; xcoord -= gridCellWidth*unitSegment)
+    {
+
+        QPoint bottomPoint(xcoord, origin -> y() + gridCellWidth / 3);
+        QPoint topPoint(xcoord, origin -> y() - gridCellWidth / 3);
         painter -> drawLine(bottomPoint, topPoint);
     }
 
-    for(int y = gridCellWidth; y <=height(); y += gridCellWidth*unitSegment)
+    // Засечки на вертикальной оси
+    //  В направлении положительных координат
+    for(int ycoord = origin->y() - gridCellWidth*unitSegment; ycoord >0; ycoord -= gridCellWidth*unitSegment)
     {
-        QPoint leftPoint(origin -> x() - gridCellWidth/3, y);
-        QPoint rightPoint(origin -> x() + gridCellWidth/3, y);
+        QPoint leftPoint(origin -> x() - gridCellWidth/3, ycoord);
+        QPoint rightPoint(origin -> x() + gridCellWidth/3, ycoord);
         painter -> drawLine(leftPoint, rightPoint);
     }
+    // В направлении отрицательных координат
 
+    for(int ycoord = origin->y() + gridCellWidth*unitSegment; ycoord <= height(); ycoord += gridCellWidth*unitSegment)
+    {
+        QPoint leftPoint(origin -> x() - gridCellWidth/3, ycoord);
+        QPoint rightPoint(origin -> x() + gridCellWidth/3, ycoord);
+        painter -> drawLine(leftPoint, rightPoint);
+    }
 }
