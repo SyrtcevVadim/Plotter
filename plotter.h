@@ -23,6 +23,7 @@ public:
     void setGridCellWidth(int width = 10);
     void setOriginWidth(int width = 3);
     void setAxesWidth(int width =1);
+    void setUnitSegmentCells(int cells = 1);// Устанавливает длину единичного отрезка в клетках
 
 };
 
