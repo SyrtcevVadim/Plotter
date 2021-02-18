@@ -6,9 +6,9 @@ class Plotter: public QWidget
     Q_OBJECT
 
 private:
-    QPoint *origin;                       // Точка начала координат
+    QPoint origin;                       // Точка начала координат
     int gridCellWidth;                       // Длина стороны клетки
-    int unitSegment;                        // Количество клеток под единичный отрезок
+    int singleTick;                        // Количество клеток под единичный отрезок
     int axesWidth;                          // Ширина координатных осей
     int originWidth;                        // Ширина точки начала координат
 
@@ -24,7 +24,7 @@ public:
     void setGridCellWidth(int width = 10);
     void setOriginWidth(int width = 3);
     void setAxesWidth(int width =1);
-    void setUnitSegmentCells(int cells = 1);// Устанавливает длину единичного отрезка в клетках
+    void setSingleTick(int cells = 1);// Устанавливает длину единичного отрезка в клетках
 
 public slots:
     void drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName);
