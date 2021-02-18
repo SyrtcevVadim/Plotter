@@ -16,8 +16,22 @@ Plotter::Plotter(QPoint *position, QSize *size, QWidget *parent): QWidget(parent
     setGridCellWidth(10);
     setOriginWidth(3);
     setAxesWidth(1);
-    setUnitSegmentCells(1);
+    setUnitSegmentCells(2);
 
+
+}
+
+// Отрисовывает названия осей координат
+void Plotter::drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName)
+{
+    QPen pen(Qt::black, 2);
+    painter ->setPen(pen);
+
+    // Название горизонтальной оси
+    painter->drawText(width()-gridCellWidth+2, origin->y()+gridCellWidth*2, hAxeName);
+    // Название вертикальной оси
+
+    painter ->drawText(origin->x() + gridCellWidth+2, 0 + gridCellWidth+2, vAxeName);
 }
 
 // Устанавливает длину стороны ячейки сетки
@@ -52,6 +66,8 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawGrid(&painter);
     drawOrigin(&painter);
     drawAxes(&painter);
+
+    drawAxesNames(&painter, QString("X"), QString("Y"));
 }
 
 // Отрисовывает сетку для графостроителя
@@ -81,6 +97,7 @@ void Plotter::drawOrigin(QPainter *painter)
     painter ->setPen(pen);
     painter -> drawPoint(origin->x(), origin ->y());
 
+    painter -> drawText(origin ->x()-gridCellWidth*0.75, origin -> y()+gridCellWidth, QString("0"));
 }
 
 // Отрисовывает оси координат и засечки через каждый единичный отрезок

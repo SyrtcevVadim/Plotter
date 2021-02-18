@@ -18,12 +18,16 @@ protected:
     void drawOrigin(QPainter *painter);     // Отрисовывает точку начала координат
     void drawAxes(QPainter *painter);       // Отрисовывает координатные оси
 
+
 public:
     Plotter(QPoint *position, QSize *size, QWidget *parentWidget = 0);
     void setGridCellWidth(int width = 10);
     void setOriginWidth(int width = 3);
     void setAxesWidth(int width =1);
     void setUnitSegmentCells(int cells = 1);// Устанавливает длину единичного отрезка в клетках
+
+public slots:
+    void drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName);
 
 };
 
