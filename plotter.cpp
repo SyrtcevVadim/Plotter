@@ -1,7 +1,7 @@
 #include "plotter.h"
 #include<QtWidgets>
 
-Plotter::Plotter(QPoint *position, QSize *size, QWidget *parent): QWidget(parent)
+Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget(parent)
 {
     int w = size->width();
     int h = size->height();
@@ -19,14 +19,38 @@ Plotter::Plotter(QPoint *position, QSize *size, QWidget *parent): QWidget(parent
     setSingleTick(2);
 }
 
+void Plotter::paintEvent(QPaintEvent *event)
+{
+    // Не используем параметр event
+    Q_UNUSED(event);
 
-// Устанавливает длину стороны ячейки сетки
+    // Данный объект занимается отрисовкой всей графики
+    QPainter painter(this);
+
+    drawGrid(&painter);
+    drawOrigin(&painter);
+    drawAxes(&painter);
+
+    drawAxesNames(&painter, QString("X"), QString("Y"));
+
+    // Тестируем отрисовку фигур, точек, линий от начала координат
+    for(int i = -10; i <= 10; i++)
+    {
+        drawPoint(&painter, QPoint(i, i));
+    }
+
+    for(double i = -10.0; i <= 10.0; i+=0.1)
+    {
+        drawPointF(&painter, QPointF(i, -i));
+    }
+
+}
+
 void Plotter::setGridCellWidth(int width)
 {
     gridCellWidth = width;
 }
 
-// Устанавливает толщину точки начала координат
 void Plotter::setOriginWidth(int width)
 {
     originWidth = width;
@@ -37,26 +61,11 @@ void Plotter:: setSingleTick(int cells)
     singleTick = cells;
 }
 
-// Устанавливает толщину линий осей координат
 void Plotter::setAxesWidth(int width)
 {
     axesWidth = width;
 }
 
-void Plotter::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-
-    QPainter painter(this);
-
-    drawGrid(&painter);
-    drawOrigin(&painter);
-    drawAxes(&painter);
-
-    drawAxesNames(&painter, QString("X"), QString("Y"));
-}
-
-// Отрисовывает сетку для графостроителя
 void Plotter::drawGrid(QPainter *painter)
 {
     QPen pen(Qt::gray, 1);
@@ -76,24 +85,23 @@ void Plotter::drawGrid(QPainter *painter)
 
 }
 
-// Отрисовывает начало координат
 void Plotter::drawOrigin(QPainter *painter)
 {
     QPen pen(Qt:: black, originWidth);
     painter ->setPen(pen);
-    painter -> drawPoint(origin);
 
+    painter -> drawPoint(origin);
     painter -> drawText(origin.x()-gridCellWidth*0.75, origin.y()+gridCellWidth, QString("0"));
 }
 
-// Отрисовывает оси координат и засечки через каждый единичный отрезок
 void Plotter:: drawAxes(QPainter *painter)
 {
     QPen pen(Qt:: black, axesWidth);
     painter ->setPen(pen);
 
-    // Отрисовываем оси координат
+    // Отрисовываем вертикальную ось
     painter ->drawLine(origin.x(), 0, origin.x(), height());
+    // Отрисовываем горизонтальную ось
     painter ->drawLine(0, origin.y(), width(), origin.y());
 
 
@@ -109,7 +117,6 @@ void Plotter:: drawAxes(QPainter *painter)
     // В направлении отрицательных координат
     for(int xcoord = origin.x()-gridCellWidth*singleTick; xcoord > 0; xcoord -= gridCellWidth*singleTick)
     {
-
         QPoint bottomPoint(xcoord, origin.y() + gridCellWidth / 3);
         QPoint topPoint(xcoord, origin.y() - gridCellWidth / 3);
         painter -> drawLine(bottomPoint, topPoint);
@@ -134,14 +141,15 @@ void Plotter:: drawAxes(QPainter *painter)
     }
 
     // Отрисовываем стрелки, показывающие положительное направление на осях координат
+    // На горизонтальных осях
     painter ->drawLine(width(), origin.y(), width()-gridCellWidth, origin.y()+gridCellWidth/2);
     painter ->drawLine(width(), origin.y(), width()-gridCellWidth, origin.y()-gridCellWidth/2);
 
+    // На вертикальных осях
     painter ->drawLine(origin.x(), 0, origin.x()+gridCellWidth/2, gridCellWidth);
     painter ->drawLine(origin.x(), 0, origin.x()-gridCellWidth/2, gridCellWidth);
 }
 
-// Отрисовывает названия осей координат
 void Plotter::drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName)
 {
     QPen pen(Qt::black, 2);
@@ -149,7 +157,24 @@ void Plotter::drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeNam
 
     // Название горизонтальной оси
     painter->drawText(width()-gridCellWidth+2, origin.y()+gridCellWidth*2, hAxeName);
-    // Название вертикальной оси
 
+    // Название вертикальной оси
     painter ->drawText(origin.x() + gridCellWidth+2, 0 + gridCellWidth+2, vAxeName);
+}
+
+void Plotter::drawPoint(QPainter *painter, QPoint point, QColor color)
+{
+    QPen pen{color, 3};
+    painter->setPen(pen);
+
+    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
+}
+
+void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
+{
+    QPen pen{color, 2};
+    painter->setPen(pen);
+
+    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
+
 }
