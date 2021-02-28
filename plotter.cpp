@@ -14,7 +14,7 @@ Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget
     origin.setY(h/2);
 
     setGridCellWidth(10);
-    setOriginWidth(5);
+    setOriginWidth(6);
     setAxesWidth(0.5);
     setSingleTick(2);
 }
@@ -158,7 +158,7 @@ void Plotter:: drawAxes(QPainter *painter)
 
 void Plotter::drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName)
 {
-    QPen pen(Qt::black, 2);
+    QPen pen(Qt::black, 3);
     painter ->setPen(pen);
 
     // Название горизонтальной оси
@@ -178,7 +178,7 @@ void Plotter::drawPoint(QPainter *painter, QPoint point, QColor color)
 
 void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 {
-    QPen pen{color, 2};
+    QPen pen{color, 3.0};
     painter->setPen(pen);
 
     painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
@@ -187,7 +187,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
 void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
 {
-    QPen pen{color, 2};
+    QPen pen{color, 3.0};
     painter ->setPen(pen);
 
     painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleTick),
