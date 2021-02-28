@@ -14,8 +14,8 @@ Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget
     origin.setY(h/2);
 
     setGridCellWidth(10);
-    setOriginWidth(3);
-    setAxesWidth(1);
+    setOriginWidth(5);
+    setAxesWidth(0.5);
     setSingleTick(2);
 }
 
@@ -33,16 +33,22 @@ void Plotter::paintEvent(QPaintEvent *event)
 
     drawAxesNames(&painter, QString("X"), QString("Y"));
 
-    // Тестируем отрисовку фигур, точек, линий от начала координат
+    // Тестируем отрисовку точек
+    /*
     for(int i = -10; i <= 10; i++)
     {
         drawPoint(&painter, QPoint(i, i));
     }
 
-    for(double i = -10.0; i <= 10.0; i+=0.1)
+    for(double i = -10.0; i <= 10.0; i+=0.01)
     {
         drawPointF(&painter, QPointF(i, -i));
     }
+    */
+    // Тестируем отрисовку линий
+
+    drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
+    drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
 
 }
 
@@ -51,7 +57,7 @@ void Plotter::setGridCellWidth(int width)
     gridCellWidth = width;
 }
 
-void Plotter::setOriginWidth(int width)
+void Plotter::setOriginWidth(double width)
 {
     originWidth = width;
 }
@@ -61,14 +67,14 @@ void Plotter:: setSingleTick(int cells)
     singleTick = cells;
 }
 
-void Plotter::setAxesWidth(int width)
+void Plotter::setAxesWidth(double width)
 {
     axesWidth = width;
 }
 
 void Plotter::drawGrid(QPainter *painter)
 {
-    QPen pen(Qt::gray, 1);
+    QPen pen(Qt::gray, .3);
     painter ->setPen(pen);
 
     // Отрисовываем вертикальные линии
@@ -177,4 +183,15 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
     painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
 
+}
+
+void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
+{
+    QPen pen{color, 2};
+    painter ->setPen(pen);
+
+    painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleTick),
+                      origin.y() - (startPoint.y()*gridCellWidth*singleTick),
+                      origin.x() +(endPoint.x()*gridCellWidth*singleTick),
+                      origin.y() - (endPoint.y()*gridCellWidth*singleTick));
 }

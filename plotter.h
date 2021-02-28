@@ -33,9 +33,9 @@ public:
     /// Устанавливает длину стороны клетки
     void setGridCellWidth(int width = 10);
     /// Устанавливает ширину точки начала координат
-    void setOriginWidth(int width = 3);
+    void setOriginWidth(double width = 5);
     /// Устанавливает толщину координатных осей
-    void setAxesWidth(int width =1);
+    void setAxesWidth(double width = 0.5);
     /// Устанавливает длину единичного отрезка в клетках
     void setSingleTick(int cells = 1);
 
@@ -46,8 +46,9 @@ public slots:
     void drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName);
     /// Отрисовывает точку с целочисленными координатами на графике относительно начала координат
     void drawPoint(QPainter *painter,QPoint point, QColor color = Qt::black);
-
+    /// Отрисовывает точку с вещественными координатами на графике относительно начала координат
     void drawPointF(QPainter *painter, QPointF point, QColor color = Qt::black);
-
+    /// Отрисовывает линию с вещественными координатами на графике относительно начала координат
+    void drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,QColor color = Qt::black);
 };
 
