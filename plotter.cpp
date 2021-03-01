@@ -5,21 +5,21 @@ Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget
 {
     setCursor(Qt::CrossCursor);
 
-    areaWidth = size->width();
-    areaHeight = size->height();
-
-
-
-    resize(areaWidth,areaHeight);
-    move(position->x(), position->y());
-
-    origin.setX(areaWidth/2);
-    origin.setY(areaHeight/2);
-
     setGridCellWidth(10);
     setOriginWidth(6);
     setAxesWidth(0.5);
-    setSingleTick(2);
+    setSingleTick(4);
+
+    resize(size->width(),size->height());
+    move(position->x(), position->y());
+
+    areaWidth = size->width() - 2*gridCellWidth;
+    areaHeight = size->height() - 2*gridCellWidth;
+
+    origin.setX(areaWidth / 2);
+    origin.setY(areaHeight / 2);
+
+
 }
 
 void Plotter::paintEvent(QPaintEvent *event)
@@ -35,6 +35,7 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawOrigin(&painter);
     drawAxes(&painter);
     drawAxesNames(&painter, QString("X"), QString("Y"));
+    drawCoordinates(&painter);
 
     drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
     drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
@@ -106,18 +107,56 @@ void Plotter::drawAreaBorders(QPainter *painter)
     QPen pen(Qt::darkGray, 3);
     painter ->setPen(pen);
     // Отрисовывает прямоугольную границу
-
     painter ->drawRect(0, 0, width(), height());
-
 }
 
 void Plotter::drawCoordinates(QPainter *painter)
 {
     QPen pen(Qt::black, 5);
-    painter -> setPen(pen);
-    // Отрисовываем координаты по оси OY
-}
+    painter ->setPen(pen);
 
+    // Отрисовываем координаты по горизонтальной оси
+    // От начала координат налево
+    int coordinateCounter{0};
+    for(int x = origin.x(); x >= gridCellWidth*singleTick; x -= gridCellWidth*singleTick)
+    {
+        if(coordinateCounter == 0)
+        {
+            painter -> drawText(x, areaHeight+gridCellWidth, QString().setNum(coordinateCounter--));
+        }
+        else
+        {
+            painter -> drawText(x - gridCellWidth/2, areaHeight+gridCellWidth, QString().setNum(coordinateCounter--));
+        }
+    }
+    coordinateCounter = 1;
+    // От начала координат направо
+    for(int x = origin.x() + gridCellWidth*singleTick; x <= areaWidth-gridCellWidth*singleTick; x += gridCellWidth*singleTick)
+    {
+        painter ->drawText(x, areaHeight + gridCellWidth, QString().setNum(coordinateCounter++));
+    }
+
+    coordinateCounter  = 0;
+    // Отрисовываем координаты по вертикальной оси
+    // От начала координат наверх
+    for(int y = origin.y(); y >= gridCellWidth*singleTick; y -= gridCellWidth*singleTick)
+    {
+        if(coordinateCounter == 0)
+        {
+            painter -> drawText(areaWidth+gridCellWidth/2, y + gridCellWidth/2  ,QString().setNum(coordinateCounter++));
+        }
+        else
+        {
+            painter -> drawText(areaWidth + gridCellWidth/2, y + gridCellWidth/3, QString().setNum(coordinateCounter++));
+        }
+    }
+    coordinateCounter = -1;
+    // От начала координат вниз
+    for(int y = origin.y() + gridCellWidth*singleTick; y <= areaHeight -gridCellWidth*singleTick; y += gridCellWidth*singleTick)
+    {
+        painter -> drawText(areaWidth + gridCellWidth/2, y , QString().setNum(coordinateCounter--));
+    }
+}
 
 void Plotter::drawOrigin(QPainter *painter)
 {
@@ -181,8 +220,8 @@ void Plotter:: drawAxes(QPainter *painter)
 
     // Отрисовываем стрелки, показывающие положительное направление на осях координат
     // На горизонтальных осях
-    painter ->drawLine(width(), origin.y(), width()-gridCellWidth, origin.y()+gridCellWidth/2);
-    painter ->drawLine(width(), origin.y(), width()-gridCellWidth, origin.y()-gridCellWidth/2);
+    painter ->drawLine(areaWidth, origin.y(), areaWidth-gridCellWidth, origin.y()+gridCellWidth/2);
+    painter ->drawLine(areaWidth, origin.y(), areaWidth-gridCellWidth, origin.y()-gridCellWidth/2);
 
     // На вертикальных осях
     painter ->drawLine(origin.x(), 0, origin.x()+gridCellWidth/2, gridCellWidth);

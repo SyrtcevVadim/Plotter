@@ -16,8 +16,9 @@ private:
     int axesWidth;
     /// Ширина точки начала координат
     int originWidth;
-
+    /// Ширина области рисования графиков
     int areaWidth;
+    /// Высота области рисования графиков
     int areaHeight;
 
 protected:
@@ -31,7 +32,7 @@ protected:
     void drawAxes(QPainter *painter);
     /// Отрисовываем прямоугольную границу плоскости
     void drawAreaBorders(QPainter *painter);
-    /// Отрисовывает координаты
+    /// Отрисовывает координаты системы
     void drawCoordinates(QPainter *painter);
 
 public:
