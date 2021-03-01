@@ -3,15 +3,18 @@
 
 Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget(parent)
 {
-    int w = size->width();
-    int h = size->height();
-
     setCursor(Qt::CrossCursor);
-    resize(w,h);
+
+    areaWidth = size->width();
+    areaHeight = size->height();
+
+
+
+    resize(areaWidth,areaHeight);
     move(position->x(), position->y());
 
-    origin.setX(w/2);
-    origin.setY(h/2);
+    origin.setX(areaWidth/2);
+    origin.setY(areaHeight/2);
 
     setGridCellWidth(10);
     setOriginWidth(6);
@@ -27,25 +30,11 @@ void Plotter::paintEvent(QPaintEvent *event)
     // Данный объект занимается отрисовкой всей графики
     QPainter painter(this);
 
+    drawAreaBorders(&painter);
     drawGrid(&painter);
     drawOrigin(&painter);
     drawAxes(&painter);
-
     drawAxesNames(&painter, QString("X"), QString("Y"));
-
-    // Тестируем отрисовку точек
-    /*
-    for(int i = -10; i <= 10; i++)
-    {
-        drawPoint(&painter, QPoint(i, i));
-    }
-
-    for(double i = -10.0; i <= 10.0; i+=0.01)
-    {
-        drawPointF(&painter, QPointF(i, -i));
-    }
-    */
-    // Тестируем отрисовку линий
 
     drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
     drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
@@ -77,19 +66,58 @@ void Plotter::drawGrid(QPainter *painter)
     QPen pen(Qt::gray, .3);
     painter ->setPen(pen);
 
+    // Сетка привязана к началу координат
+
     // Отрисовываем вертикальные линии
-    for(int x = gridCellWidth; x <= width(); x+= gridCellWidth)
+    // От точки отсчёта налево
+    for(int x = origin.x(); x >=0; x-=gridCellWidth)
     {
-        painter -> drawLine(x, 0, x, height());
+        QPoint topPoint(x, 0);
+        QPoint bottomPoint(x, areaHeight);
+        painter->drawLine(topPoint, bottomPoint);
+    }
+    // От точки отсчёта направо
+    for(int x = origin.x()+gridCellWidth; x <= areaWidth; x+=gridCellWidth)
+    {
+        QPoint topPoint(x, 0);
+        QPoint bottomPoint(x, areaHeight);
+        painter->drawLine(topPoint, bottomPoint);
     }
 
     // Отрисовываем горизонтальные линии
-    for(int y = gridCellWidth; y <= height(); y+= gridCellWidth)
+    // От точки отсчёта вверх
+    for(int y = origin.y(); y >= 0; y-= gridCellWidth)
     {
-        painter -> drawLine(0, y,width(), y);
+        QPoint leftPoint(0, y);
+        QPoint rightPoint(areaWidth, y);
+        painter ->drawLine(leftPoint, rightPoint);
     }
+    // От точки отсчёта вниз
+    for(int y = origin.y(); y <= areaHeight; y += gridCellWidth)
+    {
+        QPoint leftPoint(0, y);
+        QPoint rightPoint(areaWidth, y);
+        painter ->drawLine(leftPoint, rightPoint);
+    }
+}
+
+void Plotter::drawAreaBorders(QPainter *painter)
+{
+    QPen pen(Qt::darkGray, 3);
+    painter ->setPen(pen);
+    // Отрисовывает прямоугольную границу
+
+    painter ->drawRect(0, 0, width(), height());
 
 }
+
+void Plotter::drawCoordinates(QPainter *painter)
+{
+    QPen pen(Qt::black, 5);
+    painter -> setPen(pen);
+    // Отрисовываем координаты по оси OY
+}
+
 
 void Plotter::drawOrigin(QPainter *painter)
 {
@@ -106,15 +134,20 @@ void Plotter:: drawAxes(QPainter *painter)
     painter ->setPen(pen);
 
     // Отрисовываем вертикальную ось
-    painter ->drawLine(origin.x(), 0, origin.x(), height());
-    // Отрисовываем горизонтальную ось
-    painter ->drawLine(0, origin.y(), width(), origin.y());
+    QPoint topPoint(origin.x(), 0);
+    QPoint bottomPoint(origin.x(), areaWidth);
+    painter ->drawLine(topPoint, bottomPoint);
 
+    // Отрисовываем горизонтальную ось
+    QPoint leftPoint(0, origin.y());
+    QPoint rightPoint(areaWidth, origin.y());
+
+    painter ->drawLine(leftPoint, rightPoint);
 
     // Изображаем единичные засечки
     // Засечки на горизонтальной оси
     // В направлении положительных координат
-    for(int xcoord = origin.x()+gridCellWidth*singleTick; xcoord <= width(); xcoord += gridCellWidth*singleTick)
+    for(int xcoord = origin.x()+gridCellWidth*singleTick; xcoord <= areaWidth; xcoord += gridCellWidth*singleTick)
     {
         QPoint bottomPoint(xcoord, origin.y() + gridCellWidth / 3);
         QPoint topPoint(xcoord, origin.y() - gridCellWidth / 3);
@@ -139,7 +172,7 @@ void Plotter:: drawAxes(QPainter *painter)
     }
 
     // В направлении отрицательных координат
-    for(int ycoord = origin.y() + gridCellWidth*singleTick; ycoord <= height(); ycoord += gridCellWidth*singleTick)
+    for(int ycoord = origin.y() + gridCellWidth*singleTick; ycoord <= areaHeight; ycoord += gridCellWidth*singleTick)
     {
         QPoint leftPoint(origin.x() - gridCellWidth/3, ycoord);
         QPoint rightPoint(origin.x() + gridCellWidth/3, ycoord);
@@ -156,16 +189,16 @@ void Plotter:: drawAxes(QPainter *painter)
     painter ->drawLine(origin.x(), 0, origin.x()-gridCellWidth/2, gridCellWidth);
 }
 
-void Plotter::drawAxesNames(QPainter *painter, QString hAxeName, QString vAxeName)
+void Plotter::drawAxesNames(QPainter *painter, QString horizontalAxeName, QString verticalAxeName)
 {
     QPen pen(Qt::black, 3);
     painter ->setPen(pen);
 
     // Название горизонтальной оси
-    painter->drawText(width()-gridCellWidth+2, origin.y()+gridCellWidth*2, hAxeName);
+    painter->drawText(areaWidth-gridCellWidth+2, origin.y()+gridCellWidth*2, horizontalAxeName);
 
     // Название вертикальной оси
-    painter ->drawText(origin.x() + gridCellWidth+2, 0 + gridCellWidth+2, vAxeName);
+    painter ->drawText(origin.x() + gridCellWidth+2, 0 + gridCellWidth+2, verticalAxeName);
 }
 
 void Plotter::drawPoint(QPainter *painter, QPoint point, QColor color)

@@ -17,6 +17,9 @@ private:
     /// Ширина точки начала координат
     int originWidth;
 
+    int areaWidth;
+    int areaHeight;
+
 protected:
     /// Вызывается для отрисовки всей графики
     void paintEvent(QPaintEvent *event);
@@ -26,7 +29,10 @@ protected:
     void drawOrigin(QPainter *painter);
     /// Отрисовывает координатные оси
     void drawAxes(QPainter *painter);
-
+    /// Отрисовываем прямоугольную границу плоскости
+    void drawAreaBorders(QPainter *painter);
+    /// Отрисовывает координаты
+    void drawCoordinates(QPainter *painter);
 
 public:
     Plotter(QPoint *position, QSize *size, QWidget *parentWidget = 0);
