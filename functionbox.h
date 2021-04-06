@@ -7,6 +7,8 @@ class FunctionBox : public QWidget
 {
     Q_OBJECT
 private:
+    static int lineEditHeight;
+
     /// Метка для выражения "y="
     QLabel *functionName;
     /// Поле ввода тела функции

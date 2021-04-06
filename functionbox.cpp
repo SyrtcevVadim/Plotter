@@ -2,7 +2,7 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
-    resize(270,120);
+    resize(270,130);
     // Инициализируем все внутренние виджеты
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
@@ -13,11 +13,8 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     dLbl = new QLabel("d");
 
     aParamBox = new QLineEdit();
-
     bParamBox = new QLineEdit();
-
     cParamBox = new QLineEdit();
-
     dParamBox = new QLineEdit();
 
 
@@ -29,45 +26,30 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     errorLabel = new QLabel("Error:");
     errorText = new QLabel("everything is good!");
 
-    QVBoxLayout *vBox = new QVBoxLayout(this);
+    QGridLayout *grid = new QGridLayout();
 
-    // Первая строчка виджетов
-    QHBoxLayout *firstLine = new QHBoxLayout();
-    // Добавляем первую строчку виджетов
-    firstLine->addWidget(functionName);
-    firstLine->addWidget(functionBody);
+    grid->addWidget(functionName, 0,0);
+    grid->addWidget(functionBody, 0, 1,1,-1);
 
-    vBox->addLayout(firstLine);
+    grid->addWidget(errorLabel, 1, 0);
+    grid->addWidget(errorText, 1,1, 1, -1);
+
+    grid->addWidget(aLbl, 2, 0);
+    grid->addWidget(aParamBox, 2, 1);
+
+    grid->addWidget(bLbl, 2, 3);
+    grid->addWidget(bParamBox, 2, 4);
+
+    grid->addWidget(minimumVarValueBox, 2,5);
+    grid->addWidget(xLbl, 2, 6);
+    grid->addWidget(maximumVarValueBox, 2, 7);
+
+    grid->addWidget(cLbl, 3, 0);
+    grid->addWidget(cParamBox, 3, 1);
+
+    grid->addWidget(dLbl, 3,3);
+    grid->addWidget(dParamBox,3,4);
 
 
-    QHBoxLayout *errorLine = new QHBoxLayout();
-    errorLine ->addWidget(errorLabel);
-    errorLine ->addWidget(errorText);
-
-    vBox->addLayout(errorLine);
-
-    QHBoxLayout *secondLine = new QHBoxLayout();
-    secondLine->addWidget(aLbl);
-    secondLine->addWidget(aParamBox);
-
-    secondLine ->addWidget(bLbl);
-    secondLine ->addWidget(bParamBox);
-
-    secondLine->addWidget(minimumVarValueBox);
-    secondLine->addWidget(xLbl);
-    secondLine->addWidget(maximumVarValueBox);
-
-    vBox->addLayout(secondLine);
-
-    // Третья строчка виджетов
-    QHBoxLayout *thirdLine = new QHBoxLayout();
-    thirdLine->addWidget(cLbl);
-    thirdLine->addWidget(cParamBox);
-    thirdLine->addWidget(dLbl);
-    thirdLine ->addWidget(dParamBox);
-
-    vBox->addLayout(thirdLine);
-
-    setLayout(vBox);
-
+    setLayout(grid);
 }
