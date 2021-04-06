@@ -45,6 +45,8 @@ private:
     /// перменной x
     QLineEdit *maximumVarValueBox;
 
+    QPushButton *removeBtn;
+
 
 public:
     explicit FunctionBox(QWidget *parent = nullptr);

@@ -26,13 +26,17 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     errorLabel = new QLabel("Error:");
     errorText = new QLabel("everything is good!");
 
+    removeBtn = new QPushButton();
+
     QGridLayout *grid = new QGridLayout();
 
+    grid->addWidget(removeBtn, 0, 8);
+
     grid->addWidget(functionName, 0,0);
-    grid->addWidget(functionBody, 0, 1,1,-1);
+    grid->addWidget(functionBody, 0, 1,1,7);
 
     grid->addWidget(errorLabel, 1, 0);
-    grid->addWidget(errorText, 1,1, 1, -1);
+    grid->addWidget(errorText, 1,1, 1, 7);
 
     grid->addWidget(aLbl, 2, 0);
     grid->addWidget(aParamBox, 2, 1);
