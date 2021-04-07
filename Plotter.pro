@@ -11,12 +11,14 @@ CONFIG += c++17
 SOURCES += \
     constantbox.cpp \
     functionbox.cpp \
+    functionboxlist.cpp \
     main.cpp \
     plotter.cpp
 
 HEADERS += \
     constantbox.h \
     functionbox.h \
+    functionboxlist.h \
     plotter.h
 
 # Default rules for deployment.

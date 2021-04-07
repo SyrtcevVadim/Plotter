@@ -2,6 +2,7 @@
 #include"plotter.h"
 #include"functionbox.h"
 #include"constantbox.h"
+#include"functionboxlist.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,9 @@ int main(int argc, char *argv[])
     //FunctionBox *second = new FunctionBox(&parentWidget);
     ConstantBox *constant = new ConstantBox(&parentWidget);
     constant->move(0, 200);
+
+    FunctionBoxList *list = new FunctionBoxList(&parentWidget);
+    list ->move(0,400);
 
     parentWidget.show();
     return a.exec();
