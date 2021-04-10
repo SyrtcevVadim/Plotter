@@ -14,7 +14,7 @@ private:
     /// Body's layout
     QVBoxLayout *listLayout;
     /// Button for adding new elements of T widget
-    QPushButton *addNewItemBtn;
+    QPushButton *addNewWidgetBtn;
     /// Container for storing widgets
     QList<T> *listOfWidgets;
 
@@ -38,6 +38,9 @@ WidgetList<T>::WidgetList(int height, QWidget *parent) : QWidget(parent)
     scrollArea->setFixedSize(350, height);
     scrollArea->setWidget(listBody);
 
+    addNewWidgetBtn = new QPushButton();
+
+    // Test data
     FunctionBox *box1 = new FunctionBox();
     FunctionBox *box2 = new FunctionBox();
     FunctionBox *box3 = new FunctionBox();
@@ -45,10 +48,18 @@ WidgetList<T>::WidgetList(int height, QWidget *parent) : QWidget(parent)
     listLayout->addWidget(box1);
     listLayout->addWidget(box2);
     listLayout ->addWidget(box3);
-
-
-    // Нужно прописывать команду при каждом добавлении нового элемента
+    // necessary command after every insertion of widget
     listBody->adjustSize();
+
+    // Setting appropriate layout
+    QVBoxLayout *mainLayout = new QVBoxLayout();
+    QHBoxLayout *btnLayout = new QHBoxLayout();
+    btnLayout->setAlignment(Qt::AlignLeft);
+    mainLayout->addLayout(btnLayout);
+    btnLayout->addWidget(addNewWidgetBtn);
+    mainLayout->addWidget(scrollArea);
+
+    setLayout(mainLayout);
 }
 
 

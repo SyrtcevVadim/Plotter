@@ -20,7 +20,6 @@ private:
     QLineEdit *functionBody;
 
     /// Метка для отображения ошибок
-    QLabel *errorLabel;
     QLabel *errorText;
 
     /// Отображает название параметра a

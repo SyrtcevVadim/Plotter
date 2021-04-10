@@ -27,20 +27,19 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     minimumVarValueBox = new QLineEdit();
     maximumVarValueBox = new QLineEdit();
 
-    errorLabel = new QLabel("Error:");
-    errorText = new QLabel("everything is good!");
+    errorText = new QLabel();
 
     removeBtn = new QPushButton();
 
     QGridLayout *grid = new QGridLayout();
 
-    grid->addWidget(removeBtn, 0, 8);
+    grid->addWidget(removeBtn, 3, 8);
 
     grid->addWidget(functionName, 0,0);
-    grid->addWidget(functionBody, 0, 1,1,7);
+    grid->addWidget(functionBody, 0, 1,1,-1);
 
-    grid->addWidget(errorLabel, 1, 0);
-    grid->addWidget(errorText, 1,1, 1, 7);
+
+    grid->addWidget(errorText, 1,0, 1, -1);
 
     grid->addWidget(aLbl, 2, 0);
     grid->addWidget(aParamBox, 2, 1);
@@ -79,7 +78,6 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 {
     // При изменении математического выражения в поле ввода
     // меняем это выражение и внутри объекта
-    //qDebug() << "Str: " << str;
 
 
     // Проверяем введённое математическое выражение на корректность
@@ -91,21 +89,22 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
         {
             // В выражении присутствуют недопустимые символы
             errorText->setText(checker.GetErrorMessage());
-            errorLabel->show();
         }
         else if(!checker.AreBracketsCorrespond())
         {
             // В выражении скобки расставлены неправильно
             errorText->setText(checker.GetErrorMessage());
-            errorLabel->show();
         }
         else
         {
             //qDebug() << "Math expression is correct!";
-            errorLabel->hide();
             errorText->setText("");
             expression->SetExpression(str);
         }
+    }
+    else
+    {
+        errorText->setText("");
     }
 
 }
