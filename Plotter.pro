@@ -9,28 +9,28 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ../LibForPlotter/MathExpressionFunctionality/mathcalculator.cpp \
-    ../LibForPlotter/MathExpressionFunctionality/mathchecker.cpp \
-    ../LibForPlotter/MathExpressionFunctionality/mathexpression.cpp \
-    ../LibForPlotter/MathExpressionFunctionality/mathformconverter.cpp \
-    ../LibForPlotter/MathExpressionFunctionality/mathhelper.cpp \
-    ../LibForPlotter/MathExpressionFunctionality/mathparser.cpp \
     constantbox.cpp \
     functionbox.cpp \
     functionboxlist.cpp \
     main.cpp \
+    mathcalculator.cpp \
+    mathchecker.cpp \
+    mathexpression.cpp \
+    mathformconverter.cpp \
+    mathhelper.cpp \
+    mathparser.cpp \
     plotter.cpp
 
 HEADERS += \
-    ../LibForPlotter/MathExpressionFunctionality/mathcalculator.h \
-    ../LibForPlotter/MathExpressionFunctionality/mathchecker.h \
-    ../LibForPlotter/MathExpressionFunctionality/mathexpression.h \
-    ../LibForPlotter/MathExpressionFunctionality/mathformconverter.h \
-    ../LibForPlotter/MathExpressionFunctionality/mathhelper.h \
-    ../LibForPlotter/MathExpressionFunctionality/mathparser.h \
     constantbox.h \
     functionbox.h \
     functionboxlist.h \
+    mathcalculator.h \
+    mathchecker.h \
+    mathexpression.h \
+    mathformconverter.h \
+    mathhelper.h \
+    mathparser.h \
     plotter.h
 
 # Default rules for deployment.
