@@ -136,3 +136,21 @@ bool MathHelper::HasConstants(const QString &expression)
     }
     return false;
 }
+
+bool MathHelper::IsTokenOpeningBracket(const QString &token)
+{
+    if(token == "(" || token == "[" || token == "{")
+    {
+        return true;
+    }
+    return false;
+}
+
+bool MathHelper::IsTokenClosingBracket(const QString &token)
+{
+    if(token == ")" || token == "]" || token == "}")
+    {
+        return true;
+    }
+    return false;
+}

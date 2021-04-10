@@ -37,8 +37,11 @@ public:
     /// Checks whether token is a function or not
     static bool IsTokenFunction(const QString &expression);
     /// Checks whether token is correct or not
-    static bool IsTokenCorrect(const QString &expression);
-
+    static bool IsTokenCorrect(const QString &token);
+    /// Checks whether token is an opening bracket or not
+    static bool IsTokenOpeningBracket(const QString &token);
+    /// Checks whether token is a closing bracket or not
+    static bool IsTokenClosingBracket(const QString &token);
     /// Checks, whether string contains constants or not
     static bool HasConstants(const QString &expression);
 

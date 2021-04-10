@@ -14,10 +14,6 @@ private:
     static bool IsTokenNumber(QString &token);
     /// Checks whether token is a separator or not
     static bool IsTokenSeparator(QString &token);
-
-    /// Checks whether token is an opening bracket
-    static bool IsTokenOpeningBracket(QString &token);
-
 public:
     /// Converts mathematical expression from infix notation to postfix notation
     static QString InfixToPostfix(const QString &expression);

@@ -52,15 +52,6 @@ bool MathFormConverter::IsTokenSeparator(QString &token)
     return false;
 }
 
-bool MathFormConverter::IsTokenOpeningBracket(QString &token)
-{
-    if(token == "(" || token == "[" || token == "{")
-    {
-        return true;
-    }
-    return false;
-}
-
 QString MathFormConverter::InfixToPostfix(const QString &expression)
 {
     // Creates a stack for intermediate values
@@ -72,7 +63,7 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     for(auto token: MathParser::CreateTokenList(expression))
     {
         // Processing unary plus and minus
-        if((token == "+" || token == "-") && (previousToken.isEmpty() || IsTokenOpeningBracket(previousToken) || IsTokenSeparator(previousToken) ||
+        if((token == "+" || token == "-") && (previousToken.isEmpty() || MathHelper::IsTokenOpeningBracket(previousToken) || IsTokenSeparator(previousToken) ||
                                               MathHelper::IsTokenOperation(previousToken)))
         {
             stack.push("un"+token); // un+ or un-
@@ -95,7 +86,7 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
             resultStrExpression += token + " ";
         }
         // Process opening brackets
-        else if(IsTokenOpeningBracket(token))
+        else if(MathHelper::IsTokenOpeningBracket(token))
         {
             stack.push(token);
         }
@@ -142,7 +133,7 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
         else if(IsTokenSeparator(token))
         {
             // Pops everything from the stack until we face with opening bracket
-            while(!stack.isEmpty() && !IsTokenOpeningBracket(stack.top()))
+            while(!stack.isEmpty() && !MathHelper::IsTokenOpeningBracket(stack.top()))
             {
                 resultStrExpression += stack.pop() + " ";
             }

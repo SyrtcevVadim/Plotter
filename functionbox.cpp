@@ -1,5 +1,6 @@
 #include<QDebug>
 #include "functionbox.h"
+#include "mathparser.h"
 #include"mathexpression.h"
 #include"mathchecker.h"
 
@@ -78,21 +79,15 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 {
     // При изменении математического выражения в поле ввода
     // меняем это выражение и внутри объекта
-
+    qDebug() << MathParser::CreateTokenList(str);
 
     // Проверяем введённое математическое выражение на корректность
     MathChecker checker(str);
 
-    if(!str.isEmpty())
+    if(!(str.trimmed()).isEmpty())
     {
-        if(!checker.AreAllTokensCorrect())
+        if(!checker.AreAllTokensCorrect() || !checker.AreBracketsCorrespond() || !checker.AreArgumentsCorresepond())
         {
-            // В выражении присутствуют недопустимые символы
-            errorText->setText(checker.GetErrorMessage());
-        }
-        else if(!checker.AreBracketsCorrespond())
-        {
-            // В выражении скобки расставлены неправильно
             errorText->setText(checker.GetErrorMessage());
         }
         else

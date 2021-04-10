@@ -12,15 +12,18 @@ QStringList MathParser::delimitersForParsing({"(","[","{",")","]","}",
 
 QStringList MathParser::CreateTokenList(QString expression)
 {
-    // Insert spaces on the left and on the right of every delimiter
-    for(QString delimiter: delimitersForParsing)
+    if(!expression.isEmpty())
     {
-
-        expression = expression.replace(QRegExp(R"(\s*\)"+delimiter+R"(\s*)"), " "+delimiter+" ");
+        // Insert spaces on the left and on the right of every delimiter
+        for(QString delimiter: delimitersForParsing)
+        {
+            expression = expression.replace(QRegExp(R"(\s*\)"+delimiter+R"(\s*)"), " "+delimiter+" ");
+        }
+        // Deleting useless spaces from the end and from the start of expression
+        expression = expression.trimmed();
+        return expression.split(QRegExp(R"(\s+)"));
     }
-    // Deleting useless spaces from the end and from the start of expression
-    expression = expression.trimmed();
-    return expression.split(QRegExp(R"(\s+)"));
+    return QStringList();
 }
 
 
