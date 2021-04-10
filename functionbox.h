@@ -1,7 +1,7 @@
 #ifndef FUNCTIONBOX_H
 #define FUNCTIONBOX_H
 #include<QtWidgets>
-#include"../LibForPlotter/MathExpressionFunctionality/mathexpression.h"
+#include"mathexpression.h"
 
 /// Виджет для хранения математической функции и задания ограничений для него
 class FunctionBox : public QWidget

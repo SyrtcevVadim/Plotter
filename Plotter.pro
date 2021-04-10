@@ -18,8 +18,7 @@ SOURCES += \
     mathformconverter.cpp \
     mathhelper.cpp \
     mathparser.cpp \
-    plotter.cpp \
-    widgetlist.cpp
+    plotter.cpp
 
 HEADERS += \
     constantbox.h \

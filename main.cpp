@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     ConstantBox *constant = new ConstantBox(&parentWidget);
     constant->move(0, 200);
     */
-    WidgetList *list = new WidgetList(200, &parentWidget);
+    WidgetList<FunctionBox> *list = new WidgetList<FunctionBox>(200, &parentWidget);
 
     parentWidget.show();
     return a.exec();

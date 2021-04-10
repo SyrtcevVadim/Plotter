@@ -1,7 +1,8 @@
 #include<QDebug>
 #include "functionbox.h"
-#include"../LibForPlotter/MathExpressionFunctionality/mathexpression.h"
-#include"../LibForPlotter/MathExpressionFunctionality/mathchecker.h"
+#include"mathexpression.h"
+#include"mathchecker.h"
+
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
     expression = new MathExpression();
@@ -76,34 +77,35 @@ void FunctionBox::paintEvent(QPaintEvent *event)
 
 void FunctionBox::OnMathExpressionChanged(const QString &str)
 {
-    // Очищаем старую ошибку
-    errorText->setText("");
     // При изменении математического выражения в поле ввода
     // меняем это выражение и внутри объекта
-    qDebug() << "Str: " << str;
+    //qDebug() << "Str: " << str;
 
 
     // Проверяем введённое математическое выражение на корректность
     MathChecker checker(str);
 
-    if(str.isEmpty())
+    if(!str.isEmpty())
     {
-        // Это нормальный случай, ничего не делаем
-    }
-    else if(!checker.AreAllTokensCorrect())
-    {
-        // В выражении присутствуют недопустимые символы
-        errorText->setText(checker.GetErrorMessage());
-    }
-    else if(!checker.AreBracketsCorrespond())
-    {
-        // В выражении скобки расставлены неправильно
-        errorText->setText(checker.GetErrorMessage());
-    }
-    else
-    {
-        qDebug() << "Math expression is correct!";
-        expression->SetExpression(str);
+        if(!checker.AreAllTokensCorrect())
+        {
+            // В выражении присутствуют недопустимые символы
+            errorText->setText(checker.GetErrorMessage());
+            errorLabel->show();
+        }
+        else if(!checker.AreBracketsCorrespond())
+        {
+            // В выражении скобки расставлены неправильно
+            errorText->setText(checker.GetErrorMessage());
+            errorLabel->show();
+        }
+        else
+        {
+            //qDebug() << "Math expression is correct!";
+            errorLabel->hide();
+            errorText->setText("");
+            expression->SetExpression(str);
+        }
     }
 
 }
