@@ -5,11 +5,8 @@
 
 class FunctionBoxList : public QWidget
 {
-    Q_OBJECT
-private:
-    /// Длина тела списка
-    int listBodyHeight;
 
+private:
     /// Полоса прокрутки списка
     QScrollArea *scrollArea;
     /// Тело списка
@@ -21,7 +18,7 @@ private:
     QPushButton *removeItemBtn;
 
 public:
-    explicit FunctionBoxList(QWidget *parent = nullptr);
+    explicit FunctionBoxList(int height = 100,QWidget *parent = nullptr);
 
 };
 

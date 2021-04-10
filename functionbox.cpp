@@ -2,7 +2,7 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
-    resize(400,100);
+    resize(200,100);
     // Инициализируем все внутренние виджеты
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
