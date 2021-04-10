@@ -1,7 +1,10 @@
+#include<QDebug>
 #include "functionbox.h"
-
+#include"../LibForPlotter/MathExpressionFunctionality/mathexpression.h"
+#include"../LibForPlotter/MathExpressionFunctionality/mathchecker.h"
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
+    expression = new MathExpression();
     resize(200,100);
     // Инициализируем все внутренние виджеты
     functionName = new QLabel("y=");
@@ -56,4 +59,43 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
 
     setLayout(grid);
+
+
+    // Соединяем сигналы с обработчиками
+    QObject::connect(functionBody, SIGNAL(textEdited(const QString)),this, SLOT(OnMathExpressionChanged(const QString)));
 }
+
+void FunctionBox::OnMathExpressionChanged(const QString &str)
+{
+    // Очищаем старую ошибку
+    errorText->setText("");
+    // При изменении математического выражения в поле ввода
+    // меняем это выражение и внутри объекта
+    qDebug() << "Str: " << str;
+
+
+    // Проверяем введённое математическое выражение на корректность
+    MathChecker checker(str);
+
+    if(str.isEmpty())
+    {
+        // Это нормальный случай, ничего не делаем
+    }
+    else if(!checker.AreAllTokensCorrect())
+    {
+        // В выражении присутствуют недопустимые символы
+        errorText->setText(checker.GetErrorMessage());
+    }
+    else if(!checker.AreBracketsCorrespond())
+    {
+        // В выражении скобки расставлены неправильно
+        errorText->setText(checker.GetErrorMessage());
+    }
+    else
+    {
+        qDebug() << "Math expression is correct!";
+        expression->SetExpression(str);
+    }
+
+}
+

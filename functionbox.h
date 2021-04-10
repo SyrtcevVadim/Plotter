@@ -1,13 +1,18 @@
 #ifndef FUNCTIONBOX_H
 #define FUNCTIONBOX_H
 #include<QtWidgets>
+#include"../LibForPlotter/MathExpressionFunctionality/mathexpression.h"
 
 /// Виджет для хранения математической функции и задания ограничений для него
 class FunctionBox : public QWidget
 {
     Q_OBJECT
 private:
+    /// Высота полей ввода
     static int lineEditHeight;
+
+    /// Математическое выражение, записанное в поле ввода
+    MathExpression *expression;
 
     /// Метка для выражения "y="
     QLabel *functionName;
@@ -44,12 +49,21 @@ private:
     /// Поле для ввода максимально возможного значения
     /// перменной x
     QLineEdit *maximumVarValueBox;
-
+    /// Кнопка для удаления коробки задания функции
     QPushButton *removeBtn;
 
 
 public:
     explicit FunctionBox(QWidget *parent = nullptr);
+
+private slots:
+    void OnMathExpressionChanged(const QString &str);
+    /*
+    void OnAParamChanged();
+    void OnBParamChanged();
+    void OnCParamChanged();
+    void OnDParamChanged();
+    */
 
 };
 
