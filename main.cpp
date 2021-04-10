@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     constant->move(0, 200);
     */
     FunctionBoxList *list = new FunctionBoxList(200, &parentWidget);
-
+    list->move(300,100);
 
     parentWidget.show();
     return a.exec();

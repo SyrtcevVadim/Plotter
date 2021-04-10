@@ -28,3 +28,8 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent) : QWidget(parent)
 
 
 }
+
+void FunctionBoxList::move(int x, int y)
+{
+    scrollArea->move(x,y);
+}

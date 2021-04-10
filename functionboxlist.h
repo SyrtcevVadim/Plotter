@@ -20,6 +20,7 @@ private:
 public:
     explicit FunctionBoxList(int height = 100,QWidget *parent = nullptr);
 
+    void move(int x, int y);
 };
 
 #endif // FUNCTIONBOXLIST_H
