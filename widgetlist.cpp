@@ -1,16 +1,16 @@
-#include "functionboxlist.h"
+#include "widgetlist.h"
 #include "functionbox.h"
 #include<QtWidgets>
 
-FunctionBoxList::FunctionBoxList(int height, QWidget *parent) : QWidget(parent)
+WidgetList::WidgetList(int height, QWidget *parent) : QWidget(parent)
 {
     listBody = new QWidget();
-    listBody->setFixedWidth(300);
+    listBody->setFixedWidth(330);
     listLayout = new QVBoxLayout();
     listBody->setLayout(listLayout);
 
     scrollArea = new QScrollArea(parent);
-    scrollArea->setFixedSize(320, height);
+    scrollArea->setFixedSize(340, height);
     scrollArea->setWidget(listBody);
 
 
@@ -29,7 +29,7 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent) : QWidget(parent)
 
 }
 
-void FunctionBoxList::move(int x, int y)
+void WidgetList::move(int x, int y)
 {
     scrollArea->move(x,y);
 }

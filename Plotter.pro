@@ -11,7 +11,6 @@ CONFIG += c++17
 SOURCES += \
     constantbox.cpp \
     functionbox.cpp \
-    functionboxlist.cpp \
     main.cpp \
     mathcalculator.cpp \
     mathchecker.cpp \
@@ -19,19 +18,20 @@ SOURCES += \
     mathformconverter.cpp \
     mathhelper.cpp \
     mathparser.cpp \
-    plotter.cpp
+    plotter.cpp \
+    widgetlist.cpp
 
 HEADERS += \
     constantbox.h \
     functionbox.h \
-    functionboxlist.h \
     mathcalculator.h \
     mathchecker.h \
     mathexpression.h \
     mathformconverter.h \
     mathhelper.h \
     mathparser.h \
-    plotter.h
+    plotter.h \
+    widgetlist.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

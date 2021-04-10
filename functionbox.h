@@ -52,6 +52,8 @@ private:
     /// Кнопка для удаления коробки задания функции
     QPushButton *removeBtn;
 
+protected:
+    void paintEvent(QPaintEvent *event);
 
 public:
     explicit FunctionBox(QWidget *parent = nullptr);

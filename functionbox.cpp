@@ -65,6 +65,15 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     QObject::connect(functionBody, SIGNAL(textEdited(const QString)),this, SLOT(OnMathExpressionChanged(const QString)));
 }
 
+void FunctionBox::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+    QPainter painter(this);
+
+    // Draws a rectangle border
+    painter.drawRect(0,0, width()-5, height()-5);
+}
+
 void FunctionBox::OnMathExpressionChanged(const QString &str)
 {
     // Очищаем старую ошибку
