@@ -106,20 +106,21 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 
     if(!(str.trimmed()).isEmpty())
     {
+        qDebug() << "Token list isn't empty";
         if(!checker.AreAllTokensCorrect() || !checker.AreBracketsCorrespond() || !checker.AreArgumentsCorresepond())
         {
             errorText->setText(checker.GetErrorMessage());
         }
         else
         {
-            //qDebug() << "Math expression is correct!";
-            errorText->setText("");
+            qDebug() << "Math expression is correct!";
+            errorText->clear();
             expression->SetExpression(str);
         }
     }
     else
     {
-        errorText->setText("");
+        errorText->clear();
     }
 
 }

@@ -1,6 +1,7 @@
 #include "mathhelper.h"
 #include "mathparser.h"
 #include<utility>
+#include<QDebug>
 
 using std::pair;
 
@@ -109,7 +110,7 @@ bool MathHelper::IsTokenCorrect(const QString &expression)
 
 bool MathHelper::IsTokenOperation(const QString &expression)
 {
-    if(operations.contains(expression))
+    if(expression != "," &&operations.contains(expression))
     {
         return true;
     }

@@ -35,6 +35,7 @@ bool MathChecker::IsTokenNumber(const QString &token)
 
 bool MathChecker::AreAllTokensCorrect()
 {
+    qDebug() << "Checking for token correctness";
     for(auto token: expression)
     {
         if(!MathHelper::correctTokens.contains(token) && !IsTokenNumber(token))
@@ -50,6 +51,7 @@ bool MathChecker::AreAllTokensCorrect()
 
 bool MathChecker::AreBracketsCorrespond()
 {
+    qDebug() << "Checking for correct brackets";
     QStack<QString> stack;
     for(auto token: expression)
     {
@@ -121,7 +123,9 @@ QString MathChecker::GetErrorMessage() const
 
 bool MathChecker::AreArgumentsCorresepond()
 {
+    qDebug() << "Checking for correct arguments";
     QString previousToken{""};
+    qDebug() << "foreach";
     for(auto token: expression)
     {
         if(IsTokenNumber(previousToken) && IsTokenNumber(token))
@@ -144,15 +148,18 @@ bool MathChecker::AreArgumentsCorresepond()
         }
         previousToken = token;
     }
-    // Checking of correct arguments for binary/unary operations
     QVector vec{expression.toVector()};
+
+    // Checking of correct arguments for binary/unary operations
+    qDebug() << "vector";
     for(int i{0}; i < vec.length(); i++)
     {
-        if(MathHelper::operations.contains(vec[i]))
+        qDebug() << "is " << vec[i] << " an operation";
+        if(MathHelper::IsTokenOperation(vec[i]))
         {
-
+            qDebug() << "yes it is";
             // Checks the left operand
-            if(0 > i-1 || !(MathHelper::IsTokenClosingBracket(vec[i-1]) || IsTokenNumber(vec[i-1]) ||
+            if(i-1 < 0|| !(MathHelper::IsTokenClosingBracket(vec[i-1]) || IsTokenNumber(vec[i-1]) ||
                             MathHelper::IsTokenParameter(vec[i-1]) ||
                             MathHelper::IsTokenConstant(vec[i-1])||
                             MathHelper::IsTokenVariable(vec[i-1])))
@@ -177,7 +184,5 @@ bool MathChecker::AreArgumentsCorresepond()
     }
 
     // Check the argument separator and functions' operand quantity
-
-
     return true;
 }

@@ -28,8 +28,10 @@ MathExpression::MathExpression(QString expression): MathExpression()
     {
         infixExpression += token + " ";
     }
+    qDebug() <<"Infix expression: " << infixExpression;
     infixExpression = SubstituteConstants(infixExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
+    qDebug() << "Postfix expression: " << postfixExpression;
 }
 
 QString MathExpression::GetInfixExpression()const
@@ -72,8 +74,10 @@ void MathExpression::SetExpression(QString expression)
     {
         infixExpression += token + " ";
     }
+    qDebug() << "Infix expression: " << infixExpression;
     infixExpression = SubstituteConstants(infixExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
+    qDebug() << "Postfix expression: " << postfixExpression;
     //qDebug() << "SET EXPRESION: INFIX EXPRESSION: "<<infixExpression<<"| POSTFIX EXPRESSION: "<<postfixExpression;
 }
 
