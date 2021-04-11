@@ -123,9 +123,7 @@ QString MathChecker::GetErrorMessage() const
 
 bool MathChecker::AreArgumentsCorresepond()
 {
-    qDebug() << "Checking for correct arguments";
     QString previousToken{""};
-    qDebug() << "foreach";
     for(auto token: expression)
     {
         if(IsTokenNumber(previousToken) && IsTokenNumber(token))
@@ -151,13 +149,10 @@ bool MathChecker::AreArgumentsCorresepond()
     QVector vec{expression.toVector()};
 
     // Checking of correct arguments for binary/unary operations
-    qDebug() << "vector";
     for(int i{0}; i < vec.length(); i++)
     {
-        qDebug() << "is " << vec[i] << " an operation";
         if(MathHelper::IsTokenOperation(vec[i]))
         {
-            qDebug() << "yes it is";
             // Checks the left operand
             if(i-1 < 0|| !(MathHelper::IsTokenClosingBracket(vec[i-1]) || IsTokenNumber(vec[i-1]) ||
                             MathHelper::IsTokenParameter(vec[i-1]) ||

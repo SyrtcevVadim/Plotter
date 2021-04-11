@@ -26,7 +26,7 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
     // Test data
-    for(int i{0}; i < 5; i++)
+    for(int i{0}; i < 1; i++)
     {
         addNewWidget();
     }
@@ -57,20 +57,31 @@ void FunctionBoxList::move(int x, int y)
     scrollArea->move(x,y);
 }
 
-void FunctionBoxList::addNewWidget()
+FunctionBox* FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
     connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(OnRemoveBtnClick(FunctionBox*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
+    return newBox;
+}
 
+void FunctionBoxList::clear()
+{
+    QList<FunctionBox*> temp(listOfWidgets);
+    for(FunctionBox *item: temp)
+    {
+        listOfWidgets.takeAt(listOfWidgets.indexOf(item));
+        listLayout->takeAt(listLayout->indexOf(item));
+    }
+    listOfWidgets.clear();
+    listBody->adjustSize();
 }
 
 void FunctionBoxList::OnSaveToFileBtnClick()
 {
     QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Save data to output file");
-    qDebug() << pathToOutputFile;
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -78,19 +89,39 @@ void FunctionBoxList::OnSaveToFileBtnClick()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        outStream << expression->GetMathExpression();
+        outStream << *expression->GetMathExpression();
+        qDebug() << *expression->GetMathExpression();
     }
-    qDebug() << "Info is stored into " << pathToOutputFile <<" file!";
     outputFile.close();
 }
 
 void FunctionBoxList::OnLoadFromFileBtnClick()
 {
     QString pathToInputFile = QFileDialog::getOpenFileName(this, "Load stored data");
-    qDebug() << pathToInputFile;
     QFile inputFile(pathToInputFile);
     inputFile.open(QIODevice::ReadOnly);
     QDataStream in(&inputFile);
+    // Clears previos list content
+    clear();
+    int length;
+    in >> length;
+    for(int i{0}; i < length; i++)
+    {
+        FunctionBox *currBox = addNewWidget();
+        MathExpression *currExp = currBox->GetMathExpression();
+        qDebug() << *currExp;
+        in >> *currExp;
+        currBox->functionBody->setText(currExp->GetInitialExpression());
+        currBox->aParamBox->setText(currExp->GetParameterValue("a"));
+        currBox->bParamBox->setText(currExp->GetParameterValue("b"));
+        currBox->cParamBox->setText(currExp->GetParameterValue("c"));
+        currBox->dParamBox->setText(currExp->GetParameterValue("d"));
+
+        currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
+        currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+    }
+    qDebug() << "Loading is finished";
+    inputFile.close();
 }
 
 void FunctionBoxList::OnAddNewWidgetBtnClick()
@@ -100,7 +131,6 @@ void FunctionBoxList::OnAddNewWidgetBtnClick()
 
 void FunctionBoxList::OnRemoveBtnClick(FunctionBox *box)
 {
-    qDebug() << "REMOVING EXISTING BOX!";
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));
     delete box;

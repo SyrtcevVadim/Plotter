@@ -12,6 +12,12 @@ private:
     static int lineEditHeight;
     /// Математическое выражение, записанное в поле ввода
     MathExpression *expression;
+
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+public:
     /// Метка для выражения "y="
     QLabel *functionName;
     /// Поле ввода тела функции
@@ -45,12 +51,8 @@ private:
     /// Кнопка для удаления коробки задания функции
     QPushButton *removeBtn;
 
-protected:
-    void paintEvent(QPaintEvent *event);
-
-public:
     FunctionBox(QWidget *parent = nullptr);
-    MathExpression GetMathExpression()const;
+    MathExpression* GetMathExpression();
 
 signals:
     void elementRemoved(FunctionBox*);

@@ -17,12 +17,14 @@ MathExpression::MathExpression()
     {
         parameters[param] = 1.0;
     }
-
+    initialExpression="";
     infixExpression = "";
+    postfixExpression="";
 }
 
 MathExpression::MathExpression(QString expression): MathExpression()
 {
+    initialExpression = expression;
     infixExpression = " ";
     for(auto token: MathParser::CreateTokenList(expression))
     {
@@ -32,6 +34,11 @@ MathExpression::MathExpression(QString expression): MathExpression()
     infixExpression = SubstituteConstants(infixExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
     qDebug() << "Postfix expression: " << postfixExpression;
+}
+
+QString MathExpression::GetInitialExpression() const
+{
+    return initialExpression;
 }
 
 QString MathExpression::GetInfixExpression()const
@@ -58,6 +65,11 @@ void MathExpression::SetParameter(QString parameter, double value)
     }
 }
 
+QString MathExpression::GetParameterValue(QString parameter)const
+{
+    return QString().setNum(parameters[parameter]);
+}
+
 void MathExpression::SetParameters(double aValue, double bValue, double cValue, double dValue)
 {
     parameters["a"] = aValue;
@@ -69,6 +81,7 @@ void MathExpression::SetParameters(double aValue, double bValue, double cValue, 
 
 void MathExpression::SetExpression(QString expression)
 {
+    initialExpression = expression;
     infixExpression = " ";
     for(auto token: MathParser::CreateTokenList(expression))
     {
@@ -162,7 +175,8 @@ double MathExpression::GetMaximumVarValue()
 QDataStream& operator<<(QDataStream &stream, const MathExpression &expression)
 {
     // Inserting all info about math expression into output file
-    stream << expression.infixExpression << expression.postfixExpression <<
+    stream << expression.initialExpression <<
+              expression.infixExpression << expression.postfixExpression <<
               expression.parameters["a"] << expression.parameters["b"] <<
               expression.parameters["c"] << expression.parameters["d"] <<
               expression.minimumVarValue << expression.maximumVarValue;
@@ -171,7 +185,8 @@ QDataStream& operator<<(QDataStream &stream, const MathExpression &expression)
 
 QDataStream& operator>>(QDataStream &stream,MathExpression &expression)
 {
-    stream >> expression.infixExpression >> expression.postfixExpression >>
+    stream >> expression.initialExpression >>
+            expression.infixExpression >> expression.postfixExpression >>
             expression.parameters["a"] >> expression.parameters["b"] >>
             expression.parameters["c"] >> expression.parameters["d"] >>
             expression.minimumVarValue >> expression.maximumVarValue;

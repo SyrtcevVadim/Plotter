@@ -10,7 +10,7 @@
 class MathExpression
 {
 private:
-
+    QString initialExpression;
     /// Expression written in infix notation. Every constant inside it is replaced by it's value
     QString infixExpression;
     /// Expression written in postfix notation. Every parameter inside in is replaced by it's value
@@ -32,12 +32,16 @@ public:
     MathExpression(QString expression);
     /// Sets a value to the corresponding parameter
     void SetParameter(QString parameter, double value);
+
+    QString GetParameterValue(QString parameter)const;
+
     /// Sets values to the parameters
     void SetParameters(double aValue=1.0,double bValue=1.0, double cValue=1.0, double dValue=1.0);
     /// Sets a mathematical expression in infix notation
     void SetExpression(QString expression);
     /// Substitutes variables' values into a postfix expression and returns a result
     QString SubstituteVariableValue(const double varValue = 0.0);
+    QString GetInitialExpression()const;
     /// Returns mathematical expression in infix notation
     QString GetInfixExpression()const;
     /// Returns mathematical expression in postfix notation

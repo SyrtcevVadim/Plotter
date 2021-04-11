@@ -27,7 +27,9 @@ public:
     /// Moves widget to the (x,y) point
     void move(int x, int y);
 
-    void addNewWidget();
+    FunctionBox* addNewWidget();
+
+    void clear();
 
 private slots:
     void OnAddNewWidgetBtnClick();

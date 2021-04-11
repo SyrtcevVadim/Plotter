@@ -99,7 +99,6 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 {
     // При изменении математического выражения в поле ввода
     // меняем это выражение и внутри объекта
-    qDebug() << MathParser::CreateTokenList(str);
 
     // Проверяем введённое математическое выражение на корректность
     MathChecker checker(str);
@@ -134,8 +133,6 @@ void FunctionBox::OnAParamChanged(const QString &value)
     }
     errorText->clear();
     expression->SetParameter("a", value.toDouble());
-    qDebug() << "A"<<value;
-
 }
 
 void FunctionBox::OnBParamChanged(const QString &value)
@@ -147,7 +144,6 @@ void FunctionBox::OnBParamChanged(const QString &value)
     }
     errorText->clear();
     expression->SetParameter("b", value.toDouble());
-    qDebug() << "B"<<value;
 }
 
 void FunctionBox::OnCParamChanged(const QString &value)
@@ -159,7 +155,6 @@ void FunctionBox::OnCParamChanged(const QString &value)
     }
     errorText->clear();
     expression->SetParameter("c", value.toDouble());
-    qDebug() << "C"<<value;
 }
 
 void FunctionBox::OnDParamChanged(const QString &value)
@@ -171,7 +166,6 @@ void FunctionBox::OnDParamChanged(const QString &value)
     }
     errorText->clear();
     expression->SetParameter("d", value.toDouble());
-    qDebug() << "A"<<value;
 }
 
 void FunctionBox::OnMinimumVarValueChanged(const QString &value)
@@ -207,9 +201,9 @@ void FunctionBox::OnMaximumVarValueChanged(const QString &value)
     }
 }
 
-MathExpression FunctionBox::GetMathExpression() const
+MathExpression* FunctionBox::GetMathExpression()
 {
-    return *expression;
+    return expression;
 }
 
 void FunctionBox::OnRemoveBtnClick()
