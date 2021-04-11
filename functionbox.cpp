@@ -39,6 +39,8 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     errorText = new QLabel();
 
     removeBtn = new QPushButton();
+    QPixmap removeImage(":/images/Images/RemoveWidgetImage.png");
+    removeBtn->setIcon(removeImage);
 
     QGridLayout *grid = new QGridLayout();
 

@@ -15,8 +15,13 @@ private:
     QVBoxLayout *listLayout;
     /// Button for adding new elements of T widget
     QPushButton *addNewWidgetBtn;
+    /// Opens the file explorer to save the content of list of widgets
+    QPushButton *saveToFileBtn;
+    /// Opens the file explorer to load the content of saved list of widgets
+    QPushButton *loadFromFileBtn;
     /// Container for storing widgets
     QList<T> *listOfWidgets;
+
 
 
 public:
@@ -38,7 +43,17 @@ WidgetList<T>::WidgetList(int height, QWidget *parent) : QWidget(parent)
     scrollArea->setFixedSize(350, height);
     scrollArea->setWidget(listBody);
 
+
     addNewWidgetBtn = new QPushButton();
+    saveToFileBtn = new QPushButton();
+    loadFromFileBtn = new QPushButton();
+    // Sets images to buttons
+    QPixmap addNewWidgetIcon(":/images/Images/AddWidgetImage.png");
+    addNewWidgetBtn->setIcon(addNewWidgetIcon);
+    QPixmap saveToFileIcon(":/images/Images/SaveImage.png");
+    saveToFileBtn->setIcon(saveToFileIcon);
+    QPixmap loadFromFileIcon(":/images/Images/LoadImage.png");
+    loadFromFileBtn->setIcon(loadFromFileIcon);
 
     // Test data
     FunctionBox *box1 = new FunctionBox();
@@ -57,6 +72,8 @@ WidgetList<T>::WidgetList(int height, QWidget *parent) : QWidget(parent)
     btnLayout->setAlignment(Qt::AlignLeft);
     mainLayout->addLayout(btnLayout);
     btnLayout->addWidget(addNewWidgetBtn);
+    btnLayout->addWidget(saveToFileBtn);
+    btnLayout->addWidget(loadFromFileBtn);
     mainLayout->addWidget(scrollArea);
 
     setLayout(mainLayout);

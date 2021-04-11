@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>Images/AddWidgetImage.png</file>
+        <file>Images/RemoveWidgetImage.png</file>
+        <file>Images/SaveImage.png</file>
+        <file>Images/LoadImage.png</file>
+    </qresource>
+</RCC>
