@@ -12,7 +12,6 @@
 MathExpression::MathExpression()
 {
     // Sets 1 as an initial value of the parameters
-
     for(auto param: MathHelper::parameters)
     {
         parameters[param] = 1.0;
@@ -24,16 +23,14 @@ MathExpression::MathExpression()
 
 MathExpression::MathExpression(QString expression): MathExpression()
 {
-    initialExpression = expression;
+    initialExpression = expression.trimmed();
     infixExpression = " ";
     for(auto token: MathParser::CreateTokenList(expression))
     {
         infixExpression += token + " ";
     }
-    qDebug() <<"Infix expression: " << infixExpression;
     infixExpression = SubstituteConstants(infixExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
-    qDebug() << "Postfix expression: " << postfixExpression;
 }
 
 QString MathExpression::GetInitialExpression() const
@@ -87,17 +84,14 @@ void MathExpression::SetExpression(QString expression)
     {
         infixExpression += token + " ";
     }
-    qDebug() << "Infix expression: " << infixExpression;
     infixExpression = SubstituteConstants(infixExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
-    qDebug() << "Postfix expression: " << postfixExpression;
-    //qDebug() << "SET EXPRESION: INFIX EXPRESSION: "<<infixExpression<<"| POSTFIX EXPRESSION: "<<postfixExpression;
 }
 
 QString MathExpression::SubstituteConstants(QString infixExpression)
 {
     QString resultExpression{""};
-    for(auto key: MathParser::CreateTokenList(infixExpression))
+    for(auto key: (infixExpression.trimmed()).split(" "))
     {
         if(MathHelper::constants.contains(key))
         {
@@ -125,7 +119,7 @@ QString MathExpression::SubstituteParameters(QString postfixExpression)
     {
         if(parameters.contains(key))
         {
-            resultExpression += QString().setNum(parameters[key]) +" ";
+            resultExpression += GetParameterValue(key) +" ";
         }
         else
         {

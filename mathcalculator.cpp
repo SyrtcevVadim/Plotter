@@ -186,9 +186,8 @@ double MathCalculator::Calculate(double varValue)
     QString expressionWithSubstitutedValues(expression.SubstituteVariableValue(varValue));
     // For intermediate values
     QStack<QString> stack;
-    //qDebug() << "expression: " << expressionWithSubstitutedValues.split(" ");
-    // Itarate through the postfixFormExpression
 
+    // Iterate through the postfixFormExpression
     for(auto token: (expressionWithSubstitutedValues.trimmed()).split(" "))
     {
         if(IsTokenNumber(token))
@@ -213,7 +212,6 @@ double MathCalculator::Calculate(double varValue)
             else
             {
                 qDebug() << "NOT ENOUGH ARGUMENTS FOR FUNCTION: "<< token;
-                throw "Not enough operands for "+token+" function";
             }
         }
         //qDebug() << "stack: "<< stack;

@@ -128,7 +128,7 @@ bool MathHelper::IsTokenFunction(const QString &expression)
 
 bool MathHelper::HasConstants(const QString &expression)
 {
-    for(auto key: MathParser::CreateTokenList(expression))
+    for(auto key: (expression.trimmed()).split(" "))
     {
         if(constants.contains(key))
         {

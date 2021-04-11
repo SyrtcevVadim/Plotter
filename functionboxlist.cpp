@@ -31,9 +31,6 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
         addNewWidget();
     }
 
-    // necessary command after every insertion of widget
-    listBody->adjustSize();
-
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
     QHBoxLayout *btnLayout = new QHBoxLayout();
@@ -45,8 +42,8 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     mainLayout->addWidget(scrollArea);
 
     setLayout(mainLayout);
-    // Linking signals with slots
 
+    // Linking signals with slots
     connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(OnSaveToFileBtnClick()));
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(OnLoadFromFileBtnClick()));
     connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(OnAddNewWidgetBtnClick()));
@@ -90,7 +87,6 @@ void FunctionBoxList::OnSaveToFileBtnClick()
     for(auto *expression: listOfWidgets)
     {
         outStream << *expression->GetMathExpression();
-        qDebug() << *expression->GetMathExpression();
     }
     outputFile.close();
 }
@@ -109,7 +105,6 @@ void FunctionBoxList::OnLoadFromFileBtnClick()
     {
         FunctionBox *currBox = addNewWidget();
         MathExpression *currExp = currBox->GetMathExpression();
-        qDebug() << *currExp;
         in >> *currExp;
         currBox->functionBody->setText(currExp->GetInitialExpression());
         currBox->aParamBox->setText(currExp->GetParameterValue("a"));
@@ -120,7 +115,6 @@ void FunctionBoxList::OnLoadFromFileBtnClick()
         currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
         currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
     }
-    qDebug() << "Loading is finished";
     inputFile.close();
 }
 

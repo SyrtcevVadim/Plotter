@@ -36,11 +36,22 @@ QMap<QString, int> MathFormConverter::precedence({pair<QString, int>("abs", 1),
 
 bool MathFormConverter::IsTokenNumber(QString &token)
 {
-    if(!MathHelper::IsTokenOperation(token) && token[0].isDigit())
+    if(token.isEmpty())
     {
-        return true;
+        return false;
     }
-    return false;
+    if(MathHelper::operations.contains(token))
+    {
+        return false;
+    }
+    for(auto symbol: token)
+    {
+        if(symbol != '-' && symbol != '+' && !symbol.isDigit() && symbol != ".")
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 bool MathFormConverter::IsTokenSeparator(QString &token)
@@ -58,9 +69,9 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     QStack<QString> stack;
     QString resultStrExpression{" "};
     QString previousToken{""};
+    //qDebug() << MathParser::CreateTokenList(expression);
     // Iterates through the expression
-
-    for(auto token: (expression.trimmed()).split(" "))
+    for(auto token: MathParser::CreateTokenList(expression))
     {
         // Processing unary plus and minus
         if((token == "+" || token == "-") && (previousToken.isEmpty() || MathHelper::IsTokenOpeningBracket(previousToken) || IsTokenSeparator(previousToken) ||
@@ -160,5 +171,6 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     {
         resultStrExpression += stack.pop() + " ";
     }
+    //qDebug() << resultStrExpression;
     return resultStrExpression.trimmed();
 }

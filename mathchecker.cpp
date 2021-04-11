@@ -5,6 +5,7 @@
 #include<QStack>
 #include<QString>
 #include<QDebug>
+#include<QVector>
 
 
 
@@ -25,7 +26,7 @@ bool MathChecker::IsTokenNumber(const QString &token)
     }
     for(auto symbol: token)
     {
-        if(symbol != '-' && symbol != '+' && !symbol.isDigit())
+        if(symbol != '-' && symbol != '+' && !symbol.isDigit() && symbol!=".")
         {
             return false;
         }
@@ -144,7 +145,7 @@ bool MathChecker::AreArgumentsCorresepond()
         }
         previousToken = token;
     }
-    QVector vec{expression.toVector()};
+    QVector<QString> vec{expression.toVector()};
 
     // Checking of correct arguments for binary/unary operations
     for(int i{0}; i < vec.length(); i++)

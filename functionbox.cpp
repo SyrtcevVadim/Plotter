@@ -54,8 +54,6 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     minimumVarValueBox->setText("-10");
     maximumVarValueBox->setText("10");
 
-    qDebug() << expression->GetMinimumVarValue() << " " << expression->GetMaximumVarValue();
-
     QGridLayout *grid = new QGridLayout();
 
     grid->addWidget(removeBtn, 3, 8);
@@ -82,8 +80,6 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     grid->addWidget(dParamBox,3,4);
 
     setLayout(grid);
-
-
 }
 
 void FunctionBox::paintEvent(QPaintEvent *event)
