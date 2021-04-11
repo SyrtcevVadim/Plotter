@@ -35,7 +35,6 @@ bool MathChecker::IsTokenNumber(const QString &token)
 
 bool MathChecker::AreAllTokensCorrect()
 {
-    qDebug() << "Checking for token correctness";
     for(auto token: expression)
     {
         if(!MathHelper::correctTokens.contains(token) && !IsTokenNumber(token))
@@ -51,7 +50,6 @@ bool MathChecker::AreAllTokensCorrect()
 
 bool MathChecker::AreBracketsCorrespond()
 {
-    qDebug() << "Checking for correct brackets";
     QStack<QString> stack;
     for(auto token: expression)
     {

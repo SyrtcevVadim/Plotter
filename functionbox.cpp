@@ -105,14 +105,12 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 
     if(!(str.trimmed()).isEmpty())
     {
-        qDebug() << "Token list isn't empty";
         if(!checker.AreAllTokensCorrect() || !checker.AreBracketsCorrespond() || !checker.AreArgumentsCorresepond())
         {
             errorText->setText(checker.GetErrorMessage());
         }
         else
         {
-            qDebug() << "Math expression is correct!";
             errorText->clear();
             expression->SetExpression(str);
         }
@@ -209,5 +207,4 @@ MathExpression* FunctionBox::GetMathExpression()
 void FunctionBox::OnRemoveBtnClick()
 {
     emit(elementRemoved(this));
-    qDebug()<<"REMOVED BUTTON IS PRESSED";
 }

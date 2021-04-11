@@ -74,9 +74,9 @@ void FunctionBoxList::clear()
     {
         listOfWidgets.takeAt(listOfWidgets.indexOf(item));
         listLayout->takeAt(listLayout->indexOf(item));
+        listBody->adjustSize();
+        delete item;
     }
-    listOfWidgets.clear();
-    listBody->adjustSize();
 }
 
 void FunctionBoxList::OnSaveToFileBtnClick()
