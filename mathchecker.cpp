@@ -13,7 +13,7 @@ MathChecker::MathChecker(const QString &expression)
     this->expression = MathParser::CreateTokenList(expression);
 }
 
-bool MathChecker::IsTokenNumber(QString &token)const
+bool MathChecker::IsTokenNumber(const QString &token)
 {
     if(token.isEmpty())
     {
@@ -118,7 +118,6 @@ QString MathChecker::GetErrorMessage() const
 {
     return this->errorMessage;
 }
-
 
 bool MathChecker::AreArgumentsCorresepond()
 {

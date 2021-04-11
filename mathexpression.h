@@ -16,6 +16,10 @@ private:
     /// Stores parameters' values
     QMap<QString, double> parameters;
 
+    double minimumVarValue;
+
+    double maximumVarValue;
+
     /// Replaces constants by it's value recursively
     QString SubstituteConstants(QString infixExpression);
     /// Replaces parameters by it's values
@@ -36,6 +40,14 @@ public:
     QString GetInfixExpression()const;
     /// Returns mathematical expression in postfix notation
     QString GetPostfixExpression()const;
+    /// Sets the minimum possible value of variable
+    void SetMinimumVarValue(double value);
+    /// Returns the minimum possible value of variable
+    double GetMinimumVarValue();
+    /// Sets the maximum possible value of variable
+    void SetMaximumVarValue(double value);
+    /// Returns the maximum possible value of variable
+    double GetMaximumVarValue();
 
 };
 

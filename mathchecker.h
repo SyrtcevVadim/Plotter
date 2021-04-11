@@ -10,14 +10,14 @@ private:
     /// Stores mathematical expression it checks
     QStringList expression;
     /// Checks whether token is decimal number or not
-    bool IsTokenNumber(QString &token)const;
+
     /// Stores incorrect token after executing check-methods
     QString errorMessage;
 
 public:
     MathChecker() = default;
     MathChecker(const QString &expression);
-
+    static bool IsTokenNumber(const QString &token);
     /// Checks whether all tokens in the expression are correct or not. If expression contains incorrect token
     /// function returns false and that incorrect token is stored at incorrectToken field
     bool AreAllTokensCorrect();

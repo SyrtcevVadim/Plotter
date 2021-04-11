@@ -133,3 +133,23 @@ QString MathExpression::SubstituteVariableValue(const double varValue)
     }
     return resultExpression.trimmed();
 }
+
+void MathExpression::SetMinimumVarValue(double value)
+{
+    minimumVarValue = value;
+}
+
+double MathExpression::GetMinimumVarValue()
+{
+    return minimumVarValue;
+}
+
+void MathExpression::SetMaximumVarValue(double value)
+{
+    maximumVarValue = value;
+}
+
+double MathExpression::GetMaximumVarValue()
+{
+    return maximumVarValue;
+}

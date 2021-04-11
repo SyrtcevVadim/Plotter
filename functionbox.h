@@ -59,12 +59,12 @@ public:
 
 private slots:
     void OnMathExpressionChanged(const QString &str);
-    /*
-    void OnAParamChanged();
-    void OnBParamChanged();
-    void OnCParamChanged();
-    void OnDParamChanged();
-    */
+    void OnAParamChanged(const QString &value);
+    void OnBParamChanged(const QString &value);
+    void OnCParamChanged(const QString &value);
+    void OnDParamChanged(const QString &value);
+    void OnMinimumVarValueChanged(const QString &value);
+    void OnMaximumVarValueChanged(const QString &value);
 
 };
 
