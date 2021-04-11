@@ -52,6 +52,9 @@ public:
     FunctionBox(QWidget *parent = nullptr);
     MathExpression GetMathExpression()const;
 
+signals:
+    void elementRemoved(FunctionBox*);
+
 private slots:
     void OnMathExpressionChanged(const QString &str);
     void OnAParamChanged(const QString &value);
@@ -60,6 +63,7 @@ private slots:
     void OnDParamChanged(const QString &value);
     void OnMinimumVarValueChanged(const QString &value);
     void OnMaximumVarValueChanged(const QString &value);
+    void OnRemoveBtnClick();
 
 };
 

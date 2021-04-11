@@ -27,10 +27,13 @@ public:
     /// Moves widget to the (x,y) point
     void move(int x, int y);
 
+    void addNewWidget();
+
 private slots:
     void OnAddNewWidgetBtnClick();
     void OnSaveToFileBtnClick();
     void OnLoadFromFileBtnClick();
+    void OnRemoveBtnClick(FunctionBox*);
 
 };
 

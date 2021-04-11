@@ -26,21 +26,9 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
     // Test data
-    FunctionBox *box1 = new FunctionBox();
-    FunctionBox *box2 = new FunctionBox();
-    FunctionBox *box3 = new FunctionBox();
-
-    listLayout->addWidget(box1);
-    listLayout->addWidget(box2);
-    listLayout->addWidget(box3);
-
-    listOfWidgets.append(box1);
-    listOfWidgets.append(box2);
-    listOfWidgets.append(box3);
-
-    for(FunctionBox *item: listOfWidgets)
+    for(int i{0}; i < 5; i++)
     {
-        qDebug() << item->GetMathExpression();
+        addNewWidget();
     }
 
     // necessary command after every insertion of widget
@@ -69,6 +57,16 @@ void FunctionBoxList::move(int x, int y)
     scrollArea->move(x,y);
 }
 
+void FunctionBoxList::addNewWidget()
+{
+    FunctionBox *newBox = new FunctionBox();
+    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(OnRemoveBtnClick(FunctionBox*)));
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
+    listLayout->addWidget(newBox);
+    listOfWidgets.append(newBox);
+
+}
+
 void FunctionBoxList::OnSaveToFileBtnClick()
 {
     QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Save data to output file");
@@ -82,7 +80,7 @@ void FunctionBoxList::OnSaveToFileBtnClick()
     {
         outStream << expression->GetMathExpression();
     }
-    qDebug() << "Info stored into " << pathToOutputFile <<" file!";
+    qDebug() << "Info is stored into " << pathToOutputFile <<" file!";
     outputFile.close();
 }
 
@@ -97,5 +95,14 @@ void FunctionBoxList::OnLoadFromFileBtnClick()
 
 void FunctionBoxList::OnAddNewWidgetBtnClick()
 {
+    addNewWidget();
+}
 
+void FunctionBoxList::OnRemoveBtnClick(FunctionBox *box)
+{
+    qDebug() << "REMOVING EXISTING BOX!";
+    listOfWidgets.takeAt(listOfWidgets.indexOf(box));
+    delete listLayout->takeAt(listLayout->indexOf(box));
+    delete box;
+    listBody->adjustSize();
 }

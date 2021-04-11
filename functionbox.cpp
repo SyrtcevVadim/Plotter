@@ -48,6 +48,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     QObject::connect(dParamBox, SIGNAL(textChanged(const QString)), this, SLOT(OnDParamChanged(const QString)));
     QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(OnMinimumVarValueChanged(const QString)));
     QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(OnMaximumVarValueChanged(const QString)));
+    connect(removeBtn, SIGNAL(pressed()), this, SLOT(OnRemoveBtnClick()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -181,7 +182,6 @@ void FunctionBox::OnMinimumVarValueChanged(const QString &value)
     }
     errorText->clear();
     expression->SetMinimumVarValue(value.toDouble());
-    qDebug() << "min: " << expression->GetMinimumVarValue() << " " << "max: " << expression->GetMaximumVarValue();
     // Minimum variable value can't exceeds the maximum one
     if(expression->GetMinimumVarValue() > expression->GetMaximumVarValue())
     {
@@ -199,7 +199,6 @@ void FunctionBox::OnMaximumVarValueChanged(const QString &value)
     }
     errorText->clear();
     expression->SetMaximumVarValue(value.toDouble());
-    qDebug() << "min: " << expression->GetMinimumVarValue() << " " << "max: " << expression->GetMaximumVarValue();
     // Maximum variable value have to be greater than the minimum one
     if(expression->GetMaximumVarValue() < expression->GetMinimumVarValue())
     {
@@ -210,4 +209,10 @@ void FunctionBox::OnMaximumVarValueChanged(const QString &value)
 MathExpression FunctionBox::GetMathExpression() const
 {
     return *expression;
+}
+
+void FunctionBox::OnRemoveBtnClick()
+{
+    emit(elementRemoved(this));
+    qDebug()<<"REMOVED BUTTON IS PRESSED";
 }
