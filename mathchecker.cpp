@@ -151,10 +151,11 @@ bool MathChecker::AreArgumentsCorresepond()
         if(MathHelper::operations.contains(vec[i]))
         {
 
-            // Checks left operand
+            // Checks the left operand
             if(0 > i-1 || !(MathHelper::IsTokenClosingBracket(vec[i-1]) || IsTokenNumber(vec[i-1]) ||
                             MathHelper::IsTokenParameter(vec[i-1]) ||
-                            MathHelper::IsTokenConstant(vec[i-1])))
+                            MathHelper::IsTokenConstant(vec[i-1])||
+                            MathHelper::IsTokenVariable(vec[i-1])))
             {
                 if(vec[i] != "+" && vec[i] != "-")
                 {
@@ -162,9 +163,11 @@ bool MathChecker::AreArgumentsCorresepond()
                     return false;
                 }
             }
+            //Checks the right operand
             if(vec.length() <= i+1 || !(MathHelper::IsTokenFunction(vec[i+1]) || IsTokenNumber(vec[i+1]) ||
                                         MathHelper::IsTokenConstant(vec[i+1]) ||
-                                        MathHelper::IsTokenParameter(vec[i+1])))
+                                        MathHelper::IsTokenParameter(vec[i+1])||
+                                        MathHelper::IsTokenVariable(vec[i+1])))
             {
                 // In case: + + - *
                 errorMessage = "Missed right argument of " + vec[i] + " operation!";

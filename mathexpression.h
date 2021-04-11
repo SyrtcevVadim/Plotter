@@ -3,6 +3,8 @@
 #include<QString>
 #include<QMap>
 #include<QStringList>
+#include<QDebug>
+#include<QDataStream>
 #include<QMetaType>
 
 class MathExpression
@@ -49,6 +51,9 @@ public:
     /// Returns the maximum possible value of variable
     double GetMaximumVarValue();
 
+    friend QDataStream& operator<<(QDataStream &stream, const MathExpression &expression);
+    friend QDataStream& operator>>(QDataStream &stream, MathExpression &expression);
+    friend QDebug operator<<(QDebug stream, const MathExpression &expression);
 };
 
 Q_DECLARE_METATYPE(MathExpression)

@@ -206,3 +206,8 @@ void FunctionBox::OnMaximumVarValueChanged(const QString &value)
         errorText->setText("Minimum possible varialbe's value is greater than the maximum one!");
     }
 }
+
+MathExpression FunctionBox::GetMathExpression() const
+{
+    return *expression;
+}

@@ -10,18 +10,14 @@ class FunctionBox : public QWidget
 private:
     /// Высота полей ввода
     static int lineEditHeight;
-
     /// Математическое выражение, записанное в поле ввода
     MathExpression *expression;
-
     /// Метка для выражения "y="
     QLabel *functionName;
     /// Поле ввода тела функции
     QLineEdit *functionBody;
-
     /// Метка для отображения ошибок
     QLabel *errorText;
-
     /// Отображает название параметра a
     QLabel *aLbl;
     /// Поле ввода значения параметра а
@@ -38,10 +34,8 @@ private:
     QLabel *dLbl;
     /// Поле ввода значения параметра d
     QLineEdit *dParamBox;
-
     /// Отображает название переменной
     QLabel *xLbl;
-
     /// Поле для ввода минимально возможного значения
     /// переменной x
     QLineEdit *minimumVarValueBox;
@@ -55,7 +49,8 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 public:
-    explicit FunctionBox(QWidget *parent = nullptr);
+    FunctionBox(QWidget *parent = nullptr);
+    MathExpression GetMathExpression()const;
 
 private slots:
     void OnMathExpressionChanged(const QString &str);

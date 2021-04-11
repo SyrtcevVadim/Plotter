@@ -3,6 +3,7 @@
 #include "mathparser.h"
 #include "mathformconverter.h"
 #include<QMap>
+#include<QDataStream>
 #include<QDebug>
 #include<QString>
 
@@ -152,4 +153,31 @@ void MathExpression::SetMaximumVarValue(double value)
 double MathExpression::GetMaximumVarValue()
 {
     return maximumVarValue;
+}
+
+QDataStream& operator<<(QDataStream &stream, const MathExpression &expression)
+{
+    // Inserting all info about math expression into output file
+    stream << expression.infixExpression << expression.postfixExpression <<
+              expression.parameters["a"] << expression.parameters["b"] <<
+              expression.parameters["c"] << expression.parameters["d"] <<
+              expression.minimumVarValue << expression.maximumVarValue;
+    return stream;
+}
+
+QDataStream& operator>>(QDataStream &stream,MathExpression &expression)
+{
+    stream >> expression.infixExpression >> expression.postfixExpression >>
+            expression.parameters["a"] >> expression.parameters["b"] >>
+            expression.parameters["c"] >> expression.parameters["d"] >>
+            expression.minimumVarValue >> expression.maximumVarValue;
+    return stream;
+}
+
+QDebug operator<<(QDebug stream, const MathExpression &expression)
+{
+    stream << "Infix: " << expression.GetInfixExpression() <<"\nPostfix: " << expression.GetPostfixExpression()<< "\nA: " <<
+              expression.parameters["a"] << "| B: " << expression.parameters["b"] <<"| C: "<<expression.parameters["c"] <<
+              "| D: "<<expression.parameters["d"] <<"\nMinXVal: " << expression.minimumVarValue << "| MaxXVal: "<<expression.maximumVarValue;
+    return stream;
 }
