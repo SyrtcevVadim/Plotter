@@ -27,7 +27,7 @@ public:
 
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
     FunctionBox* addNewWidget();
-
+    int getListOfWidgetsLength()const;
 
     void clear();
 public slots:

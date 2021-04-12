@@ -23,4 +23,29 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     fileMenu->addAction("&Сохранить список функций", functionBoxList, SLOT(SaveFunctionListToFile()), Qt::CTRL+Qt::Key_S);
     fileMenu->addSeparator();
     fileMenu->addAction("&Выйти", this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
+
+
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    // If user worked with several function before closing the application
+    if(functionBoxList->getListOfWidgetsLength() > 0)
+    {
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение сохранения данных перед выходом",
+                                              "Вы хотите сохранить список функций в файл перед выходом из программы?",
+                                              QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        int userAnswer = msgBox->exec();
+        delete msgBox;
+
+        if(userAnswer == QMessageBox::Yes)
+        {
+            // Open the QFileDialog to store info to output file
+            functionBoxList->SaveFunctionListToFile();
+        }
+        else if(userAnswer==QMessageBox::Cancel)
+        {
+            event->ignore();
+        }
+    }
 }

@@ -20,9 +20,12 @@ private:
     // FunctionBoxList object
     FunctionBoxList *functionBoxList;
 
+
+protected:
+    void closeEvent(QCloseEvent *event);
+
 public:
     explicit MainWindow(QWidget *parent = nullptr);
-
 
 };
 

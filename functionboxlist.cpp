@@ -82,9 +82,22 @@ void FunctionBoxList::clear()
 void FunctionBoxList::Clear()
 {
     // TODO добавить предупреждение
-    clear();
+    QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка функций",
+                                          "Вы точно хотите удалить все функции из списка?",
+                                          QMessageBox::Yes | QMessageBox::No);
+    int result = msgBox->exec();
+    if(result==QMessageBox::Yes)
+    {
+        clear();
+    }
+
 }
 
+
+int FunctionBoxList::getListOfWidgetsLength() const
+{
+    return listOfWidgets.length();
+}
 
 void FunctionBoxList::SaveFunctionListToFile()
 {
