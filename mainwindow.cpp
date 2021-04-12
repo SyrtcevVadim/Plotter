@@ -3,8 +3,11 @@
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     QSize displaySize = QGuiApplication::screens()[0]->availableSize();
-    functionBoxList = new FunctionBoxList(500,this);
+    functionBoxList = new FunctionBoxList(500, this);
     functionBoxList->move(10, 50);
+
+    constantBoxList = new ConstantBoxList(500, this);
+    constantBoxList->move(400,50);
     plotter = new Plotter(new QPoint(displaySize.width()-910,50), new QSize(900,900), this);
 
 
@@ -29,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // If user worked with several function before closing the application
+    // If user have worked with several function before closing the application
     if(functionBoxList->getListOfWidgetsLength() > 0)
     {
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение сохранения данных перед выходом",

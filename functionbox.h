@@ -58,14 +58,14 @@ signals:
     void elementRemoved(FunctionBox*);
 
 private slots:
-    void OnMathExpressionChanged(const QString &str);
-    void OnAParamChanged(const QString &value);
-    void OnBParamChanged(const QString &value);
-    void OnCParamChanged(const QString &value);
-    void OnDParamChanged(const QString &value);
-    void OnMinimumVarValueChanged(const QString &value);
-    void OnMaximumVarValueChanged(const QString &value);
-    void OnRemoveBtnClick();
+    void MathExpressionChanged(const QString &str);
+    void AParamChanged(const QString &value);
+    void BParamChanged(const QString &value);
+    void CParamChanged(const QString &value);
+    void DParamChanged(const QString &value);
+    void MinimumVarValueChanged(const QString &value);
+    void MaximumVarValueChanged(const QString &value);
+    void RemoveBtnClick();
 
 };
 

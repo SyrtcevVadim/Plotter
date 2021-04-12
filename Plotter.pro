@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     constantbox.cpp \
+    constantboxlist.cpp \
     functionbox.cpp \
     functionboxlist.cpp \
     main.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     constantbox.h \
+    constantboxlist.h \
     functionbox.h \
     functionboxlist.h \
     mainwindow.h \

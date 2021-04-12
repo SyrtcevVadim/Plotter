@@ -1,7 +1,7 @@
-#include "functionboxlist.h"
+#include "constantboxlist.h"
 #include<QtWidgets>
 
-FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
+ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
 {
     listBody = new QWidget();
     listBody->setFixedWidth(330);
@@ -15,11 +15,11 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
 
 
     addNewWidgetBtn = new QPushButton();
-    addNewWidgetBtn->setToolTip("Добавить новый блок ввода функции");
+    addNewWidgetBtn->setToolTip("Добавить новый блок ввода констант");
     saveToFileBtn = new QPushButton();
-    saveToFileBtn->setToolTip("Сохранить список функций в файл");
+    saveToFileBtn->setToolTip("Сохранить список констант в файл");
     loadFromFileBtn = new QPushButton();
-    loadFromFileBtn->setToolTip("Загрузить список функций из файла");
+    loadFromFileBtn->setToolTip("Загрузить список констант из файла");
     clearAllContentBtn = new QPushButton();
     clearAllContentBtn->setToolTip("Очистить список функций");
 
@@ -57,20 +57,21 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(Clear()));
 }
 
-FunctionBox* FunctionBoxList::addNewWidget()
+ConstantBox* ConstantBoxList::addNewWidget()
 {
-    FunctionBox *newBox = new FunctionBox();
-    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(RemoveWidget(FunctionBox*)));
+    ConstantBox *newBox = new ConstantBox();
+    connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(RemoveWidget(ConstantBox*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
     return newBox;
 }
 
-void FunctionBoxList::clear()
+
+void ConstantBoxList::clear()
 {
-    QList<FunctionBox*> temp(listOfWidgets);
-    for(FunctionBox *item: temp)
+    QList<ConstantBox*> temp(listOfWidgets);
+    for(ConstantBox *item: temp)
     {
         listOfWidgets.takeAt(listOfWidgets.indexOf(item));
         listLayout->takeAt(listLayout->indexOf(item));
@@ -79,11 +80,11 @@ void FunctionBoxList::clear()
     }
 }
 
-void FunctionBoxList::Clear()
+void ConstantBoxList::Clear()
 {
     // TODO добавить предупреждение
-    QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка функций",
-                                          "Вы точно хотите удалить все функции из списка?",
+    QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка констант",
+                                          "Вы точно хотите удалить все константы из списка?",
                                           QMessageBox::Yes | QMessageBox::No);
     int result = msgBox->exec();
     if(result==QMessageBox::Yes)
@@ -94,14 +95,14 @@ void FunctionBoxList::Clear()
 }
 
 
-int FunctionBoxList::getListOfWidgetsLength() const
+int ConstantBoxList::getListOfWidgetsLength() const
 {
     return listOfWidgets.length();
 }
 
-void FunctionBoxList::SaveFunctionListToFile()
+void ConstantBoxList::SaveFunctionListToFile()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "functions.izum","Izum files (*.izum *.dat)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить константы в файл", "constants.izum","Izum files (*.izum *.dat)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -109,12 +110,12 @@ void FunctionBoxList::SaveFunctionListToFile()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        outStream << *expression->GetMathExpression();
+        // TODO
     }
     outputFile.close();
 }
 
-void FunctionBoxList::LoadFunctionListFromFile()
+void ConstantBoxList::LoadFunctionListFromFile()
 {
     QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izum *.dat");
     if(!pathToInputFile.isEmpty())
@@ -128,28 +129,18 @@ void FunctionBoxList::LoadFunctionListFromFile()
         in >> length;
         for(int i{0}; i < length; i++)
         {
-            FunctionBox *currBox = addNewWidget();
-            MathExpression *currExp = currBox->GetMathExpression();
-            in >> *currExp;
-            currBox->functionBody->setText(currExp->GetInitialExpression());
-            currBox->aParamBox->setText(currExp->GetParameterValue("a"));
-            currBox->bParamBox->setText(currExp->GetParameterValue("b"));
-            currBox->cParamBox->setText(currExp->GetParameterValue("c"));
-            currBox->dParamBox->setText(currExp->GetParameterValue("d"));
-
-            currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
-            currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+            // TODO
         }
         inputFile.close();
     }
 }
 
-void FunctionBoxList::AddNewWidgetToFunctionList()
+void ConstantBoxList::AddNewWidgetToFunctionList()
 {
     addNewWidget();
 }
 
-void FunctionBoxList::RemoveWidget(FunctionBox *box)
+void ConstantBoxList::RemoveWidget(ConstantBox *box)
 {
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));

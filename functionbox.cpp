@@ -50,14 +50,14 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     removeBtn->setIcon(removeImage);
 
     // Соединяем сигналы с обработчиками
-    QObject::connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(OnMathExpressionChanged(const QString)));
-    QObject::connect(aParamBox, SIGNAL(textChanged(const QString)), this, SLOT(OnAParamChanged(const QString)));
-    QObject::connect(bParamBox, SIGNAL(textChanged(const QString)), this, SLOT(OnBParamChanged(const QString)));
-    QObject::connect(cParamBox, SIGNAL(textChanged(const QString)), this, SLOT(OnCParamChanged(const QString)));
-    QObject::connect(dParamBox, SIGNAL(textChanged(const QString)), this, SLOT(OnDParamChanged(const QString)));
-    QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(OnMinimumVarValueChanged(const QString)));
-    QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(OnMaximumVarValueChanged(const QString)));
-    connect(removeBtn, SIGNAL(pressed()), this, SLOT(OnRemoveBtnClick()));
+    QObject::connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(MathExpressionChanged(const QString)));
+    QObject::connect(aParamBox, SIGNAL(textChanged(const QString)), this, SLOT(AParamChanged(const QString)));
+    QObject::connect(bParamBox, SIGNAL(textChanged(const QString)), this, SLOT(BParamChanged(const QString)));
+    QObject::connect(cParamBox, SIGNAL(textChanged(const QString)), this, SLOT(CParamChanged(const QString)));
+    QObject::connect(dParamBox, SIGNAL(textChanged(const QString)), this, SLOT(DParamChanged(const QString)));
+    QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(MinimumVarValueChanged(const QString)));
+    QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(MaximumVarValueChanged(const QString)));
+    connect(removeBtn, SIGNAL(pressed()), this, SLOT(RemoveBtnClick()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -100,7 +100,7 @@ void FunctionBox::paintEvent(QPaintEvent *event)
     painter.drawRect(0,0, width()-5, height()-5);
 }
 
-void FunctionBox::OnMathExpressionChanged(const QString &str)
+void FunctionBox::MathExpressionChanged(const QString &str)
 {
     // При изменении математического выражения в поле ввода
     // меняем это выражение и внутри объекта
@@ -127,7 +127,7 @@ void FunctionBox::OnMathExpressionChanged(const QString &str)
 
 }
 
-void FunctionBox::OnAParamChanged(const QString &value)
+void FunctionBox::AParamChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -138,7 +138,7 @@ void FunctionBox::OnAParamChanged(const QString &value)
     expression->SetParameter("a", value.toDouble());
 }
 
-void FunctionBox::OnBParamChanged(const QString &value)
+void FunctionBox::BParamChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -149,7 +149,7 @@ void FunctionBox::OnBParamChanged(const QString &value)
     expression->SetParameter("b", value.toDouble());
 }
 
-void FunctionBox::OnCParamChanged(const QString &value)
+void FunctionBox::CParamChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -160,7 +160,7 @@ void FunctionBox::OnCParamChanged(const QString &value)
     expression->SetParameter("c", value.toDouble());
 }
 
-void FunctionBox::OnDParamChanged(const QString &value)
+void FunctionBox::DParamChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -171,7 +171,7 @@ void FunctionBox::OnDParamChanged(const QString &value)
     expression->SetParameter("d", value.toDouble());
 }
 
-void FunctionBox::OnMinimumVarValueChanged(const QString &value)
+void FunctionBox::MinimumVarValueChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -188,7 +188,7 @@ void FunctionBox::OnMinimumVarValueChanged(const QString &value)
 
 }
 
-void FunctionBox::OnMaximumVarValueChanged(const QString &value)
+void FunctionBox::MaximumVarValueChanged(const QString &value)
 {
     if(!MathChecker::IsTokenNumber(value))
     {
@@ -209,7 +209,7 @@ MathExpression* FunctionBox::GetMathExpression()
     return expression;
 }
 
-void FunctionBox::OnRemoveBtnClick()
+void FunctionBox::RemoveBtnClick()
 {
     emit(elementRemoved(this));
 }

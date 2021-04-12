@@ -3,6 +3,7 @@
 
 #include"plotter.h"
 #include"functionboxlist.h"
+#include"constantboxlist.h"
 #include<QtWidgets>
 
 class MainWindow : public QWidget
@@ -14,11 +15,9 @@ private:
     QMenu *fileMenu;
     QMenu *helpMenu;
 
-    // Plotter object
     Plotter *plotter;
-
-    // FunctionBoxList object
     FunctionBoxList *functionBoxList;
+    ConstantBoxList *constantBoxList;
 
 
 protected:
