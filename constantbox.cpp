@@ -43,14 +43,30 @@ void ConstantBox::paintEvent(QPaintEvent *event)
 void ConstantBox::RemoveBtnClick()
 {
     emit(elementRemoved(this));
+    MathHelper::RemoveConstant(constantName);
+    qDebug() << MathHelper::userDefinedConstants;
 }
 
 void ConstantBox::SetConstantName(const QString &str)
 {
-    qDebug() << str;
+    // Constant's name is changed, it have to be removed from the list with correct constants
+    MathHelper::RemoveConstant(constantName);
+
+    qDebug() << "Constant name: " << str;
+
+    // New constant is added to the list with correct constants
+    MathHelper::AddConstant(str, constantValue);
+    qDebug() << str << ":"<< MathHelper::userDefinedConstants[str];
+    constantName = str;
 }
 
 void ConstantBox::SetConstantValue(const QString &str)
 {
-    qDebug() << str;
+    qDebug() << "Constant value: " << str;
+    if(!constantName.isEmpty())
+    {
+        MathHelper::AlterConstantValue(constantName, str);
+        qDebug()<< constantName << ": " << MathHelper::userDefinedConstants[constantName];
+    }
+    constantValue = str;
 }

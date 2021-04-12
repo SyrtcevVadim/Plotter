@@ -24,9 +24,11 @@ QStringList MathHelper::functions({"abs", "pow", "sqr", "sqrt",
                                   "arsin","arccos","arctg", "arcctg",
                                   "ln","lg","log"});
 
-QMap<QString, QString> MathHelper::constants({pair<QString, QString>("e", "2.718281828"),
+QMap<QString, QString> MathHelper::predefinedConstants({pair<QString, QString>("e", "2.718281828"),
                                               pair<QString, QString>("pi", "3.141592")
                                             });
+
+QMap<QString, QString> MathHelper::userDefinedConstants;
 
 QMap<QString, int> MathHelper::operandQuantity({     pair<QString, int>("un-", 1),
                                                      pair<QString, int>("un+", 1),
@@ -53,20 +55,25 @@ QMap<QString, int> MathHelper::operandQuantity({     pair<QString, int>("un-", 1
 QStringList MathHelper::parameters({"a", "b","c","d"});
 
 
-void MathHelper::AddConstant(QString constant, QString value)
+void MathHelper::AddConstant(const QString &constant, const QString &value)
 {
     // Check constant for double entry
     if(!correctTokens.contains(constant))
     {
          correctTokens.append(constant);
-         constants[constant] = value;
+         userDefinedConstants[constant] = value;
     }
 }
 
-void MathHelper::RemoveConstant(QString constant)
+void MathHelper::RemoveConstant(const QString &constant)
 {
-    constants.remove(constant);
     correctTokens.removeOne(constant);
+    userDefinedConstants.remove(constant);
+}
+
+void MathHelper::AlterConstantValue(const QString &constant, const QString &value)
+{
+    userDefinedConstants[constant] = value;
 }
 
 bool MathHelper::IsTokenVariable(const QString &token)
@@ -89,7 +96,7 @@ bool MathHelper::IsTokenParameter(const QString &token)
 
 bool MathHelper::IsTokenConstant(const QString &token)
 {
-    if(constants.contains(token))
+    if(predefinedConstants.contains(token) || userDefinedConstants.contains(token))
     {
         return true;
     }
@@ -130,7 +137,7 @@ bool MathHelper::HasConstants(const QString &expression)
 {
     for(auto key: (expression.trimmed()).split(" "))
     {
-        if(constants.contains(key))
+        if(predefinedConstants.contains(key) || userDefinedConstants.contains(key))
         {
             return true;
         }

@@ -118,6 +118,7 @@ void FunctionBox::MathExpressionChanged(const QString &str)
         {
             errorText->clear();
             expression->SetExpression(str);
+            qDebug() << *expression;
         }
     }
     else

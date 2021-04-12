@@ -150,7 +150,7 @@ double MathCalculator::Arccotangent(double value, double unused)
 {
 
     Q_UNUSED(unused);
-    return MathHelper::constants["pi"].toDouble()/2 - qAtan(value);
+    return MathHelper::predefinedConstants["pi"].toDouble()/2 - qAtan(value);
 }
 
 double MathCalculator::Ln(double value, double unused)

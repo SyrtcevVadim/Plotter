@@ -13,18 +13,22 @@ public:
     static QStringList operations;
     /// Stores the correct functions
     static QStringList functions;
-    /// Stores predefined and defined by user constants' values
-    static QMap<QString, QString> constants;
-    /// Stores operand quantity for every function/operation
+    /// Stores predefined constants' values
+    static QMap<QString, QString> predefinedConstants;
+    /// Stores user-defined constants' values
+    static QMap<QString, QString> userDefinedConstants;
+    /// Stores operand quantity for every functio/operation
     static QMap<QString, int> operandQuantity;
     /// Stores parameters' names
     static QStringList parameters;
 
 
-    /// Associates user-defind constant with it's value
-    static void AddConstant(QString constant, QString value);
-    /// Remove constant from defined constants
-    static void RemoveConstant(QString constant);
+    /// Create new user-defined constant with provided value
+    static void AddConstant(const QString &constant, const QString &value);
+    /// Removes constant from user-defined constants
+    static void RemoveConstant(const QString &constant);
+    /// Alters existing user-defined constant's value
+    static void AlterConstantValue(const QString &constant, const QString &value);
 
     /// Checks whether token is a variable or not
     static bool IsTokenVariable(const QString &token);

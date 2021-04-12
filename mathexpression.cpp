@@ -93,9 +93,13 @@ QString MathExpression::SubstituteConstants(QString infixExpression)
     QString resultExpression{""};
     for(auto key: (infixExpression.trimmed()).split(" "))
     {
-        if(MathHelper::constants.contains(key))
+        if(MathHelper::predefinedConstants.contains(key))
         {
-            resultExpression += MathHelper::constants[key] + " ";
+            resultExpression += MathHelper::predefinedConstants[key] + " ";
+        }
+        else if(MathHelper::userDefinedConstants.contains(key))
+        {
+            resultExpression += MathHelper::userDefinedConstants[key] + " ";
         }
         else
         {

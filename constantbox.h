@@ -7,6 +7,9 @@ class ConstantBox : public QWidget
 {
     Q_OBJECT
 private:
+    QString constantName;
+    QString constantValue;
+
     QLabel *constantNameLbl;
     /// LineEdit to enter the constant's name
     QLineEdit *constantBox;
