@@ -20,19 +20,22 @@ private:
     QPushButton *saveToFileBtn;
     /// Opens the file explorer to load the content of saved list of widgets
     QPushButton *loadFromFileBtn;
+    /// Clears the content of the list
+    QPushButton *clearAllContentBtn;
 
 public:
 
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
     FunctionBox* addNewWidget();
 
-    void clear();
 
+    void clear();
 public slots:
     void AddNewWidgetToFunctionList();
     void SaveFunctionListToFile();
     void LoadFunctionListFromFile();
-    void OnRemoveBtnClick(FunctionBox*);
+    void RemoveWidget(FunctionBox*);
+    void Clear();
 
 };
 

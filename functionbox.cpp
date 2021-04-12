@@ -12,6 +12,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     // Инициализируем все внутренние виджеты
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
+    functionBody->setToolTip("Тело функции");
 
     aLbl = new QLabel("a");
     bLbl = new QLabel("b");
@@ -19,9 +20,14 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     dLbl = new QLabel("d");
 
     aParamBox = new QLineEdit();
+    aParamBox->setToolTip("Значение параметра a");
     bParamBox = new QLineEdit();
+    bParamBox->setToolTip("Значение параметра b");
     cParamBox = new QLineEdit();
+    cParamBox->setToolTip("Значение параметра c");
     dParamBox = new QLineEdit();
+    dParamBox->setToolTip("Значение параметра d");
+
     // Set default values
     aParamBox->setText("1");
     bParamBox->setText("1");
@@ -32,11 +38,14 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     xLbl = new QLabel("<=X<=");
 
     minimumVarValueBox = new QLineEdit();
+    minimumVarValueBox->setToolTip("Минимальное значение переменной x");
     maximumVarValueBox = new QLineEdit();
+    maximumVarValueBox->setToolTip("Максимальное значение переменной x");
 
     errorText = new QLabel();
 
     removeBtn = new QPushButton();
+    removeBtn->setToolTip("Удалить блок функции");
     QPixmap removeImage(":/images/Images/RemoveWidgetImage.png");
     removeBtn->setIcon(removeImage);
 

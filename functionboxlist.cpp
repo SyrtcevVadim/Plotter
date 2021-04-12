@@ -15,8 +15,14 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
 
 
     addNewWidgetBtn = new QPushButton();
+    addNewWidgetBtn->setToolTip("Добавить новый блок ввода функции");
     saveToFileBtn = new QPushButton();
+    saveToFileBtn->setToolTip("Сохранить список функций в файл");
     loadFromFileBtn = new QPushButton();
+    loadFromFileBtn->setToolTip("Загрузить список функций из файла");
+    clearAllContentBtn = new QPushButton();
+    clearAllContentBtn->setToolTip("Очистить список функций");
+
     // Sets images to buttons
     QPixmap addNewWidgetIcon(":/images/Images/AddWidgetImage.png");
     addNewWidgetBtn->setIcon(addNewWidgetIcon);
@@ -39,6 +45,7 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     btnLayout->addWidget(addNewWidgetBtn);
     btnLayout->addWidget(saveToFileBtn);
     btnLayout->addWidget(loadFromFileBtn);
+    btnLayout->addWidget(clearAllContentBtn);
     mainLayout->addWidget(scrollArea);
 
     setLayout(mainLayout);
@@ -47,12 +54,13 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(SaveFunctionListToFile()));
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(LoadFunctionListFromFile()));
     connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(AddNewWidgetToFunctionList()));
+    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(Clear()));
 }
 
 FunctionBox* FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
-    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(OnRemoveBtnClick(FunctionBox*)));
+    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(RemoveWidget(FunctionBox*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
@@ -70,6 +78,13 @@ void FunctionBoxList::clear()
         delete item;
     }
 }
+
+void FunctionBoxList::Clear()
+{
+    // TODO добавить предупреждение
+    clear();
+}
+
 
 void FunctionBoxList::SaveFunctionListToFile()
 {
@@ -95,7 +110,7 @@ void FunctionBoxList::LoadFunctionListFromFile()
         inputFile.open(QIODevice::ReadOnly);
         QDataStream in(&inputFile);
         // Clears previos list content
-        clear();
+        Clear();
         int length;
         in >> length;
         for(int i{0}; i < length; i++)
@@ -121,7 +136,7 @@ void FunctionBoxList::AddNewWidgetToFunctionList()
     addNewWidget();
 }
 
-void FunctionBoxList::OnRemoveBtnClick(FunctionBox *box)
+void FunctionBoxList::RemoveWidget(FunctionBox *box)
 {
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));
