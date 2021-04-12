@@ -73,7 +73,7 @@ void FunctionBoxList::clear()
 
 void FunctionBoxList::OnSaveToFileBtnClick()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Save data to output file");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Save data to output file", "untitled.izum","Izum files (*.izum *.dat)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -88,29 +88,32 @@ void FunctionBoxList::OnSaveToFileBtnClick()
 
 void FunctionBoxList::OnLoadFromFileBtnClick()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Load stored data");
-    QFile inputFile(pathToInputFile);
-    inputFile.open(QIODevice::ReadOnly);
-    QDataStream in(&inputFile);
-    // Clears previos list content
-    clear();
-    int length;
-    in >> length;
-    for(int i{0}; i < length; i++)
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Load stored data","","*.izum *.dat");
+    if(!pathToInputFile.isEmpty())
     {
-        FunctionBox *currBox = addNewWidget();
-        MathExpression *currExp = currBox->GetMathExpression();
-        in >> *currExp;
-        currBox->functionBody->setText(currExp->GetInitialExpression());
-        currBox->aParamBox->setText(currExp->GetParameterValue("a"));
-        currBox->bParamBox->setText(currExp->GetParameterValue("b"));
-        currBox->cParamBox->setText(currExp->GetParameterValue("c"));
-        currBox->dParamBox->setText(currExp->GetParameterValue("d"));
+        QFile inputFile(pathToInputFile);
+        inputFile.open(QIODevice::ReadOnly);
+        QDataStream in(&inputFile);
+        // Clears previos list content
+        clear();
+        int length;
+        in >> length;
+        for(int i{0}; i < length; i++)
+        {
+            FunctionBox *currBox = addNewWidget();
+            MathExpression *currExp = currBox->GetMathExpression();
+            in >> *currExp;
+            currBox->functionBody->setText(currExp->GetInitialExpression());
+            currBox->aParamBox->setText(currExp->GetParameterValue("a"));
+            currBox->bParamBox->setText(currExp->GetParameterValue("b"));
+            currBox->cParamBox->setText(currExp->GetParameterValue("c"));
+            currBox->dParamBox->setText(currExp->GetParameterValue("d"));
 
-        currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
-        currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+            currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
+            currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+        }
+        inputFile.close();
     }
-    inputFile.close();
 }
 
 void FunctionBoxList::OnAddNewWidgetBtnClick()
