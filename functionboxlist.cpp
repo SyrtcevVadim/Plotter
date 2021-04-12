@@ -44,9 +44,9 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     setLayout(mainLayout);
 
     // Linking signals with slots
-    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(OnSaveToFileBtnClick()));
-    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(OnLoadFromFileBtnClick()));
-    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(OnAddNewWidgetBtnClick()));
+    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(SaveFunctionListToFile()));
+    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(LoadFunctionListFromFile()));
+    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(AddNewWidgetToFunctionList()));
 }
 
 FunctionBox* FunctionBoxList::addNewWidget()
@@ -71,9 +71,9 @@ void FunctionBoxList::clear()
     }
 }
 
-void FunctionBoxList::OnSaveToFileBtnClick()
+void FunctionBoxList::SaveFunctionListToFile()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Save data to output file", "untitled.izum","Izum files (*.izum *.dat)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "untitled.izum","Izum files (*.izum *.dat)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -86,9 +86,9 @@ void FunctionBoxList::OnSaveToFileBtnClick()
     outputFile.close();
 }
 
-void FunctionBoxList::OnLoadFromFileBtnClick()
+void FunctionBoxList::LoadFunctionListFromFile()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Load stored data","","*.izum *.dat");
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izum *.dat");
     if(!pathToInputFile.isEmpty())
     {
         QFile inputFile(pathToInputFile);
@@ -116,7 +116,7 @@ void FunctionBoxList::OnLoadFromFileBtnClick()
     }
 }
 
-void FunctionBoxList::OnAddNewWidgetBtnClick()
+void FunctionBoxList::AddNewWidgetToFunctionList()
 {
     addNewWidget();
 }

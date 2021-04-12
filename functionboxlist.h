@@ -24,15 +24,14 @@ private:
 public:
 
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
-
     FunctionBox* addNewWidget();
 
     void clear();
 
-private slots:
-    void OnAddNewWidgetBtnClick();
-    void OnSaveToFileBtnClick();
-    void OnLoadFromFileBtnClick();
+public slots:
+    void AddNewWidgetToFunctionList();
+    void SaveFunctionListToFile();
+    void LoadFunctionListFromFile();
     void OnRemoveBtnClick(FunctionBox*);
 
 };
