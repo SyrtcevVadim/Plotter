@@ -13,6 +13,7 @@ SOURCES += \
     functionbox.cpp \
     functionboxlist.cpp \
     main.cpp \
+    mainwindow.cpp \
     mathcalculator.cpp \
     mathchecker.cpp \
     mathexpression.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     constantbox.h \
     functionbox.h \
     functionboxlist.h \
+    mainwindow.h \
     mathcalculator.h \
     mathchecker.h \
     mathexpression.h \

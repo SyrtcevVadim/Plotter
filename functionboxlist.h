@@ -24,8 +24,6 @@ private:
 public:
 
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
-    /// Moves widget to the (x,y) point
-    void move(int x, int y);
 
     FunctionBox* addNewWidget();
 

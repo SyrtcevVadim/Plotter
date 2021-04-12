@@ -49,11 +49,6 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(OnAddNewWidgetBtnClick()));
 }
 
-void FunctionBoxList::move(int x, int y)
-{
-    scrollArea->move(x,y);
-}
-
 FunctionBox* FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
