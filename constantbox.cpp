@@ -10,6 +10,7 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     valueBox = new QLineEdit();
 
     removeButton = new QPushButton();
+    removeButton->setIcon(QPixmap(":/images/Images/RemoveWidgetImage.png"));
 
     QGridLayout *grid = new QGridLayout(this);
 
@@ -70,3 +71,4 @@ void ConstantBox::SetConstantValue(const QString &str)
     }
     constantValue = str;
 }
+

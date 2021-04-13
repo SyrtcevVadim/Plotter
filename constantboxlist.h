@@ -7,6 +7,8 @@ class ConstantBoxList : public QWidget
 {
     Q_OBJECT
 private:
+    int m_width;
+    int m_height;
     QScrollArea *scrollArea;
     /// Body of the list
     QWidget *listBody;
@@ -23,6 +25,8 @@ private:
     /// Clears the content of the list
     QPushButton *clearAllContentBtn;
 
+protected:
+    QSize sizeHint()const;
 public:
     ConstantBoxList(int height = 400, QWidget *parent = nullptr);
     ConstantBox* addNewWidget();

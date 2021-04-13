@@ -14,6 +14,7 @@ private:
     QMenuBar *topLevelMenu;
     QMenu *fileMenu;
     QMenu *helpMenu;
+    QMenu *settingsMenu;
 
     Plotter *plotter;
     FunctionBoxList *functionBoxList;
@@ -25,6 +26,8 @@ protected:
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+public slots:
+    void ShowAboutProgramMenu();
 
 };
 

@@ -1,4 +1,4 @@
-#include<QDebug>
+    #include<QDebug>
 #include "functionbox.h"
 #include "mathparser.h"
 #include"mathexpression.h"

@@ -3,14 +3,16 @@
 
 ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
 {
+    m_width = 350;
+    m_height = height+50;
     listBody = new QWidget();
-    listBody->setFixedWidth(330);
+    listBody->setFixedWidth(m_width-20);
 
     listLayout = new QVBoxLayout();
     listBody->setLayout(listLayout);
 
     scrollArea = new QScrollArea(parent);
-    scrollArea->setFixedSize(350, height);
+    scrollArea->setFixedSize(m_width, height);
     scrollArea->setWidget(listBody);
 
 
@@ -39,9 +41,10 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
 
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
+    mainLayout->setAlignment(Qt::AlignTop);
     QHBoxLayout *btnLayout = new QHBoxLayout();
     btnLayout->setAlignment(Qt::AlignLeft);
-    mainLayout->addLayout(btnLayout);
+    mainLayout->addLayout(btnLayout,1);
     btnLayout->addWidget(addNewWidgetBtn);
     btnLayout->addWidget(saveToFileBtn);
     btnLayout->addWidget(loadFromFileBtn);
@@ -82,16 +85,17 @@ void ConstantBoxList::clear()
 
 void ConstantBoxList::Clear()
 {
-    // TODO добавить предупреждение
-    QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка констант",
-                                          "Вы точно хотите удалить все константы из списка?",
-                                          QMessageBox::Yes | QMessageBox::No);
-    int result = msgBox->exec();
-    if(result==QMessageBox::Yes)
+    if(listOfWidgets.length() > 0)
     {
-        clear();
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка констант",
+                                              "Вы точно хотите удалить все константы из списка?",
+                                              QMessageBox::Yes | QMessageBox::No);
+        int result = msgBox->exec();
+        if(result==QMessageBox::Yes)
+        {
+            clear();
+        }
     }
-
 }
 
 
@@ -146,4 +150,9 @@ void ConstantBoxList::RemoveWidget(ConstantBox *box)
     delete listLayout->takeAt(listLayout->indexOf(box));
     delete box;
     listBody->adjustSize();
+}
+
+QSize ConstantBoxList::sizeHint() const
+{
+    return QSize(m_width, m_height);
 }

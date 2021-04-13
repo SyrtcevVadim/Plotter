@@ -24,6 +24,9 @@ private:
 protected:
     /// Вызывается для отрисовки всей графики
     void paintEvent(QPaintEvent *event);
+
+    QSize sizeHint()const;
+
     /// Отрисовывает координатную сетку
     void drawGrid(QPainter *painter);
     /// Отрисовывает точку начала координат
@@ -36,7 +39,8 @@ protected:
     void drawCoordinates(QPainter *painter);
 
 public:
-    Plotter(QPoint *position, QSize *size, QWidget *parentWidget = 0);
+    Plotter(QWidget *parentWidget = nullptr);
+    Plotter(QSize *size, QWidget *parentWidget = nullptr);
     /// Устанавливает длину стороны клетки
     void setGridCellWidth(int width = 10);
     /// Устанавливает ширину точки начала координат

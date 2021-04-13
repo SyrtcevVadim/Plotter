@@ -1,8 +1,9 @@
 #include "plotter.h"
 #include<QtWidgets>
 
-Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget(parent)
+Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
 {
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setCursor(Qt::CrossCursor);
 
     setGridCellWidth(10);
@@ -11,16 +12,14 @@ Plotter::Plotter(QPoint *position /*=0*/, QSize *size, QWidget *parent): QWidget
     setSingleTick(4);
 
     resize(size->width(),size->height());
-    move(position->x(), position->y());
 
     areaWidth = size->width() - 2*gridCellWidth;
     areaHeight = size->height() - 2*gridCellWidth;
 
     origin.setX(areaWidth / 2);
     origin.setY(areaHeight / 2);
-
-
 }
+
 
 void Plotter::paintEvent(QPaintEvent *event)
 {
@@ -266,4 +265,9 @@ void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,
                       origin.y() - (startPoint.y()*gridCellWidth*singleTick),
                       origin.x() +(endPoint.x()*gridCellWidth*singleTick),
                       origin.y() - (endPoint.y()*gridCellWidth*singleTick));
+}
+
+QSize Plotter::sizeHint() const
+{
+    return QSize(width(), height());
 }

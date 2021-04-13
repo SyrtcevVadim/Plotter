@@ -2,24 +2,26 @@
 #include<QtWidgets>
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
-    QSize displaySize = QGuiApplication::screens()[0]->availableSize();
-    functionBoxList = new FunctionBoxList(500, this);
-    functionBoxList->move(10, 50);
-
-    constantBoxList = new ConstantBoxList(500, this);
-    constantBoxList->move(400,50);
-    plotter = new Plotter(new QPoint(displaySize.width()-910,50), new QSize(900,900), this);
+    functionBoxList = new FunctionBoxList(500);
+    constantBoxList = new ConstantBoxList(500);
+    plotter = new Plotter(new QSize(600,600));
 
 
     topLevelMenu = new QMenuBar(this);
+    topLevelMenu->addSeparator();
     // Defining menu items
     fileMenu = new QMenu("&Файл");
+    settingsMenu = new QMenu("&Настройки");
     helpMenu = new QMenu("&Справка");
     topLevelMenu->addMenu(fileMenu);
     topLevelMenu->addMenu(helpMenu);
+    topLevelMenu->addMenu(settingsMenu);
+    topLevelMenu->showNormal();
 
 
     helpMenu->addAction("&Знакомство");
+    helpMenu->addSeparator();
+    helpMenu->addAction("&О программе Изюм");
 
 
     fileMenu->addAction("&Загрузить список функций", functionBoxList, SLOT(LoadFunctionListFromFile()), Qt::CTRL+Qt::Key_L);
@@ -27,7 +29,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     fileMenu->addSeparator();
     fileMenu->addAction("&Выйти", this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
 
+    // Sets layout
 
+    QHBoxLayout *itemLayout = new QHBoxLayout();
+    itemLayout->setContentsMargins(5,50,5,5);
+    itemLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
+    itemLayout->addWidget(constantBoxList, 1, Qt::AlignTop);
+    itemLayout->addWidget(plotter,1, Qt::AlignTop);
+
+    setLayout(itemLayout);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -51,4 +61,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
         }
     }
+}
+
+void MainWindow::ShowAboutProgramMenu()
+{
+    QMessageBox *aboutProgramBox = new QMessageBox(QMessageBox::Information,"О программе Изюм",
+                                                   "Программ");
 }

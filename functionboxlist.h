@@ -7,6 +7,8 @@ class FunctionBoxList : public QWidget
 {
     Q_OBJECT
 private:
+    int m_width;
+    int m_height;
     QScrollArea *scrollArea;
     /// Body of the list
     QWidget *listBody;
@@ -22,6 +24,9 @@ private:
     QPushButton *loadFromFileBtn;
     /// Clears the content of the list
     QPushButton *clearAllContentBtn;
+
+protected:
+    QSize sizeHint()const;
 
 public:
 
