@@ -90,6 +90,10 @@ void FunctionBoxList::Clear()
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка функций",
                                               "Вы точно хотите удалить все функции из списка?",
                                               QMessageBox::Yes | QMessageBox::No);
+
+        msgBox->buttons()[0]->setText("Да");
+        msgBox->buttons()[1]->setText("Нет");
+
         int result = msgBox->exec();
         if(result==QMessageBox::Yes)
         {

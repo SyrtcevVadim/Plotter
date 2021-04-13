@@ -48,6 +48,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение сохранения данных перед выходом",
                                               "Вы хотите сохранить список функций в файл перед выходом из программы?",
                                               QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
+        msgBox->buttons()[0]->setText("Отмена");
+        msgBox->buttons()[1]->setText("Да");
+        msgBox->buttons()[2]->setText("Нет");
         int userAnswer = msgBox->exec();
         delete msgBox;
 

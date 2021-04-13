@@ -5,6 +5,7 @@
 Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
 {
     setAcceptDrops(true);
+
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setCursor(Qt::CrossCursor);
 
