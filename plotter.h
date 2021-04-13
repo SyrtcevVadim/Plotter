@@ -27,6 +27,10 @@ protected:
 
     QSize sizeHint()const;
 
+    void dragEnterEvent(QDragEnterEvent *event);
+
+    void dropEvent(QDropEvent *event);
+
     /// Отрисовывает координатную сетку
     void drawGrid(QPainter *painter);
     /// Отрисовывает точку начала координат

@@ -1,8 +1,10 @@
 #include "plotter.h"
+#include "mathexpression.h"
 #include<QtWidgets>
 
 Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
 {
+    setAcceptDrops(true);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setCursor(Qt::CrossCursor);
 
@@ -270,4 +272,24 @@ void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,
 QSize Plotter::sizeHint() const
 {
     return QSize(width(), height());
+}
+
+void Plotter::dragEnterEvent(QDragEnterEvent *event)
+{
+    qDebug() << "DragEnterEvent!";
+    if(event->mimeData()->hasFormat("MathExpression"))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void Plotter::dropEvent(QDropEvent *event)
+{
+    qDebug() << "DropEvent!";
+    QByteArray byteArray(event->mimeData()->data("MathExpression"));
+    QDataStream in(&byteArray, QIODevice::ReadOnly);
+
+    MathExpression expression;
+    in >> expression;
+    qDebug() << expression;
 }
