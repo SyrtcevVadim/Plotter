@@ -12,10 +12,17 @@ private:
     static int lineEditHeight;
     /// Математическое выражение, записанное в поле ввода
     MathExpression *expression;
-
+    /// Хранит позицию, в которую пользователь кликнул ЛКМ внутри этого виджета
+    QPoint mouseClickPos;
+    /// Starts drag process
+    void startDrag();
 
 protected:
     void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
 
 public:
     /// Метка для выражения "y="

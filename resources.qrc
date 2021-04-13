@@ -4,5 +4,6 @@
         <file>Images/RemoveWidgetImage.png</file>
         <file>Images/SaveImage.png</file>
         <file>Images/LoadImage.png</file>
+        <file>Images/FunctionBoxDragged.png</file>
     </qresource>
 </RCC>

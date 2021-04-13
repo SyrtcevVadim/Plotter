@@ -7,6 +7,7 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
+    setCursor(Qt::OpenHandCursor);
     expression = new MathExpression();
     resize(200,100);
     // Инициализируем все внутренние виджеты
@@ -213,4 +214,54 @@ MathExpression* FunctionBox::GetMathExpression()
 void FunctionBox::RemoveBtnClick()
 {
     emit(elementRemoved(this));
+}
+
+void FunctionBox::mousePressEvent(QMouseEvent *event)
+{
+    setCursor(Qt::ClosedHandCursor);
+    qDebug() << "Mouse press event!";
+    if(event->button() == Qt::LeftButton)
+    {
+        mouseClickPos = event->pos();
+    }
+}
+
+void FunctionBox::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    setCursor(Qt::OpenHandCursor);
+}
+
+void FunctionBox::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug() << "Mouse move event!" << event->button();
+    if(event->buttons() & Qt::LeftButton)
+    {
+        int distance{(event->pos()-mouseClickPos).manhattanLength()};
+        qDebug() << distance << " " << QApplication::startDragDistance();
+        if(distance > QApplication::startDragDistance())
+        {
+            startDrag();
+        }
+    }
+}
+
+void FunctionBox::startDrag()
+{
+    qDebug() <<"DRAG STARTED!";
+    // Writes MathExpression object to byteArr object
+    QByteArray byteArr;
+    QDataStream stream(&byteArr, QIODevice::WriteOnly);
+    stream << *expression;
+
+    // Prepare expression to drag&drop mechanism
+    QMimeData *data = new QMimeData;
+    data->setData("MathExpression", byteArr);
+
+    QDrag *drag = new QDrag(this);
+    drag->setMimeData(data);
+    drag->setPixmap(QPixmap(":/images/Images/FunctionBoxDragged.png"));
+
+    drag->exec();
+
 }
