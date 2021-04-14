@@ -17,15 +17,20 @@ private:
 public:
     MathChecker() = default;
     MathChecker(const QString &expression);
-    static bool IsTokenNumber(const QString &token);
+
     /// Checks whether all tokens in the expression are correct or not. If expression contains incorrect token
     /// function returns false and that incorrect token is stored at incorrectToken field
     bool AreAllTokensCorrect();
     /// Checks whether opening brackets corresponds to closing ones or not. If any bracket is missed, it's
     /// stored at incorrectToken field
     bool AreBracketsCorrespond();
-    /// Checks wether every function has appropriate number of arguments or not
-    bool AreArgumentsCorresepond();
+    /// Checks whether mathematical expression constists of empty brackets or not
+    bool HasEmptyBrackets();
+    /// Checks whether there're missed operations between operands
+    bool HasMissedOperations();
+    /// Checks whether every function/operation has enough operands
+    bool HasMissedOperands();
+
     /// Returns the error message if mistake is presented
     QString GetErrorMessage()const;
 };

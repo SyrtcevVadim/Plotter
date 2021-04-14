@@ -14,10 +14,6 @@ private:
 
     /// Strores pointers to mathematical function handlers
     static QMap<QString, std::function<double(double, double)>> functionHandlers;
-    /// Checks whether token is a number or not
-    static bool IsTokenNumber(QString &token);
-    /// Checks whether token is a function or not
-    static bool IsTokenFunction(QString &token);
 
     /// Is used for un+ operation
     static double Nothing(double value, double unused);

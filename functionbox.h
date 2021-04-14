@@ -12,6 +12,8 @@ private:
     static int lineEditHeight;
     /// Математическое выражение, записанное в поле ввода
     MathExpression *expression;
+    /// Хранит все ошибки, найденные системой в математическом выражении
+    QStringList *errorList;
     /// Хранит позицию, в которую пользователь кликнул ЛКМ внутри этого виджета
     QPoint mouseClickPos;
 
@@ -68,7 +70,7 @@ signals:
     void elementRemoved(FunctionBox*);
 
 private slots:
-    //TODOvoid checkMathExpressionCorrectness();
+    void checkCorrectness(const QString &str);
     void MathExpressionChanged(const QString &str);
     void aParamChanged(double value);
     void bParamChanged(double value);

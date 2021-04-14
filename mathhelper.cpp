@@ -54,27 +54,26 @@ QMap<QString, int> MathHelper::operandQuantity({     pair<QString, int>("un-", 1
                                                     });
 QStringList MathHelper::parameters({"a", "b","c","d"});
 
-
-void MathHelper::AddConstant(const QString &constant, const QString &value)
+bool MathHelper::IsTokenNumber(const QString &token)
 {
-    // Check constant for double entry
-    if(!correctTokens.contains(constant))
+    if(token.isEmpty())
     {
-         correctTokens.append(constant);
-         userDefinedConstants[constant] = value;
+        return false;
     }
+    if(MathHelper::operations.contains(token))
+    {
+        return false;
+    }
+    for(auto symbol: token)
+    {
+        if(symbol != '-' && symbol != '+' && !symbol.isDigit() && symbol!=".")
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
-void MathHelper::RemoveConstant(const QString &constant)
-{
-    correctTokens.removeOne(constant);
-    userDefinedConstants.remove(constant);
-}
-
-void MathHelper::AlterConstantValue(const QString &constant, const QString &value)
-{
-    userDefinedConstants[constant] = value;
-}
 
 bool MathHelper::IsTokenVariable(const QString &token)
 {
@@ -161,4 +160,26 @@ bool MathHelper::IsTokenClosingBracket(const QString &token)
         return true;
     }
     return false;
+}
+
+
+void MathHelper::AddConstant(const QString &constant, const QString &value)
+{
+    // Check constant for double entry
+    if(!correctTokens.contains(constant))
+    {
+         correctTokens.append(constant);
+         userDefinedConstants[constant] = value;
+    }
+}
+
+void MathHelper::RemoveConstant(const QString &constant)
+{
+    correctTokens.removeOne(constant);
+    userDefinedConstants.remove(constant);
+}
+
+void MathHelper::AlterConstantValue(const QString &constant, const QString &value)
+{
+    userDefinedConstants[constant] = value;
 }

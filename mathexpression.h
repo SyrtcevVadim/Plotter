@@ -18,9 +18,10 @@ private:
     /// Stores parameters' values
     QMap<QString, double> parameters;
 
-    double minimumVarValue;
-
-    double maximumVarValue;
+    /// Minimum possible variable's value
+    double minimumVarValue{-10.0};
+    /// Maximum possible variable's value
+    double maximumVarValue{10.0};
 
     /// Replaces constants by it's value recursively
     QString SubstituteConstants(QString infixExpression);

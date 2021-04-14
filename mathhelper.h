@@ -23,13 +23,8 @@ public:
     static QStringList parameters;
 
 
-    /// Create new user-defined constant with provided value
-    static void AddConstant(const QString &constant, const QString &value);
-    /// Removes constant from user-defined constants
-    static void RemoveConstant(const QString &constant);
-    /// Alters existing user-defined constant's value
-    static void AlterConstantValue(const QString &constant, const QString &value);
-
+    /// Checks whether token is a decimal number or not
+    static bool IsTokenNumber(const QString &token);
     /// Checks whether token is a variable or not
     static bool IsTokenVariable(const QString &token);
     /// Checks whether token is a parameter or not
@@ -48,6 +43,14 @@ public:
     static bool IsTokenClosingBracket(const QString &token);
     /// Checks, whether string contains constants or not
     static bool HasConstants(const QString &expression);
+
+
+    /// Create new user-defined constant with provided value
+    static void AddConstant(const QString &constant, const QString &value);
+    /// Removes constant from user-defined constants
+    static void RemoveConstant(const QString &constant);
+    /// Alters existing user-defined constant's value
+    static void AlterConstantValue(const QString &constant, const QString &value);
 
 
 };

@@ -7,6 +7,7 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
+    errorList = new QStringList;
     expression = new MathExpression();
     resize(250,100);
     // Инициализируем все внутренние виджеты
@@ -50,12 +51,17 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     dParamBox->setValue(1.0);
 
 
-    xLbl = new QLabel("<=X<=");
+    xLbl = new QLabel("X");
 
     minimumVarValueBox = new QLineEdit();
     minimumVarValueBox->setToolTip("Минимальное значение переменной x");
     maximumVarValueBox = new QLineEdit();
     maximumVarValueBox->setToolTip("Максимальное значение переменной x");
+
+    // User can write only numbers as a minimum/maximum value of variable
+    QDoubleValidator *restrictionValidator = new QDoubleValidator();
+    minimumVarValueBox->setValidator(restrictionValidator);
+    maximumVarValueBox->setValidator(restrictionValidator);
 
     errorText = new QLabel();
 
@@ -115,32 +121,58 @@ void FunctionBox::paintEvent(QPaintEvent *event)
     painter.drawRect(0,0, width()-5, height()-5);
 }
 
-void FunctionBox::MathExpressionChanged(const QString &str)
+void FunctionBox::checkCorrectness(const QString &str)
 {
-    // При изменении математического выражения в поле ввода
-    // меняем это выражение и внутри объекта
+    // Очищаем все старые записи об ошибках
+    errorList->clear();
+    errorText->clear();
 
     // Проверяем введённое математическое выражение на корректность
     MathChecker checker(str);
 
+
     if(!(str.trimmed()).isEmpty())
     {
-        if(!checker.AreAllTokensCorrect() || !checker.AreBracketsCorrespond() || !checker.AreArgumentsCorresepond())
+        if(!checker.AreAllTokensCorrect())
         {
-            errorText->setText(checker.GetErrorMessage());
+           errorList->append(checker.GetErrorMessage());
+        }
+        if(!checker.AreBracketsCorrespond())
+        {
+            errorList->append(checker.GetErrorMessage());
+        }
+        if(!checker.HasEmptyBrackets())
+        {
+            errorList->append(checker.GetErrorMessage());
+        }
+        if(!checker.HasMissedOperations())
+        {
+            errorList->append(checker.GetErrorMessage());
+        }
+        if(!checker.HasMissedOperands())
+        {
+            errorList->append(checker.GetErrorMessage());
+        }
+
+        if(maximumVarValueBox->text().toDouble() < minimumVarValueBox->text().toDouble())
+        {
+            errorList->append("Минимальное значение перменной больше максимального");
+        }
+    }
+}
+
+void FunctionBox::MathExpressionChanged(const QString &str)
+{
+        checkCorrectness(str);
+        qDebug() << "Error list: " << *errorList;
+        if(errorList->empty())
+        {
+            expression->SetExpression(str);
         }
         else
         {
-            errorText->clear();
-            expression->SetExpression(str);
-            qDebug() << *expression;
+            errorText->setText(errorList->front());
         }
-    }
-    else
-    {
-        errorText->clear();
-    }
-
 }
 
 void FunctionBox::aParamChanged(double value)
@@ -165,22 +197,30 @@ void FunctionBox::dParamChanged(double value)
 
 void FunctionBox::minimumVariableValueChanged(const QString &strValue)
 {
-    expression->SetMinimumVarValue(strValue.toDouble());
     // Minimum variable value can't exceeds the maximum one
-    if(expression->GetMinimumVarValue() > expression->GetMaximumVarValue())
+    if(strValue.toDouble() > expression->GetMaximumVarValue())
     {
-        errorText->setText("Minimum variable value is greater than the maximum one!");
+        errorText->setText("Минимальное значение переменной больше максимального");
     }
-
+    else
+    {
+        expression->SetMinimumVarValue(strValue.toDouble());
+        checkCorrectness(functionBody->text());
+    }
 }
 
 void FunctionBox::maximumVariableValueChanged(const QString &strValue)
 {
-    expression->SetMaximumVarValue(strValue.toDouble());
+
     // Maximum variable value have to be greater than the minimum one
-    if(expression->GetMaximumVarValue() < expression->GetMinimumVarValue())
+    if(strValue.toDouble() < expression->GetMinimumVarValue())
     {
-        errorText->setText("Minimum possible varialbe's value is greater than the maximum one!");
+        errorText->setText("Минимальное значение перменной больше максимального");
+    }
+    else
+    {
+        expression->SetMaximumVarValue(strValue.toDouble());
+        checkCorrectness(functionBody->text());
     }
 }
 

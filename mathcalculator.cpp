@@ -36,24 +36,7 @@ QMap<QString, function<double(double, double)>> MathCalculator::functionHandlers
                                                                                   pair<QString, function<double(double,double)>>("ln", Ln),
                                                                                   pair<QString, function<double(double,double)>>("log", Log)
                                                                                  });
-bool MathCalculator::IsTokenNumber(QString &token)
-{
-    //qDebug() << "ISTOKENNUMBER: "<<token;
-    if(!MathHelper::operations.contains(token)&&((token[0] == "-" && token[1].isDigit())||token[0].isDigit()))
-    {
-        return true;
-    }
-    return false;
-}
 
-bool MathCalculator::IsTokenFunction(QString &token)
-{
-    if(MathHelper::functions.contains(token) || MathHelper::operations.contains(token))
-    {
-        return true;
-    }
-    return false;
-}
 
 double MathCalculator::Negate(double value, double unused)
 {
@@ -190,11 +173,11 @@ double MathCalculator::Calculate(double varValue)
     // Iterate through the postfixFormExpression
     for(auto token: (expressionWithSubstitutedValues.trimmed()).split(" "))
     {
-        if(IsTokenNumber(token))
+        if(MathHelper::IsTokenNumber(token))
         {
             stack.push(token);
         }
-        else if(IsTokenFunction(token))
+        else if(MathHelper::IsTokenFunction(token) || MathHelper::IsTokenOperation(token))
         {
             // Checking for necessary operands quantity
             if(!stack.isEmpty() && stack.count() >= MathHelper::operandQuantity[token])
@@ -209,13 +192,7 @@ double MathCalculator::Calculate(double varValue)
                 // Pushs result back to stack
                 stack.push(QString().setNum(result));
             }
-            else
-            {
-                qDebug() << "NOT ENOUGH ARGUMENTS FOR FUNCTION: "<< token;
-            }
         }
-        //qDebug() << "stack: "<< stack;
     }
     return stack.pop().toDouble();
 }
-
