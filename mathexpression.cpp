@@ -62,9 +62,9 @@ void MathExpression::SetParameter(QString parameter, double value)
     }
 }
 
-QString MathExpression::GetParameterValue(QString parameter)const
+double MathExpression::GetParameterValue(QString parameter)const
 {
-    return QString().setNum(parameters[parameter]);
+    return parameters[parameter];
 }
 
 void MathExpression::SetParameters(double aValue, double bValue, double cValue, double dValue)
@@ -123,7 +123,7 @@ QString MathExpression::SubstituteParameters(QString postfixExpression)
     {
         if(parameters.contains(key))
         {
-            resultExpression += GetParameterValue(key) +" ";
+            resultExpression += QString().setNum(parameters[key]) +" ";
         }
         else
         {

@@ -10,6 +10,12 @@ private:
     QString constantName;
     QString constantValue;
 
+
+
+protected:
+    void paintEvent(QPaintEvent *event);
+
+public:
     QLabel *constantNameLbl;
     /// LineEdit to enter the constant's name
     QLineEdit *constantBox;
@@ -18,12 +24,9 @@ private:
     QLineEdit *valueBox;
     /// Removes current ConstantBox object
     QPushButton *removeButton;
-
-protected:
-    void paintEvent(QPaintEvent *event);
-
-public:
     explicit ConstantBox(QWidget *parent = nullptr);
+    QString GetConstantName()const;
+    QString GetConstantValue()const;
 
 public slots:
     void RemoveBtnClick();

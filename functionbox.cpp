@@ -1,4 +1,4 @@
-    #include<QDebug>
+#include<QDebug>
 #include "functionbox.h"
 #include "mathparser.h"
 #include"mathexpression.h"
@@ -7,9 +7,8 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
-    setCursor(Qt::OpenHandCursor);
     expression = new MathExpression();
-    resize(200,100);
+    resize(250,100);
     // Инициализируем все внутренние виджеты
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
@@ -20,20 +19,35 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     cLbl = new QLabel("c");
     dLbl = new QLabel("d");
 
-    aParamBox = new QLineEdit();
+    aParamBox = new QDoubleSpinBox();
+    aParamBox->setRange(-10'000.0, 10'000.0);
+    aParamBox->setSingleStep(0.1);
+    aParamBox->setDecimals(1);
     aParamBox->setToolTip("Значение параметра a");
-    bParamBox = new QLineEdit();
+
+    bParamBox = new QDoubleSpinBox();
+    bParamBox->setRange(-10'000.0, 10'000.0);
+    bParamBox->setSingleStep(0.1);
+    bParamBox->setDecimals(1);
     bParamBox->setToolTip("Значение параметра b");
-    cParamBox = new QLineEdit();
+
+    cParamBox = new QDoubleSpinBox();
+    cParamBox->setRange(-10'000.0, 10'000.0);
+    cParamBox->setSingleStep(0.1);
+    cParamBox->setDecimals(1);
     cParamBox->setToolTip("Значение параметра c");
-    dParamBox = new QLineEdit();
+
+    dParamBox = new QDoubleSpinBox();
+    dParamBox->setRange(-10'000.0, 10'000.0);
+    dParamBox->setSingleStep(0.1);
+    dParamBox->setDecimals(1);
     dParamBox->setToolTip("Значение параметра d");
 
     // Set default values
-    aParamBox->setText("1");
-    bParamBox->setText("1");
-    cParamBox->setText("1");
-    dParamBox->setText("1");
+    aParamBox->setValue(1.0);
+    bParamBox->setValue(1.0);
+    cParamBox->setValue(1.0);
+    dParamBox->setValue(1.0);
 
 
     xLbl = new QLabel("<=X<=");
@@ -52,12 +66,12 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     // Соединяем сигналы с обработчиками
     QObject::connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(MathExpressionChanged(const QString)));
-    QObject::connect(aParamBox, SIGNAL(textChanged(const QString)), this, SLOT(AParamChanged(const QString)));
-    QObject::connect(bParamBox, SIGNAL(textChanged(const QString)), this, SLOT(BParamChanged(const QString)));
-    QObject::connect(cParamBox, SIGNAL(textChanged(const QString)), this, SLOT(CParamChanged(const QString)));
-    QObject::connect(dParamBox, SIGNAL(textChanged(const QString)), this, SLOT(DParamChanged(const QString)));
-    QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(MinimumVarValueChanged(const QString)));
-    QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(MaximumVarValueChanged(const QString)));
+    QObject::connect(aParamBox, SIGNAL(valueChanged(double)), this, SLOT(aParamChanged(double)));
+    QObject::connect(bParamBox, SIGNAL(valueChanged(double)), this, SLOT(bParamChanged(double)));
+    QObject::connect(cParamBox, SIGNAL(valueChanged(double)), this, SLOT(cParamChanged(double)));
+    QObject::connect(dParamBox, SIGNAL(valueChanged(double)), this, SLOT(dParamChanged(double)));
+    QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(minimumVariableValueChanged(const QString)));
+    QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(maximumVariableValueChanged(const QString)));
     connect(removeBtn, SIGNAL(pressed()), this, SLOT(RemoveBtnClick()));
 
     // Set default values
@@ -129,59 +143,29 @@ void FunctionBox::MathExpressionChanged(const QString &str)
 
 }
 
-void FunctionBox::AParamChanged(const QString &value)
+void FunctionBox::aParamChanged(double value)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Value of 'a' parameter isn't a decimal number!");
-        return;
-    }
-    errorText->clear();
-    expression->SetParameter("a", value.toDouble());
+    expression->SetParameter("a", value);
 }
 
-void FunctionBox::BParamChanged(const QString &value)
+void FunctionBox::bParamChanged(double value)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Value of 'b' parameter isn't a decimal number!");
-        return;
-    }
-    errorText->clear();
-    expression->SetParameter("b", value.toDouble());
+    expression->SetParameter("b", value);
 }
 
-void FunctionBox::CParamChanged(const QString &value)
+void FunctionBox::cParamChanged(double value)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Value of 'c' parameter isn't a decimal number!");
-        return;
-    }
-    errorText->clear();
-    expression->SetParameter("c", value.toDouble());
+    expression->SetParameter("c", value);
 }
 
-void FunctionBox::DParamChanged(const QString &value)
+void FunctionBox::dParamChanged(double value)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Value of 'd' parameter isn't a decimal number!");
-        return;
-    }
-    errorText->clear();
-    expression->SetParameter("d", value.toDouble());
+    expression->SetParameter("d", value);
 }
 
-void FunctionBox::MinimumVarValueChanged(const QString &value)
+void FunctionBox::minimumVariableValueChanged(const QString &strValue)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Minimum possible variable's value must be a decimal number");
-        return;
-    }
-    errorText->clear();
-    expression->SetMinimumVarValue(value.toDouble());
+    expression->SetMinimumVarValue(strValue.toDouble());
     // Minimum variable value can't exceeds the maximum one
     if(expression->GetMinimumVarValue() > expression->GetMaximumVarValue())
     {
@@ -190,15 +174,9 @@ void FunctionBox::MinimumVarValueChanged(const QString &value)
 
 }
 
-void FunctionBox::MaximumVarValueChanged(const QString &value)
+void FunctionBox::maximumVariableValueChanged(const QString &strValue)
 {
-    if(!MathChecker::IsTokenNumber(value))
-    {
-        errorText->setText("Maximum possible variable's value must be a decimal number");
-        return;
-    }
-    errorText->clear();
-    expression->SetMaximumVarValue(value.toDouble());
+    expression->SetMaximumVarValue(strValue.toDouble());
     // Maximum variable value have to be greater than the minimum one
     if(expression->GetMaximumVarValue() < expression->GetMinimumVarValue())
     {
@@ -218,27 +196,17 @@ void FunctionBox::RemoveBtnClick()
 
 void FunctionBox::mousePressEvent(QMouseEvent *event)
 {
-    setCursor(Qt::ClosedHandCursor);
-    qDebug() << "Mouse press event!";
     if(event->button() == Qt::LeftButton)
     {
         mouseClickPos = event->pos();
     }
 }
 
-void FunctionBox::mouseReleaseEvent(QMouseEvent *event)
-{
-    Q_UNUSED(event);
-    setCursor(Qt::OpenHandCursor);
-}
-
 void FunctionBox::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "Mouse move event!" << event->button();
     if(event->buttons() & Qt::LeftButton)
     {
         int distance{(event->pos()-mouseClickPos).manhattanLength()};
-        qDebug() << distance << " " << QApplication::startDragDistance();
         if(distance > QApplication::startDragDistance())
         {
             startDrag();
@@ -248,7 +216,6 @@ void FunctionBox::mouseMoveEvent(QMouseEvent *event)
 
 void FunctionBox::startDrag()
 {
-    qDebug() <<"DRAG STARTED!";
     // Writes MathExpression object to byteArr object
     QByteArray byteArr;
     QDataStream stream(&byteArr, QIODevice::WriteOnly);

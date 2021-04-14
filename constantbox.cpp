@@ -72,3 +72,12 @@ void ConstantBox::SetConstantValue(const QString &str)
     constantValue = str;
 }
 
+QString ConstantBox::GetConstantName() const
+{
+    return constantName;
+}
+
+QString ConstantBox::GetConstantValue() const
+{
+    return constantValue;
+}

@@ -14,41 +14,44 @@ private:
     MathExpression *expression;
     /// Хранит позицию, в которую пользователь кликнул ЛКМ внутри этого виджета
     QPoint mouseClickPos;
+
+    /// Метка для выражения "y="
+    QLabel *functionName;
+    /// Метка для отображения ошибок
+    QLabel *errorText;
+    /// Отображает название параметра a
+    QLabel *aLbl;
+    /// Отображает название параметра b
+    QLabel *bLbl;
+    /// Отображает название параметра c
+    QLabel *cLbl;
+    /// Отображает название параметра d
+    QLabel *dLbl;
+    /// Отображает название переменной
+    QLabel *xLbl;
+
     /// Starts drag process
     void startDrag();
 
 protected:
     void paintEvent(QPaintEvent *event);
+    // Функции для реализации технологии drag&drop
     void mousePressEvent(QMouseEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
 
 public:
-    /// Метка для выражения "y="
-    QLabel *functionName;
+
     /// Поле ввода тела функции
     QLineEdit *functionBody;
-    /// Метка для отображения ошибок
-    QLabel *errorText;
-    /// Отображает название параметра a
-    QLabel *aLbl;
     /// Поле ввода значения параметра а
-    QLineEdit *aParamBox;
-    /// Отображает название параметра b
-    QLabel *bLbl;
+    QDoubleSpinBox *aParamBox;
     /// Поле ввода значения параметра b
-    QLineEdit *bParamBox;
-    /// Отображает название параметра c
-    QLabel *cLbl;
+    QDoubleSpinBox *bParamBox;
     /// Поле ввода значения параметра c
-    QLineEdit *cParamBox;
-    /// Отображает название параметра d
-    QLabel *dLbl;
+    QDoubleSpinBox *cParamBox;
     /// Поле ввода значения параметра d
-    QLineEdit *dParamBox;
-    /// Отображает название переменной
-    QLabel *xLbl;
+    QDoubleSpinBox *dParamBox;
     /// Поле для ввода минимально возможного значения
     /// переменной x
     QLineEdit *minimumVarValueBox;
@@ -65,13 +68,14 @@ signals:
     void elementRemoved(FunctionBox*);
 
 private slots:
+    //TODOvoid checkMathExpressionCorrectness();
     void MathExpressionChanged(const QString &str);
-    void AParamChanged(const QString &value);
-    void BParamChanged(const QString &value);
-    void CParamChanged(const QString &value);
-    void DParamChanged(const QString &value);
-    void MinimumVarValueChanged(const QString &value);
-    void MaximumVarValueChanged(const QString &value);
+    void aParamChanged(double value);
+    void bParamChanged(double value);
+    void cParamChanged(double value);
+    void dParamChanged(double value);
+    void minimumVariableValueChanged(const QString &strValue);
+    void maximumVariableValueChanged(const QString &strValue);
     void RemoveBtnClick();
 
 };

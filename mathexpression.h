@@ -33,7 +33,7 @@ public:
     /// Sets a value to the corresponding parameter
     void SetParameter(QString parameter, double value);
 
-    QString GetParameterValue(QString parameter)const;
+    double GetParameterValue(QString parameter)const;
 
     /// Sets values to the parameters
     void SetParameters(double aValue=1.0,double bValue=1.0, double cValue=1.0, double dValue=1.0);

@@ -1,4 +1,5 @@
 #include "constantboxlist.h"
+#include"mathhelper.h"
 #include<QtWidgets>
 
 ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
@@ -70,15 +71,18 @@ ConstantBox* ConstantBoxList::addNewWidget()
     return newBox;
 }
 
-
 void ConstantBoxList::clear()
 {
     QList<ConstantBox*> temp(listOfWidgets);
     for(ConstantBox *item: temp)
     {
+        // Deletes ConstantBox objects from layout and widgets list
         listOfWidgets.takeAt(listOfWidgets.indexOf(item));
         listLayout->takeAt(listLayout->indexOf(item));
         listBody->adjustSize();
+
+        // Deletes constant from the list of correct constants
+        MathHelper::RemoveConstant(item->GetConstantName());
         delete item;
     }
 }
@@ -100,7 +104,6 @@ void ConstantBoxList::Clear()
     }
 }
 
-
 int ConstantBoxList::getListOfWidgetsLength() const
 {
     return listOfWidgets.length();
@@ -108,7 +111,7 @@ int ConstantBoxList::getListOfWidgetsLength() const
 
 void ConstantBoxList::SaveFunctionListToFile()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить константы в файл", "constants.izum","Izum files (*.izum *.dat)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить константы в файл", "constants.izumc","Izum constants (*.izumc)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -116,14 +119,16 @@ void ConstantBoxList::SaveFunctionListToFile()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        // TODO
+        QString constantName = expression->GetConstantName();
+        QString constantValue = expression->GetConstantValue();
+        outStream << constantName << constantValue;
     }
     outputFile.close();
 }
 
 void ConstantBoxList::LoadFunctionListFromFile()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izum *.dat");
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","Izum constants *.izumc");
     if(!pathToInputFile.isEmpty())
     {
         QFile inputFile(pathToInputFile);
@@ -135,7 +140,12 @@ void ConstantBoxList::LoadFunctionListFromFile()
         in >> length;
         for(int i{0}; i < length; i++)
         {
-            // TODO
+            ConstantBox *newConstantBox = addNewWidget();
+            QString constantName, constantValue;
+            in>>constantName >> constantValue;
+            qDebug() << constantName << constantValue;
+            newConstantBox->constantBox->setText(constantName);
+            newConstantBox->valueBox->setText(constantValue);
         }
         inputFile.close();
     }

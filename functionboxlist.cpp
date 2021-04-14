@@ -4,7 +4,7 @@
 FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
 {
     m_height = height+50;
-    m_width = 350;
+    m_width = 370;
     listBody = new QWidget();
     listBody->setFixedWidth(m_width-20);
 
@@ -110,7 +110,7 @@ int FunctionBoxList::getListOfWidgetsLength() const
 
 void FunctionBoxList::SaveFunctionListToFile()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "functions.izum","Izum files (*.izum *.dat)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "functions.izumf","Izum functions (*.izumf)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -125,7 +125,7 @@ void FunctionBoxList::SaveFunctionListToFile()
 
 void FunctionBoxList::LoadFunctionListFromFile()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izum *.dat");
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izumf");
     if(!pathToInputFile.isEmpty())
     {
         QFile inputFile(pathToInputFile);
@@ -141,10 +141,10 @@ void FunctionBoxList::LoadFunctionListFromFile()
             MathExpression *currExp = currBox->GetMathExpression();
             in >> *currExp;
             currBox->functionBody->setText(currExp->GetInitialExpression());
-            currBox->aParamBox->setText(currExp->GetParameterValue("a"));
-            currBox->bParamBox->setText(currExp->GetParameterValue("b"));
-            currBox->cParamBox->setText(currExp->GetParameterValue("c"));
-            currBox->dParamBox->setText(currExp->GetParameterValue("d"));
+            currBox->aParamBox->setValue(currExp->GetParameterValue("a"));
+            currBox->bParamBox->setValue(currExp->GetParameterValue("b"));
+            currBox->cParamBox->setValue(currExp->GetParameterValue("c"));
+            currBox->dParamBox->setValue(currExp->GetParameterValue("d"));
 
             currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
             currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
