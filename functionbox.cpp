@@ -7,7 +7,6 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
-    errorList = new QStringList;
     expression = new MathExpression();
     resize(250,100);
     // Инициализируем все внутренние виджеты
@@ -124,7 +123,6 @@ void FunctionBox::paintEvent(QPaintEvent *event)
 void FunctionBox::checkCorrectness(const QString &str)
 {
     // Очищаем все старые записи об ошибках
-    errorList->clear();
     errorText->clear();
 
     // Проверяем введённое математическое выражение на корректность
@@ -135,28 +133,28 @@ void FunctionBox::checkCorrectness(const QString &str)
     {
         if(!checker.AreAllTokensCorrect())
         {
-           errorList->append(checker.GetErrorMessage());
+           errorText->setText(checker.GetErrorMessage());
         }
-        if(!checker.AreBracketsCorrespond())
+        else if(!checker.AreBracketsCorrespond())
         {
-            errorList->append(checker.GetErrorMessage());
+            errorText->setText(checker.GetErrorMessage());
         }
-        if(!checker.HasEmptyBrackets())
+        else if(!checker.HasEmptyBrackets())
         {
-            errorList->append(checker.GetErrorMessage());
+            errorText->setText(checker.GetErrorMessage());
         }
-        if(!checker.HasMissedOperations())
+        else if(!checker.HasMissedOperations())
         {
-            errorList->append(checker.GetErrorMessage());
+            errorText->setText(checker.GetErrorMessage());
         }
-        if(!checker.HasMissedOperands())
+        else if(!checker.HasMissedOperands())
         {
-            errorList->append(checker.GetErrorMessage());
+            errorText->setText(checker.GetErrorMessage());
         }
 
         if(maximumVarValueBox->text().toDouble() < minimumVarValueBox->text().toDouble())
         {
-            errorList->append("Минимальное значение перменной больше максимального");
+            errorText->setText("Минимальное значение перменной больше максимального");
         }
     }
 }
@@ -164,14 +162,13 @@ void FunctionBox::checkCorrectness(const QString &str)
 void FunctionBox::MathExpressionChanged(const QString &str)
 {
         checkCorrectness(str);
-        qDebug() << "Error list: " << *errorList;
-        if(errorList->empty())
+        if(errorText->text().isEmpty())
         {
             expression->SetExpression(str);
         }
         else
         {
-            errorText->setText(errorList->front());
+            expression->SetExpression("");
         }
 }
 
