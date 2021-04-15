@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aboutprogdialog.cpp \
     constantbox.cpp \
     constantboxlist.cpp \
     functionbox.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
     plotter.cpp
 
 HEADERS += \
+    aboutprogdialog.h \
     constantbox.h \
     constantboxlist.h \
     functionbox.h \

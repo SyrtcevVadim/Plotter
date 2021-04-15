@@ -27,7 +27,7 @@ protected:
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 public slots:
-    void ShowAboutProgramMenu();
+    void showAboutProgramInfo();
 
 };
 

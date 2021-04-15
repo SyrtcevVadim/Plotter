@@ -39,8 +39,8 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawAxesNames(&painter, QString("X"), QString("Y"));
     drawCoordinates(&painter);
 
-    drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
-    drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
+    //drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
+    //drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
 
 }
 

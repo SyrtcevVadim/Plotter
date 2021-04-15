@@ -1,5 +1,7 @@
 #include "mainwindow.h"
+#include "aboutprogdialog.h"
 #include<QtWidgets>
+
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     functionBoxList = new FunctionBoxList(500);
@@ -14,14 +16,15 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     settingsMenu = new QMenu("&Настройки");
     helpMenu = new QMenu("&Справка");
     topLevelMenu->addMenu(fileMenu);
-    topLevelMenu->addMenu(helpMenu);
     topLevelMenu->addMenu(settingsMenu);
+    topLevelMenu->addMenu(helpMenu);
+
     topLevelMenu->showNormal();
 
 
     helpMenu->addAction("&Знакомство");
     helpMenu->addSeparator();
-    helpMenu->addAction("&О программе Изюм");
+    helpMenu->addAction("&О программе Изюм", this, SLOT(showAboutProgramInfo()));
 
 
     fileMenu->addAction("Загрузить функции", functionBoxList, SLOT(loadFunctionListFromFile()));
@@ -71,8 +74,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::ShowAboutProgramMenu()
+void MainWindow::showAboutProgramInfo()
 {
-    QMessageBox *aboutProgramBox = new QMessageBox(QMessageBox::Information,"О программе Изюм",
-                                                   "Программ");
+    AboutProgDialog *aboutProg = new AboutProgDialog();
+    aboutProg->exec();
 }
