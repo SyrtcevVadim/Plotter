@@ -23,13 +23,9 @@ MathExpression::MathExpression()
 
 MathExpression::MathExpression(QString expression): MathExpression()
 {
-    initialExpression = expression.trimmed();
-    infixExpression = " ";
-    for(auto token: MathParser::CreateTokenList(expression))
-    {
-        infixExpression += token + " ";
-    }
-    infixExpression = SubstituteConstants(infixExpression);
+    initialExpression = expression;
+
+    infixExpression = SubstituteConstants(initialExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
 }
 
@@ -79,19 +75,16 @@ void MathExpression::SetParameters(double aValue, double bValue, double cValue, 
 void MathExpression::SetExpression(QString expression)
 {
     initialExpression = expression;
-    infixExpression = " ";
-    for(auto token: MathParser::CreateTokenList(expression))
-    {
-        infixExpression += token + " ";
-    }
-    infixExpression = SubstituteConstants(infixExpression);
+
+    infixExpression = SubstituteConstants(initialExpression);
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
 }
 
 QString MathExpression::SubstituteConstants(QString infixExpression)
 {
+    qDebug() << "\nExpression before constant substitution: " << infixExpression;
     QString resultExpression{""};
-    for(auto key: (infixExpression.trimmed()).split(" "))
+    for(auto key: MathParser::CreateTokenList(infixExpression))
     {
         if(MathHelper::predefinedConstants.contains(key))
         {
@@ -106,12 +99,14 @@ QString MathExpression::SubstituteConstants(QString infixExpression)
             resultExpression += key + " ";
         }
     }
+    qDebug() << "Expression after iteration: " << resultExpression;
     if(MathHelper::HasConstants(resultExpression))
     {
         return SubstituteConstants(resultExpression);
     }
     else
     {
+        qDebug() << "Expression after constant substitution: " <<resultExpression;
         return resultExpression;
     }
 }

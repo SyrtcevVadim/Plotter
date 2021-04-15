@@ -33,14 +33,15 @@ public:
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
     FunctionBox* addNewWidget();
     int getListOfWidgetsLength()const;
-
     void clear();
+
 public slots:
-    void AddNewWidgetToFunctionList();
-    void SaveFunctionListToFile();
-    void LoadFunctionListFromFile();
-    void RemoveWidget(FunctionBox*);
-    void Clear();
+    void update();
+    void addNewWidgetToFunctionList();
+    void saveFunctionListToFile();
+    void loadFunctionListFromFile();
+    void removeWidget(FunctionBox*);
+    void clearList();
 
 };
 

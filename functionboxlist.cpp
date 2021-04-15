@@ -54,16 +54,16 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     setLayout(mainLayout);
 
     // Linking signals with slots
-    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(SaveFunctionListToFile()));
-    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(LoadFunctionListFromFile()));
-    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(AddNewWidgetToFunctionList()));
-    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(Clear()));
+    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(saveFunctionListToFile()));
+    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadFunctionListFromFile()));
+    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidgetToFunctionList()));
+    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clearList()));
 }
 
 FunctionBox* FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
-    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(RemoveWidget(FunctionBox*)));
+    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
@@ -82,7 +82,7 @@ void FunctionBoxList::clear()
     }
 }
 
-void FunctionBoxList::Clear()
+void FunctionBoxList::clearList()
 {
     // TODO добавить предупреждение
     if(listOfWidgets.length() > 0)
@@ -108,7 +108,7 @@ int FunctionBoxList::getListOfWidgetsLength() const
     return listOfWidgets.length();
 }
 
-void FunctionBoxList::SaveFunctionListToFile()
+void FunctionBoxList::saveFunctionListToFile()
 {
     QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "functions.izumf","Izum functions (*.izumf)");
     QFile outputFile(pathToOutputFile);
@@ -123,7 +123,7 @@ void FunctionBoxList::SaveFunctionListToFile()
     outputFile.close();
 }
 
-void FunctionBoxList::LoadFunctionListFromFile()
+void FunctionBoxList::loadFunctionListFromFile()
 {
     QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izumf");
     if(!pathToInputFile.isEmpty())
@@ -132,7 +132,7 @@ void FunctionBoxList::LoadFunctionListFromFile()
         inputFile.open(QIODevice::ReadOnly);
         QDataStream in(&inputFile);
         // Clears previos list content
-        Clear();
+        clearList();
         int length;
         in >> length;
         for(int i{0}; i < length; i++)
@@ -153,12 +153,12 @@ void FunctionBoxList::LoadFunctionListFromFile()
     }
 }
 
-void FunctionBoxList::AddNewWidgetToFunctionList()
+void FunctionBoxList::addNewWidgetToFunctionList()
 {
     addNewWidget();
 }
 
-void FunctionBoxList::RemoveWidget(FunctionBox *box)
+void FunctionBoxList::removeWidget(FunctionBox *box)
 {
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));
@@ -169,4 +169,13 @@ void FunctionBoxList::RemoveWidget(FunctionBox *box)
 QSize FunctionBoxList::sizeHint() const
 {
     return QSize(m_width, m_height);
+}
+
+void FunctionBoxList::update()
+{
+    for(auto *box: listOfWidgets)
+    {
+        // Updates math expression
+        box->changeMathExpression("");
+    }
 }

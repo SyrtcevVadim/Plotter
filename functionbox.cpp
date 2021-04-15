@@ -1,5 +1,6 @@
 #include<QDebug>
 #include "functionbox.h"
+#include "constantbox.h"
 #include "mathparser.h"
 #include"mathexpression.h"
 #include"mathhelper.h"
@@ -70,14 +71,14 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     removeBtn->setIcon(removeImage);
 
     // Соединяем сигналы с обработчиками
-    QObject::connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(MathExpressionChanged(const QString)));
-    QObject::connect(aParamBox, SIGNAL(valueChanged(double)), this, SLOT(aParamChanged(double)));
-    QObject::connect(bParamBox, SIGNAL(valueChanged(double)), this, SLOT(bParamChanged(double)));
-    QObject::connect(cParamBox, SIGNAL(valueChanged(double)), this, SLOT(cParamChanged(double)));
-    QObject::connect(dParamBox, SIGNAL(valueChanged(double)), this, SLOT(dParamChanged(double)));
-    QObject::connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(minimumVariableValueChanged(const QString)));
-    QObject::connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(maximumVariableValueChanged(const QString)));
-    connect(removeBtn, SIGNAL(pressed()), this, SLOT(RemoveBtnClick()));
+    connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(changeMathExpression(const QString)));
+    connect(aParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeAParamValue(double)));
+    connect(bParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeBParamValue(double)));
+    connect(cParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeCParamValue(double)));
+    connect(dParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeDParamValue(double)));
+    connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMinimumVariableValue(const QString)));
+    connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMaximumVariableValue(const QString)));
+    connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeBtnClick()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -89,7 +90,6 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     grid->addWidget(functionName, 0,0);
     grid->addWidget(functionBody, 0, 1,1,-1);
-
     grid->addWidget(errorText, 1,0, 1, -1);
 
     grid->addWidget(aLbl, 2, 0);
@@ -120,17 +120,15 @@ void FunctionBox::paintEvent(QPaintEvent *event)
     painter.drawRect(0,0, width()-5, height()-5);
 }
 
-void FunctionBox::checkCorrectness(const QString &str)
+void FunctionBox::checkCorrectness()
 {
     // Очищаем все старые записи об ошибках
     errorText->clear();
 
     // Проверяем введённое математическое выражение на корректность
-    MathChecker checker(str);
-
-
-    if(!(str.trimmed()).isEmpty())
+    if(!expression->GetInitialExpression().isEmpty())
     {
+        MathChecker checker(expression->GetInitialExpression());
         if(!checker.AreAllTokensCorrect())
         {
            errorText->setText(checker.GetErrorMessage());
@@ -159,40 +157,38 @@ void FunctionBox::checkCorrectness(const QString &str)
     }
 }
 
-void FunctionBox::MathExpressionChanged(const QString &str)
+void FunctionBox::changeMathExpression(const QString &str)
 {
-        checkCorrectness(str);
-        if(errorText->text().isEmpty())
-        {
-            expression->SetExpression(str);
-        }
-        else
-        {
-            expression->SetExpression("");
-        }
+    Q_UNUSED(str);
+    expression->SetExpression(functionBody->text());
+    checkCorrectness();
+    if(!errorText->text().isEmpty())
+    {
+        expression->SetExpression("");
+    }
 }
 
-void FunctionBox::aParamChanged(double value)
+void FunctionBox::changeAParamValue(double value)
 {
     expression->SetParameter("a", value);
 }
 
-void FunctionBox::bParamChanged(double value)
+void FunctionBox::changeBParamValue(double value)
 {
     expression->SetParameter("b", value);
 }
 
-void FunctionBox::cParamChanged(double value)
+void FunctionBox::changeCParamValue(double value)
 {
     expression->SetParameter("c", value);
 }
 
-void FunctionBox::dParamChanged(double value)
+void FunctionBox::changeDParamValue(double value)
 {
     expression->SetParameter("d", value);
 }
 
-void FunctionBox::minimumVariableValueChanged(const QString &strValue)
+void FunctionBox::changeMinimumVariableValue(const QString &strValue)
 {
     // Minimum variable value can't exceeds the maximum one
     if(strValue.toDouble() > expression->GetMaximumVarValue())
@@ -202,11 +198,11 @@ void FunctionBox::minimumVariableValueChanged(const QString &strValue)
     else
     {
         expression->SetMinimumVarValue(strValue.toDouble());
-        checkCorrectness(functionBody->text());
+        checkCorrectness();
     }
 }
 
-void FunctionBox::maximumVariableValueChanged(const QString &strValue)
+void FunctionBox::changeMaximumVariableValue(const QString &strValue)
 {
 
     // Maximum variable value have to be greater than the minimum one
@@ -217,7 +213,7 @@ void FunctionBox::maximumVariableValueChanged(const QString &strValue)
     else
     {
         expression->SetMaximumVarValue(strValue.toDouble());
-        checkCorrectness(functionBody->text());
+        checkCorrectness();
     }
 }
 
@@ -226,7 +222,7 @@ MathExpression* FunctionBox::GetMathExpression()
     return expression;
 }
 
-void FunctionBox::RemoveBtnClick()
+void FunctionBox::removeBtnClick()
 {
     emit(elementRemoved(this));
 }

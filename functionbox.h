@@ -41,7 +41,6 @@ protected:
 
 
 public:
-
     /// Поле ввода тела функции
     QLineEdit *functionBody;
     /// Поле ввода значения параметра а
@@ -67,16 +66,19 @@ public:
 signals:
     void elementRemoved(FunctionBox*);
 
+public slots:
+    void checkCorrectness();
+    void changeMathExpression(const QString &str);
 private slots:
-    void checkCorrectness(const QString &str);
-    void MathExpressionChanged(const QString &str);
-    void aParamChanged(double value);
-    void bParamChanged(double value);
-    void cParamChanged(double value);
-    void dParamChanged(double value);
-    void minimumVariableValueChanged(const QString &strValue);
-    void maximumVariableValueChanged(const QString &strValue);
-    void RemoveBtnClick();
+
+
+    void changeAParamValue(double value);
+    void changeBParamValue(double value);
+    void changeCParamValue(double value);
+    void changeDParamValue(double value);
+    void changeMinimumVariableValue(const QString &strValue);
+    void changeMaximumVariableValue(const QString &strValue);
+    void removeBtnClick();
 
 };
 

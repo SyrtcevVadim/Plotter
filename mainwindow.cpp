@@ -24,8 +24,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     helpMenu->addAction("&О программе Изюм");
 
 
-    fileMenu->addAction("&Загрузить список функций", functionBoxList, SLOT(LoadFunctionListFromFile()), Qt::CTRL+Qt::Key_L);
-    fileMenu->addAction("&Сохранить список функций", functionBoxList, SLOT(SaveFunctionListToFile()), Qt::CTRL+Qt::Key_S);
+    fileMenu->addAction("Загрузить функции", functionBoxList, SLOT(loadFunctionListFromFile()));
+    fileMenu->addAction("Сохранить функции", functionBoxList, SLOT(saveFunctionListToFile()));
+    fileMenu->addSeparator();
+    fileMenu->addAction("Загрузить константы", constantBoxList, SLOT(loadConstantListFromFile()));
+    fileMenu->addAction("Сохранить константы", constantBoxList, SLOT(saveConstantListToFile()));
     fileMenu->addSeparator();
     fileMenu->addAction("&Выйти", this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
 
@@ -38,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     itemLayout->addWidget(plotter,1, Qt::AlignTop);
 
     setLayout(itemLayout);
+
+    connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -57,7 +62,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         if(userAnswer == QMessageBox::Yes)
         {
             // Open the QFileDialog to store info to output file
-            functionBoxList->SaveFunctionListToFile();
+            functionBoxList->saveFunctionListToFile();
         }
         else if(userAnswer==QMessageBox::Cancel)
         {

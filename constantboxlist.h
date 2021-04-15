@@ -16,6 +16,16 @@ private:
     QVBoxLayout *listLayout;
     /// Container for storing widgets
     QList<ConstantBox*> listOfWidgets;
+
+
+protected:
+    QSize sizeHint()const;
+
+public:
+    ConstantBoxList(int height = 400, QWidget *parent = nullptr);
+    ConstantBox* addNewWidget();
+    int getListOfWidgetsLength()const;
+    void clear();
     /// Button for adding new elements of T widget
     QPushButton *addNewWidgetBtn;
     /// Opens the file explorer to save the content of list of widgets
@@ -25,20 +35,18 @@ private:
     /// Clears the content of the list
     QPushButton *clearAllContentBtn;
 
-protected:
-    QSize sizeHint()const;
-public:
-    ConstantBoxList(int height = 400, QWidget *parent = nullptr);
-    ConstantBox* addNewWidget();
-    int getListOfWidgetsLength()const;
-    void clear();
+
+signals:
+    /// Invokes after every change of constant, i.e. altering, removing, clearing
+    void constantsUpdated();
 
 public slots:
-    void AddNewWidgetToFunctionList();
-    void SaveFunctionListToFile();
-    void LoadFunctionListFromFile();
-    void RemoveWidget(ConstantBox*);
-    void Clear();
+    void update();
+    void addNewWidgetToFunctionList();
+    void saveConstantListToFile();
+    void loadConstantListFromFile();
+    void removeWidget(ConstantBox*);
+    void clearList();
 
 };
 

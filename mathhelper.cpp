@@ -134,10 +134,11 @@ bool MathHelper::IsTokenFunction(const QString &expression)
 
 bool MathHelper::HasConstants(const QString &expression)
 {
-    for(auto key: (expression.trimmed()).split(" "))
+    for(auto key: MathParser::CreateTokenList(expression))
     {
         if(predefinedConstants.contains(key) || userDefinedConstants.contains(key))
         {
+            qDebug() << key << " is constant";
             return true;
         }
     }
@@ -168,14 +169,12 @@ void MathHelper::AddConstant(const QString &constant, const QString &value)
     // Check constant for double entry
     if(!correctTokens.contains(constant))
     {
-         correctTokens.append(constant);
          userDefinedConstants[constant] = value;
     }
 }
 
 void MathHelper::RemoveConstant(const QString &constant)
 {
-    correctTokens.removeOne(constant);
     userDefinedConstants.remove(constant);
 }
 

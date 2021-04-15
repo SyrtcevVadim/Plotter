@@ -19,7 +19,7 @@ bool MathChecker::AreAllTokensCorrect()
 {
     for(auto token: expression)
     {
-        if(!MathHelper::correctTokens.contains(token) && !MathHelper::IsTokenNumber(token))
+        if(!(MathHelper::correctTokens.contains(token) || MathHelper::userDefinedConstants.contains(token))&& !MathHelper::IsTokenNumber(token))
         {
             errorMessage = QString("Получено неизвестное выражение \"%1\"").arg(token);
             return false;

@@ -55,16 +55,18 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
     setLayout(mainLayout);
 
     // Linking signals with slots
-    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(SaveFunctionListToFile()));
-    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(LoadFunctionListFromFile()));
-    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(AddNewWidgetToFunctionList()));
-    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(Clear()));
+    connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(saveConstantListToFile()));
+    connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadConstantListFromFile()));
+    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidgetToFunctionList()));
+    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clearList()));
 }
 
 ConstantBox* ConstantBoxList::addNewWidget()
 {
     ConstantBox *newBox = new ConstantBox();
-    connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(RemoveWidget(ConstantBox*)));
+    connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(removeWidget(ConstantBox*)));
+    connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(update()));
+    connect(newBox, SIGNAL(elementChanged()), this, SLOT(update()));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
@@ -73,6 +75,7 @@ ConstantBox* ConstantBoxList::addNewWidget()
 
 void ConstantBoxList::clear()
 {
+
     QList<ConstantBox*> temp(listOfWidgets);
     for(ConstantBox *item: temp)
     {
@@ -87,7 +90,7 @@ void ConstantBoxList::clear()
     }
 }
 
-void ConstantBoxList::Clear()
+void ConstantBoxList::clearList()
 {
     if(listOfWidgets.length() > 0)
     {
@@ -100,8 +103,10 @@ void ConstantBoxList::Clear()
         if(result==QMessageBox::Yes)
         {
             clear();
+            emit(constantsUpdated());
         }
     }
+
 }
 
 int ConstantBoxList::getListOfWidgetsLength() const
@@ -109,8 +114,9 @@ int ConstantBoxList::getListOfWidgetsLength() const
     return listOfWidgets.length();
 }
 
-void ConstantBoxList::SaveFunctionListToFile()
+void ConstantBoxList::saveConstantListToFile()
 {
+
     QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить константы в файл", "constants.izumc","Izum constants (*.izumc)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
@@ -126,7 +132,7 @@ void ConstantBoxList::SaveFunctionListToFile()
     outputFile.close();
 }
 
-void ConstantBoxList::LoadFunctionListFromFile()
+void ConstantBoxList::loadConstantListFromFile()
 {
     QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","Izum constants *.izumc");
     if(!pathToInputFile.isEmpty())
@@ -135,7 +141,7 @@ void ConstantBoxList::LoadFunctionListFromFile()
         inputFile.open(QIODevice::ReadOnly);
         QDataStream in(&inputFile);
         // Clears previos list content
-        Clear();
+        clearList();
         int length;
         in >> length;
         for(int i{0}; i < length; i++)
@@ -149,22 +155,29 @@ void ConstantBoxList::LoadFunctionListFromFile()
         }
         inputFile.close();
     }
+    emit(constantsUpdated());
 }
 
-void ConstantBoxList::AddNewWidgetToFunctionList()
+void ConstantBoxList::addNewWidgetToFunctionList()
 {
     addNewWidget();
 }
 
-void ConstantBoxList::RemoveWidget(ConstantBox *box)
+void ConstantBoxList::removeWidget(ConstantBox *box)
 {
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));
     delete box;
     listBody->adjustSize();
+    emit(constantsUpdated());
 }
 
 QSize ConstantBoxList::sizeHint() const
 {
     return QSize(m_width, m_height);
+}
+
+void ConstantBoxList::update()
+{
+    emit(constantsUpdated());
 }

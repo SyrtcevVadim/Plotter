@@ -29,10 +29,13 @@ public:
     QString GetConstantValue()const;
 
 public slots:
-    void RemoveBtnClick();
-    void SetConstantName(const QString&);
-    void SetConstantValue(const QString&);
+    void removeBtnClick();
+    void setConstantName(const QString&);
+    void setConstantValue(const QString&);
 signals:
+    /// Emits when user change constant inside constantBox object,
+    /// i.e. alters, removes constant
+    void elementChanged();
     void elementRemoved(ConstantBox*);
 };
 
