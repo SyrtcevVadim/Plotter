@@ -78,7 +78,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     connect(dParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeDParamValue(double)));
     connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMinimumVariableValue(const QString)));
     connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMaximumVariableValue(const QString)));
-    connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeBtnClick()));
+    connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeFunction()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -166,26 +166,35 @@ void FunctionBox::changeMathExpression(const QString &str)
     {
         expression->SetExpression("");
     }
+    else
+    {
+        emit(expressionChanged(expression));
+    }
+
 }
 
 void FunctionBox::changeAParamValue(double value)
 {
     expression->SetParameter("a", value);
+    emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeBParamValue(double value)
 {
     expression->SetParameter("b", value);
+    emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeCParamValue(double value)
 {
     expression->SetParameter("c", value);
+    emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeDParamValue(double value)
 {
     expression->SetParameter("d", value);
+    emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeMinimumVariableValue(const QString &strValue)
@@ -200,6 +209,11 @@ void FunctionBox::changeMinimumVariableValue(const QString &strValue)
         expression->SetMinimumVarValue(strValue.toDouble());
         checkCorrectness();
     }
+    if(errorText->text().isEmpty())
+    {
+        emit(expressionChanged(expression));
+    }
+
 }
 
 void FunctionBox::changeMaximumVariableValue(const QString &strValue)
@@ -215,6 +229,10 @@ void FunctionBox::changeMaximumVariableValue(const QString &strValue)
         expression->SetMaximumVarValue(strValue.toDouble());
         checkCorrectness();
     }
+    if(errorText->text().isEmpty())
+    {
+        emit(expressionChanged(expression));
+    }
 }
 
 MathExpression* FunctionBox::getMathExpression()
@@ -222,7 +240,7 @@ MathExpression* FunctionBox::getMathExpression()
     return expression;
 }
 
-void FunctionBox::removeBtnClick()
+void FunctionBox::removeFunction()
 {
     emit(elementRemoved(this));
 }

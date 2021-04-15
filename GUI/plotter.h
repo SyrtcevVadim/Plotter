@@ -1,4 +1,6 @@
 #pragma once
+#include"LibForPlotter/mathexpression.h"
+#include"LibForPlotter/valuetable.h"
 #include<QtWidgets>
 
 class Plotter: public QWidget
@@ -20,6 +22,11 @@ private:
     int areaWidth;
     /// Height of the painting area
     int areaHeight;
+
+    /// Stores pointers to function defined inside FunctionBoxList object
+    QList<MathExpression *> functions;
+    /// Stores tables of values of functions
+    QList<ValueTable *> valueTables;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -62,5 +69,8 @@ public slots:
     void drawPointF(QPainter *painter, QPointF point, QColor color = Qt::black);
     /// Draws a line at painting area
     void drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,QColor color = Qt::black);
+
+    void addFunction(MathExpression *expression);
+    void createTableValue(MathExpression *expression);
 };
 

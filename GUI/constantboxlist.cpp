@@ -34,11 +34,6 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
     QPixmap loadFromFileIcon(":/images/Images/LoadImage.png");
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
-    // Test data
-    for(int i{0}; i < 1; i++)
-    {
-        addNewWidget();
-    }
 
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -95,7 +90,7 @@ void ConstantBoxList::clear()
 
 }
 
-int ConstantBoxList::getListOfWidgetsLength() const
+int ConstantBoxList::getLength() const
 {
     return listOfWidgets.length();
 }

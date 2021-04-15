@@ -33,6 +33,10 @@ public:
     /// Returns the length of list
     int getLength()const;
 
+signals:
+    void newFunctionAdded(MathExpression*);
+    void expressionChanged(MathExpression*);
+
 public slots:
     /// Updates the content of list
     void update();
@@ -46,6 +50,9 @@ public slots:
     void removeWidget(FunctionBox*);
     /// Clears list's content
     void clear();
+
+    void onExpressionChanged(MathExpression *expression);
+
 };
 
 #endif // FUNCTIONBOXLIST_H

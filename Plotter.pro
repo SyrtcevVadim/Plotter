@@ -22,7 +22,8 @@ SOURCES += \
     LibForPlotter/mathformconverter.cpp \
     LibForPlotter/mathhelper.cpp \
     LibForPlotter/mathparser.cpp \
-    main.cpp
+    LibForPlotter/valuetable.cpp \
+    main.cpp \
 
 
 
@@ -39,7 +40,8 @@ HEADERS += \
     LibForPlotter/mathexpression.h \
     LibForPlotter/mathformconverter.h \
     LibForPlotter/mathhelper.h \
-    LibForPlotter/mathparser.h
+    LibForPlotter/mathparser.h \
+    LibForPlotter/valuetable.h \
 
 
 # Default rules for deployment.

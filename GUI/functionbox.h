@@ -60,12 +60,15 @@ public:
 signals:
     /// Is emmited when user deletes this functionBox object
     void elementRemoved(FunctionBox*);
+    /// Is emmited when user changes any parameter of FunctionBox object
+    void expressionChanged(MathExpression*);
 
 public slots:
     /// Checks the correctness of provided mathematic expression
     void checkCorrectness();
     /// Changes mathematic expression
     void changeMathExpression(const QString &str);
+
 private slots:
     /// Changes a parameter value
     void changeAParamValue(double value);

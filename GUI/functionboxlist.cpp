@@ -33,11 +33,6 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     QPixmap loadFromFileIcon(":/images/Images/LoadImage.png");
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
-    // Test data
-    for(int i{0}; i < 1; i++)
-    {
-        addNewWidget();
-    }
 
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -57,11 +52,10 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(saveFunctionListToFile()));
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadFunctionListFromFile()));
     connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidget()));
-    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clearList()));
+    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clear()));
 }
 
-
-void FunctionBoxList::clearList()
+void FunctionBoxList::clear()
 {
     if(listOfWidgets.length() > 0)
     {
@@ -83,8 +77,7 @@ void FunctionBoxList::clearList()
     }
 }
 
-
-int FunctionBoxList::getListOfWidgetsLength() const
+int FunctionBoxList::getLength() const
 {
     return listOfWidgets.length();
 }
@@ -113,7 +106,7 @@ void FunctionBoxList::loadFunctionListFromFile()
         inputFile.open(QIODevice::ReadOnly);
         QDataStream in(&inputFile);
         // Clears previos list content
-        clearList();
+        clear();
         int length;
         in >> length;
         for(int i{0}; i < length; i++)
@@ -138,11 +131,13 @@ void FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
     connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
+    connect(newBox, SIGNAL(expressionChanged(MathExpression*)), this, SLOT(onExpressionChanged(MathExpression*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
 
     // Adds new FunctionBox object to widget list
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
+    emit(newFunctionAdded(newBox->getMathExpression()));
 }
 
 void FunctionBoxList::removeWidget(FunctionBox *box)
@@ -164,5 +159,11 @@ void FunctionBoxList::update()
     {
         // Updates math expression
         box->changeMathExpression("");
+        emit(expressionChanged(box->getMathExpression()));
     }
+}
+
+void FunctionBoxList::onExpressionChanged(MathExpression *expression)
+{
+    emit(expressionChanged(expression));
 }

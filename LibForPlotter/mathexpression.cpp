@@ -150,7 +150,7 @@ void MathExpression::SetMinimumVarValue(double value)
     minimumVarValue = value;
 }
 
-double MathExpression::GetMinimumVarValue()
+double MathExpression::GetMinimumVarValue()const
 {
     return minimumVarValue;
 }
@@ -160,7 +160,7 @@ void MathExpression::SetMaximumVarValue(double value)
     maximumVarValue = value;
 }
 
-double MathExpression::GetMaximumVarValue()
+double MathExpression::GetMaximumVarValue()const
 {
     return maximumVarValue;
 }

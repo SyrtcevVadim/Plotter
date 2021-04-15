@@ -1,5 +1,6 @@
-#include "GUI/plotter.h"
-#include "LibForPlotter/mathexpression.h"
+#include"GUI/plotter.h"
+#include"LibForPlotter/mathexpression.h"
+#include"LibForPlotter/valuetable.h"
 #include<QtWidgets>
 
 Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
@@ -38,6 +39,18 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawAxes(&painter);
     drawAxesNames(&painter, QString("X"), QString("Y"));
     drawCoordinates(&painter);
+
+    // Отрисовываем графики функций
+    for(ValueTable *table: valueTables)
+    {
+        if(table->hasToBeDrawn)
+        {
+            for(double var{table->getMin()}; var <= table->getMax(); var+=table->getSingleStep())
+            {
+                drawLineF(&painter, QPointF(var-table->getSingleStep(), table->get(var-table->getSingleStep())), QPointF(var, table->get(var)));
+            }
+        }
+    }
 
     //drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
     //drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
@@ -252,7 +265,7 @@ void Plotter::drawPoint(QPainter *painter, QPoint point, QColor color)
 
 void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 {
-    QPen pen{color, 3.0};
+    QPen pen{color, 1.0};
     painter->setPen(pen);
 
     painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleStep), origin.y()-(point.y()*gridCellWidth*singleStep));
@@ -261,7 +274,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
 void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
 {
-    QPen pen{color, 3.0};
+    QPen pen{color, 1.5};
     painter ->setPen(pen);
 
     painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleStep),
@@ -292,5 +305,52 @@ void Plotter::dropEvent(QDropEvent *event)
 
     MathExpression expression;
     in >> expression;
-    qDebug() << expression;
+    qDebug() <<"Dropped expression: "<< expression;
+
+    for(MathExpression *item: functions)
+    {
+        if(item->getInitialExpression() == expression.getInitialExpression())
+        {
+            valueTables.at(functions.indexOf(item))->hasToBeDrawn=true;
+        }
+    }
+    repaint();
+
+}
+
+void Plotter::addFunction(MathExpression *expression)
+{
+    functions.append(expression);
+
+    qDebug() << "Functions stored inside plotter: ";
+    for(auto *item: functions)
+    {
+        qDebug() << *item;
+    }
+}
+
+void Plotter::createTableValue(MathExpression *expression)
+{
+    int index{0};
+    for(MathExpression *item: functions)
+    {
+        if(item->getInitialExpression() == expression->getInitialExpression())
+        {
+            break;
+        }
+        index++;
+    }
+    //Removes old table of values
+    if(index < valueTables.length())
+    {
+        valueTables.removeAt(index);
+    }
+
+    // Creating table of values for this expression
+    if(!expression->GetInfixExpression().isEmpty())
+    {
+        ValueTable *table = new ValueTable(expression);
+        valueTables.insert(index, table);
+    }
+    repaint();
 }

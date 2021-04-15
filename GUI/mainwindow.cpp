@@ -46,12 +46,14 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     setLayout(itemLayout);
 
     connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
+    connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), plotter, SLOT(addFunction(MathExpression*)));
+    connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     // If user have worked with several function before closing the application
-    if(functionBoxList->getListOfWidgetsLength() > 0)
+    if(functionBoxList->getLength() > 0)
     {
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение сохранения данных перед выходом",
                                               "Вы хотите сохранить список функций в файл перед выходом из программы?",

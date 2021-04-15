@@ -50,11 +50,11 @@ public:
     /// Sets the minimum possible value of variable
     void SetMinimumVarValue(double value);
     /// Returns the minimum possible value of variable
-    double GetMinimumVarValue();
+    double GetMinimumVarValue()const;
     /// Sets the maximum possible value of variable
     void SetMaximumVarValue(double value);
     /// Returns the maximum possible value of variable
-    double GetMaximumVarValue();
+    double GetMaximumVarValue()const;
 
     friend QDataStream& operator<<(QDataStream &stream, const MathExpression &expression);
     friend QDataStream& operator>>(QDataStream &stream, MathExpression &expression);

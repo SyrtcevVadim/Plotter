@@ -52,7 +52,7 @@ public slots:
     void loadConstantListFromFile();
     /// Removes ConstantBox object from list
     void removeWidget(ConstantBox*);
-    /// Clears all list's content
+    /// Clears list's content
     void clear();
 
 };

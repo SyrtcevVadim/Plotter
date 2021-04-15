@@ -195,5 +195,12 @@ double MathCalculator::Calculate(double varValue)
             }
         }
     }
-    return stack.pop().toDouble();
+    if(!stack.isEmpty())
+    {
+        return stack.pop().toDouble();
+    }
+    else
+    {
+        return 0.0;
+    }
 }
