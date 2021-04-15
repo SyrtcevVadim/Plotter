@@ -1,5 +1,5 @@
-#include "mathhelper.h"
-#include "mathparser.h"
+#include "LibForPlotter/mathhelper.h"
+#include "LibForPlotter/mathparser.h"
 #include<utility>
 #include<QDebug>
 

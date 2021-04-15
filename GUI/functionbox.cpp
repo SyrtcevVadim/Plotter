@@ -1,10 +1,10 @@
+#include"GUI/functionbox.h"
+#include"GUI/constantbox.h"
+#include"LibForPlotter/mathparser.h"
+#include"LibForPlotter/mathexpression.h"
+#include"LibForPlotter/mathhelper.h"
+#include"LibForPlotter/mathchecker.h"
 #include<QDebug>
-#include "functionbox.h"
-#include "constantbox.h"
-#include "mathparser.h"
-#include"mathexpression.h"
-#include"mathhelper.h"
-#include"mathchecker.h"
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
@@ -126,9 +126,9 @@ void FunctionBox::checkCorrectness()
     errorText->clear();
 
     // Проверяем введённое математическое выражение на корректность
-    if(!expression->GetInitialExpression().isEmpty())
+    if(!expression->getInitialExpression().isEmpty())
     {
-        MathChecker checker(expression->GetInitialExpression());
+        MathChecker checker(expression->getInitialExpression());
         if(!checker.AreAllTokensCorrect())
         {
            errorText->setText(checker.GetErrorMessage());
@@ -217,7 +217,7 @@ void FunctionBox::changeMaximumVariableValue(const QString &strValue)
     }
 }
 
-MathExpression* FunctionBox::GetMathExpression()
+MathExpression* FunctionBox::getMathExpression()
 {
     return expression;
 }

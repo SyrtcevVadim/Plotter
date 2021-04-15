@@ -1,7 +1,7 @@
-#include "mathhelper.h"
-#include "mathexpression.h"
-#include "mathparser.h"
-#include "mathformconverter.h"
+#include "LibForPlotter/mathhelper.h"
+#include "LibForPlotter/mathexpression.h"
+#include "LibForPlotter/mathparser.h"
+#include "LibForPlotter/mathformconverter.h"
 #include<QMap>
 #include<QDataStream>
 #include<QDebug>
@@ -29,7 +29,7 @@ MathExpression::MathExpression(QString expression): MathExpression()
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
 }
 
-QString MathExpression::GetInitialExpression() const
+QString MathExpression::getInitialExpression() const
 {
     return initialExpression;
 }
@@ -58,7 +58,7 @@ void MathExpression::SetParameter(QString parameter, double value)
     }
 }
 
-double MathExpression::GetParameterValue(QString parameter)const
+double MathExpression::getParameterValue(QString parameter)const
 {
     return parameters[parameter];
 }

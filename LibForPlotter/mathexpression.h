@@ -34,7 +34,7 @@ public:
     /// Sets a value to the corresponding parameter
     void SetParameter(QString parameter, double value);
 
-    double GetParameterValue(QString parameter)const;
+    double getParameterValue(QString parameter)const;
 
     /// Sets values to the parameters
     void SetParameters(double aValue=1.0,double bValue=1.0, double cValue=1.0, double dValue=1.0);
@@ -42,7 +42,7 @@ public:
     void SetExpression(QString expression);
     /// Substitutes variables' values into a postfix expression and returns a result
     QString SubstituteVariableValue(const double varValue = 0.0);
-    QString GetInitialExpression()const;
+    QString getInitialExpression()const;
     /// Returns mathematical expression in infix notation
     QString GetInfixExpression()const;
     /// Returns mathematical expression in postfix notation

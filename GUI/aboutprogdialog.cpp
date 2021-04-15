@@ -1,4 +1,4 @@
-#include "aboutprogdialog.h"
+#include "GUI/aboutprogdialog.h"
 #include<QtWidgets>
 
 AboutProgDialog::AboutProgDialog(QWidget *parent): QDialog(parent, Qt::WindowTitleHint)

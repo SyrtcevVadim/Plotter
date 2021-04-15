@@ -1,4 +1,4 @@
-#include "functionboxlist.h"
+#include "GUI/functionboxlist.h"
 #include<QtWidgets>
 
 FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
@@ -56,35 +56,13 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     // Linking signals with slots
     connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(saveFunctionListToFile()));
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadFunctionListFromFile()));
-    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidgetToFunctionList()));
+    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidget()));
     connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clearList()));
 }
 
-FunctionBox* FunctionBoxList::addNewWidget()
-{
-    FunctionBox *newBox = new FunctionBox();
-    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
-    listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
-    listLayout->addWidget(newBox);
-    listOfWidgets.append(newBox);
-    return newBox;
-}
-
-void FunctionBoxList::clear()
-{
-    QList<FunctionBox*> temp(listOfWidgets);
-    for(FunctionBox *item: temp)
-    {
-        listOfWidgets.takeAt(listOfWidgets.indexOf(item));
-        listLayout->takeAt(listLayout->indexOf(item));
-        listBody->adjustSize();
-        delete item;
-    }
-}
 
 void FunctionBoxList::clearList()
 {
-    // TODO добавить предупреждение
     if(listOfWidgets.length() > 0)
     {
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка функций",
@@ -97,7 +75,10 @@ void FunctionBoxList::clearList()
         int result = msgBox->exec();
         if(result==QMessageBox::Yes)
         {
-            clear();
+            for(FunctionBox *item: listOfWidgets)
+            {
+                removeWidget(item);
+            }
         }
     }
 }
@@ -118,7 +99,7 @@ void FunctionBoxList::saveFunctionListToFile()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        outStream << *expression->GetMathExpression();
+        outStream << *expression->getMathExpression();
     }
     outputFile.close();
 }
@@ -137,25 +118,31 @@ void FunctionBoxList::loadFunctionListFromFile()
         in >> length;
         for(int i{0}; i < length; i++)
         {
-            FunctionBox *currBox = addNewWidget();
-            MathExpression *currExp = currBox->GetMathExpression();
+            addNewWidget();
+            FunctionBox *newFunctionBox = listOfWidgets.last();
+            MathExpression *currExp = newFunctionBox->getMathExpression();
             in >> *currExp;
-            currBox->functionBody->setText(currExp->GetInitialExpression());
-            currBox->aParamBox->setValue(currExp->GetParameterValue("a"));
-            currBox->bParamBox->setValue(currExp->GetParameterValue("b"));
-            currBox->cParamBox->setValue(currExp->GetParameterValue("c"));
-            currBox->dParamBox->setValue(currExp->GetParameterValue("d"));
-
-            currBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
-            currBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+            newFunctionBox->functionBody->setText(currExp->getInitialExpression());
+            newFunctionBox->aParamBox->setValue(currExp->getParameterValue("a"));
+            newFunctionBox->bParamBox->setValue(currExp->getParameterValue("b"));
+            newFunctionBox->cParamBox->setValue(currExp->getParameterValue("c"));
+            newFunctionBox->dParamBox->setValue(currExp->getParameterValue("d"));
+            newFunctionBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
+            newFunctionBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
         }
         inputFile.close();
     }
 }
 
-void FunctionBoxList::addNewWidgetToFunctionList()
+void FunctionBoxList::addNewWidget()
 {
-    addNewWidget();
+    FunctionBox *newBox = new FunctionBox();
+    connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
+
+    // Adds new FunctionBox object to widget list
+    listLayout->addWidget(newBox);
+    listOfWidgets.append(newBox);
 }
 
 void FunctionBoxList::removeWidget(FunctionBox *box)

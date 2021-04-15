@@ -9,35 +9,38 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    aboutprogdialog.cpp \
-    constantbox.cpp \
-    constantboxlist.cpp \
-    functionbox.cpp \
-    functionboxlist.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    mathcalculator.cpp \
-    mathchecker.cpp \
-    mathexpression.cpp \
-    mathformconverter.cpp \
-    mathhelper.cpp \
-    mathparser.cpp \
-    plotter.cpp
+    GUI/aboutprogdialog.cpp \
+    GUI/constantbox.cpp \
+    GUI/constantboxlist.cpp \
+    GUI/functionbox.cpp \
+    GUI/functionboxlist.cpp \
+    GUI/mainwindow.cpp \
+    GUI/plotter.cpp \
+    LibForPlotter/mathcalculator.cpp \
+    LibForPlotter/mathchecker.cpp \
+    LibForPlotter/mathexpression.cpp \
+    LibForPlotter/mathformconverter.cpp \
+    LibForPlotter/mathhelper.cpp \
+    LibForPlotter/mathparser.cpp \
+    main.cpp
+
+
 
 HEADERS += \
-    aboutprogdialog.h \
-    constantbox.h \
-    constantboxlist.h \
-    functionbox.h \
-    functionboxlist.h \
-    mainwindow.h \
-    mathcalculator.h \
-    mathchecker.h \
-    mathexpression.h \
-    mathformconverter.h \
-    mathhelper.h \
-    mathparser.h \
-    plotter.h
+    GUI/aboutprogdialog.h \
+    GUI/constantbox.h \
+    GUI/constantboxlist.h \
+    GUI/functionbox.h \
+    GUI/functionboxlist.h \
+    GUI/mainwindow.h \
+    GUI/plotter.h \
+    LibForPlotter/mathcalculator.h \
+    LibForPlotter/mathchecker.h \
+    LibForPlotter/mathexpression.h \
+    LibForPlotter/mathformconverter.h \
+    LibForPlotter/mathhelper.h \
+    LibForPlotter/mathparser.h
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

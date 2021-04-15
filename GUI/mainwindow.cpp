@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "aboutprogdialog.h"
+#include "GUI/mainwindow.h"
+#include "GUI/aboutprogdialog.h"
 #include<QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)

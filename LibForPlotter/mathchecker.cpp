@@ -1,7 +1,7 @@
-#include "mathchecker.h"
-#include "mathhelper.h"
-#include "mathparser.h"
-#include "mathexpression.h"
+#include "LibForPlotter/mathchecker.h"
+#include "LibForPlotter/mathhelper.h"
+#include "LibForPlotter/mathparser.h"
+#include "LibForPlotter/mathexpression.h"
 #include<QStack>
 #include<QString>
 #include<QDebug>

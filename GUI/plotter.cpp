@@ -1,5 +1,5 @@
-#include "plotter.h"
-#include "mathexpression.h"
+#include "GUI/plotter.h"
+#include "LibForPlotter/mathexpression.h"
 #include<QtWidgets>
 
 Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
@@ -12,7 +12,7 @@ Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
     setGridCellWidth(10);
     setOriginWidth(6);
     setAxesWidth(0.5);
-    setSingleTick(4);
+    setSingleStep(4);
 
     resize(size->width(),size->height());
 
@@ -54,9 +54,9 @@ void Plotter::setOriginWidth(double width)
     originWidth = width;
 }
 
-void Plotter:: setSingleTick(int cells)
+void Plotter:: setSingleStep(int cells)
 {
-    singleTick = cells;
+    singleStep = cells;
 }
 
 void Plotter::setAxesWidth(double width)
@@ -120,7 +120,7 @@ void Plotter::drawCoordinates(QPainter *painter)
     // Отрисовываем координаты по горизонтальной оси
     // От начала координат налево
     int coordinateCounter{0};
-    for(int x = origin.x(); x >= gridCellWidth*singleTick; x -= gridCellWidth*singleTick)
+    for(int x = origin.x(); x >= gridCellWidth*singleStep; x -= gridCellWidth*singleStep)
     {
         if(coordinateCounter == 0)
         {
@@ -133,7 +133,7 @@ void Plotter::drawCoordinates(QPainter *painter)
     }
     coordinateCounter = 1;
     // От начала координат направо
-    for(int x = origin.x() + gridCellWidth*singleTick; x <= areaWidth-gridCellWidth*singleTick; x += gridCellWidth*singleTick)
+    for(int x = origin.x() + gridCellWidth*singleStep; x <= areaWidth-gridCellWidth*singleStep; x += gridCellWidth*singleStep)
     {
         painter ->drawText(x, areaHeight + gridCellWidth, QString().setNum(coordinateCounter++));
     }
@@ -141,7 +141,7 @@ void Plotter::drawCoordinates(QPainter *painter)
     coordinateCounter  = 0;
     // Отрисовываем координаты по вертикальной оси
     // От начала координат наверх
-    for(int y = origin.y(); y >= gridCellWidth*singleTick; y -= gridCellWidth*singleTick)
+    for(int y = origin.y(); y >= gridCellWidth*singleStep; y -= gridCellWidth*singleStep)
     {
         if(coordinateCounter == 0)
         {
@@ -154,7 +154,7 @@ void Plotter::drawCoordinates(QPainter *painter)
     }
     coordinateCounter = -1;
     // От начала координат вниз
-    for(int y = origin.y() + gridCellWidth*singleTick; y <= areaHeight -gridCellWidth*singleTick; y += gridCellWidth*singleTick)
+    for(int y = origin.y() + gridCellWidth*singleStep; y <= areaHeight -gridCellWidth*singleStep; y += gridCellWidth*singleStep)
     {
         painter -> drawText(areaWidth + gridCellWidth/2, y , QString().setNum(coordinateCounter--));
     }
@@ -188,14 +188,14 @@ void Plotter:: drawAxes(QPainter *painter)
     // Изображаем единичные засечки
     // Засечки на горизонтальной оси
     // В направлении положительных координат
-    for(int xcoord = origin.x()+gridCellWidth*singleTick; xcoord <= areaWidth; xcoord += gridCellWidth*singleTick)
+    for(int xcoord = origin.x()+gridCellWidth*singleStep; xcoord <= areaWidth; xcoord += gridCellWidth*singleStep)
     {
         QPoint bottomPoint(xcoord, origin.y() + gridCellWidth / 3);
         QPoint topPoint(xcoord, origin.y() - gridCellWidth / 3);
         painter -> drawLine(bottomPoint, topPoint);
     }
     // В направлении отрицательных координат
-    for(int xcoord = origin.x()-gridCellWidth*singleTick; xcoord > 0; xcoord -= gridCellWidth*singleTick)
+    for(int xcoord = origin.x()-gridCellWidth*singleStep; xcoord > 0; xcoord -= gridCellWidth*singleStep)
     {
         QPoint bottomPoint(xcoord, origin.y() + gridCellWidth / 3);
         QPoint topPoint(xcoord, origin.y() - gridCellWidth / 3);
@@ -205,7 +205,7 @@ void Plotter:: drawAxes(QPainter *painter)
 
     // Засечки на вертикальной оси
     //  В направлении положительных координат
-    for(int ycoord = origin.y() - gridCellWidth*singleTick; ycoord >0; ycoord -= gridCellWidth*singleTick)
+    for(int ycoord = origin.y() - gridCellWidth*singleStep; ycoord >0; ycoord -= gridCellWidth*singleStep)
     {
         QPoint leftPoint(origin.x() - gridCellWidth/3, ycoord);
         QPoint rightPoint(origin.x() + gridCellWidth/3, ycoord);
@@ -213,7 +213,7 @@ void Plotter:: drawAxes(QPainter *painter)
     }
 
     // В направлении отрицательных координат
-    for(int ycoord = origin.y() + gridCellWidth*singleTick; ycoord <= areaHeight; ycoord += gridCellWidth*singleTick)
+    for(int ycoord = origin.y() + gridCellWidth*singleStep; ycoord <= areaHeight; ycoord += gridCellWidth*singleStep)
     {
         QPoint leftPoint(origin.x() - gridCellWidth/3, ycoord);
         QPoint rightPoint(origin.x() + gridCellWidth/3, ycoord);
@@ -247,7 +247,7 @@ void Plotter::drawPoint(QPainter *painter, QPoint point, QColor color)
     QPen pen{color, 3};
     painter->setPen(pen);
 
-    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
+    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleStep), origin.y()-(point.y()*gridCellWidth*singleStep));
 }
 
 void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
@@ -255,7 +255,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
     QPen pen{color, 3.0};
     painter->setPen(pen);
 
-    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleTick), origin.y()-(point.y()*gridCellWidth*singleTick));
+    painter->drawPoint(origin.x()+(point.x()*gridCellWidth*singleStep), origin.y()-(point.y()*gridCellWidth*singleStep));
 
 }
 
@@ -264,10 +264,10 @@ void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,
     QPen pen{color, 3.0};
     painter ->setPen(pen);
 
-    painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleTick),
-                      origin.y() - (startPoint.y()*gridCellWidth*singleTick),
-                      origin.x() +(endPoint.x()*gridCellWidth*singleTick),
-                      origin.y() - (endPoint.y()*gridCellWidth*singleTick));
+    painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleStep),
+                      origin.y() - (startPoint.y()*gridCellWidth*singleStep),
+                      origin.x() +(endPoint.x()*gridCellWidth*singleStep),
+                      origin.y() - (endPoint.y()*gridCellWidth*singleStep));
 }
 
 QSize Plotter::sizeHint() const

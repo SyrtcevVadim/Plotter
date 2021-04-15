@@ -1,7 +1,7 @@
 #ifndef FUNCTIONBOXLIST_H
 #define FUNCTIONBOXLIST_H
 #include <QtWidgets>
-#include "functionbox.h"
+#include "GUI/functionbox.h"
 
 class FunctionBoxList : public QWidget
 {
@@ -29,20 +29,23 @@ protected:
     QSize sizeHint()const;
 
 public:
-
     FunctionBoxList(int height = 400,QWidget *parent = nullptr);
-    FunctionBox* addNewWidget();
-    int getListOfWidgetsLength()const;
-    void clear();
+    /// Returns the length of list
+    int getLength()const;
 
 public slots:
+    /// Updates the content of list
     void update();
-    void addNewWidgetToFunctionList();
+    /// Adds new FunctionBox to list
+    void addNewWidget();
+    /// Saves functions to file
     void saveFunctionListToFile();
+    /// Loads functions from file
     void loadFunctionListFromFile();
+    /// Removes functions from list
     void removeWidget(FunctionBox*);
-    void clearList();
-
+    /// Clears list's content
+    void clear();
 };
 
 #endif // FUNCTIONBOXLIST_H

@@ -1,6 +1,6 @@
+#include "LibForPlotter/mathparser.h"
 #include<QFile>
 #include<QCoreApplication>
-#include "mathparser.h"
 #include<QDebug>
 #include<QTextStream>
 #include<QRegExp>

@@ -1,5 +1,6 @@
-#include "constantbox.h"
-#include "mathhelper.h"
+#include "GUI/constantbox.h"
+#include "LibForPlotter/mathhelper.h"
+
 ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
 {
     resize(300, 60);
@@ -26,7 +27,7 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     setLayout(grid);
 
     // Linking signals with slots
-    connect(removeButton, SIGNAL(pressed()), this, SLOT(removeBtnClick()));
+    connect(removeButton, SIGNAL(pressed()), this, SLOT(removeConstant()));
     connect(constantBox, SIGNAL(textChanged(const QString)), this, SLOT(setConstantName(const QString)));
     connect(valueBox, SIGNAL(textChanged(const QString)), this, SLOT(setConstantValue(const QString)));
 
@@ -41,11 +42,10 @@ void ConstantBox::paintEvent(QPaintEvent *event)
     painter.drawRect(0,0, width()-5, height()-5);
 }
 
-void ConstantBox::removeBtnClick()
+void ConstantBox::removeConstant()
 {
     MathHelper::RemoveConstant(constantName);
     emit(elementRemoved(this));
-    qDebug() << MathHelper::userDefinedConstants;
     emit(elementChanged());
 }
 

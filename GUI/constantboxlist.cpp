@@ -1,5 +1,5 @@
-#include "constantboxlist.h"
-#include"mathhelper.h"
+#include"GUI/constantboxlist.h"
+#include"LibForPlotter/mathhelper.h"
 #include<QtWidgets>
 
 ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
@@ -57,40 +57,23 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
     // Linking signals with slots
     connect(saveToFileBtn, SIGNAL(pressed()), this, SLOT(saveConstantListToFile()));
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadConstantListFromFile()));
-    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidgetToFunctionList()));
-    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clearList()));
+    connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidget()));
+    connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clear()));
 }
 
-ConstantBox* ConstantBoxList::addNewWidget()
+void ConstantBoxList::addNewWidget()
 {
     ConstantBox *newBox = new ConstantBox();
     connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(removeWidget(ConstantBox*)));
     connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(update()));
     connect(newBox, SIGNAL(elementChanged()), this, SLOT(update()));
+    // Adjust size of list's body to accommodate new item
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
-    return newBox;
 }
 
 void ConstantBoxList::clear()
-{
-
-    QList<ConstantBox*> temp(listOfWidgets);
-    for(ConstantBox *item: temp)
-    {
-        // Deletes ConstantBox objects from layout and widgets list
-        listOfWidgets.takeAt(listOfWidgets.indexOf(item));
-        listLayout->takeAt(listLayout->indexOf(item));
-        listBody->adjustSize();
-
-        // Deletes constant from the list of correct constants
-        MathHelper::RemoveConstant(item->GetConstantName());
-        delete item;
-    }
-}
-
-void ConstantBoxList::clearList()
 {
     if(listOfWidgets.length() > 0)
     {
@@ -102,7 +85,10 @@ void ConstantBoxList::clearList()
         int result = msgBox->exec();
         if(result==QMessageBox::Yes)
         {
-            clear();
+            for(ConstantBox *item:listOfWidgets)
+            {
+                removeWidget(item);
+            }
             emit(constantsUpdated());
         }
     }
@@ -141,12 +127,13 @@ void ConstantBoxList::loadConstantListFromFile()
         inputFile.open(QIODevice::ReadOnly);
         QDataStream in(&inputFile);
         // Clears previos list content
-        clearList();
+        clear();
         int length;
         in >> length;
         for(int i{0}; i < length; i++)
         {
-            ConstantBox *newConstantBox = addNewWidget();
+            addNewWidget();
+            ConstantBox *newConstantBox = listOfWidgets.last();
             QString constantName, constantValue;
             in>>constantName >> constantValue;
             qDebug() << constantName << constantValue;
@@ -158,16 +145,13 @@ void ConstantBoxList::loadConstantListFromFile()
     emit(constantsUpdated());
 }
 
-void ConstantBoxList::addNewWidgetToFunctionList()
-{
-    addNewWidget();
-}
-
 void ConstantBoxList::removeWidget(ConstantBox *box)
 {
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
-    delete listLayout->takeAt(listLayout->indexOf(box));
-    delete box;
+    QLayoutItem *item =  listLayout->takeAt(listLayout->indexOf(box));
+    delete item->widget();
+    delete item;
+
     listBody->adjustSize();
     emit(constantsUpdated());
 }

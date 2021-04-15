@@ -1,15 +1,16 @@
-#include <QStack>
+#include"LibForPlotter/mathcalculator.h"
+#include"LibForPlotter/mathformconverter.h"
+#include"LibForPlotter/mathexpression.h"
+#include"LibForPlotter/mathhelper.h"
+#include<QStack>
 #include<QStringList>
 #include<QDebug>
-#include <QMap>
-#include <utility>
+#include<QMap>
+#include<utility>
 #include<QtMath>
-#include <QString>
+#include<QString>
 #include<functional>
-#include "mathcalculator.h"
-#include "mathformconverter.h"
-#include "mathexpression.h"
-#include "mathhelper.h"
+
 using std::function;
 using std::pair;
 
