@@ -1,3 +1,6 @@
 [Dd]ocumentation/
 [Dd]ebug
 [Rr]elease
+object_*
+Plotter.pro.user*
+Makefile*
