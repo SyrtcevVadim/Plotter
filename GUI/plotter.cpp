@@ -13,7 +13,7 @@ Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
     setGridCellWidth(10);
     setOriginWidth(6);
     setAxesWidth(0.5);
-    setSingleStep(4);
+    setSingleStep(2);
 
     resize(size->width(),size->height());
 
@@ -309,7 +309,7 @@ void Plotter::dropEvent(QDropEvent *event)
 
     for(ValueTable *item: graphs)
     {
-        qDebug() << "current expression: " << item->getExpression();
+        qDebug() << "current expression: " << *item->getExpression();
         if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
         {
             qDebug() << expression << " is found inside plotter!";

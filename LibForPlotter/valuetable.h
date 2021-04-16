@@ -25,7 +25,7 @@ public:
     double getMax()const;
     double getSingleStep()const;
 
-    void setDrawn();
+    void setDrawn(bool val = true);
     bool isDrawn();
 
     MathExpression* getExpression();

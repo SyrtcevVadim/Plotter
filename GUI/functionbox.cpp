@@ -22,26 +22,26 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     aParamBox = new QDoubleSpinBox();
     aParamBox->setRange(-10'000.0, 10'000.0);
-    aParamBox->setSingleStep(0.1);
-    aParamBox->setDecimals(1);
+    aParamBox->setSingleStep(0.02);
+    aParamBox->setDecimals(2);
     aParamBox->setToolTip("Значение параметра a");
 
     bParamBox = new QDoubleSpinBox();
     bParamBox->setRange(-10'000.0, 10'000.0);
-    bParamBox->setSingleStep(0.1);
-    bParamBox->setDecimals(1);
+    bParamBox->setSingleStep(0.02);
+    bParamBox->setDecimals(2);
     bParamBox->setToolTip("Значение параметра b");
 
     cParamBox = new QDoubleSpinBox();
     cParamBox->setRange(-10'000.0, 10'000.0);
-    cParamBox->setSingleStep(0.1);
-    cParamBox->setDecimals(1);
+    cParamBox->setSingleStep(0.02);
+    cParamBox->setDecimals(2);
     cParamBox->setToolTip("Значение параметра c");
 
     dParamBox = new QDoubleSpinBox();
     dParamBox->setRange(-10'000.0, 10'000.0);
-    dParamBox->setSingleStep(0.1);
-    dParamBox->setDecimals(1);
+    dParamBox->setSingleStep(0.02);
+    dParamBox->setDecimals(2);
     dParamBox->setToolTip("Значение параметра d");
 
     // Set default values
@@ -175,24 +175,40 @@ void FunctionBox::changeMathExpression(const QString &str)
 
 void FunctionBox::changeAParamValue(double value)
 {
+    if(qAbs(value-0.0)<0.0001)
+    {
+        value = 0;
+    }
     expression->SetParameter("a", value);
     emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeBParamValue(double value)
 {
+    if(qAbs(value-0.0)<0.0001)
+    {
+        value = 0;
+    }
     expression->SetParameter("b", value);
     emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeCParamValue(double value)
 {
+    if(qAbs(value-0.0)<0.0001)
+    {
+        value = 0;
+    }
     expression->SetParameter("c", value);
     emit(expressionChanged(expression));
 }
 
 void FunctionBox::changeDParamValue(double value)
 {
+    if(qAbs(value-0.0)<0.0001)
+    {
+        value = 0;
+    }
     expression->SetParameter("d", value);
     emit(expressionChanged(expression));
 }

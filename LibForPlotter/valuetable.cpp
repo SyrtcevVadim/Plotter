@@ -9,8 +9,8 @@ ValueTable::ValueTable(MathExpression *expression, double step)
     if(step != 0)
     {
         singleStep = step;
-        length = qAbs(expression->GetMaximumVarValue()-
-                      expression->GetMinimumVarValue())/singleStep+1;
+        length = (expression->GetMaximumVarValue()-
+                      expression->GetMinimumVarValue())/singleStep;
         if((valuesArr = new(std::nothrow) double[length]) == nullptr)
         {
             qDebug() << "Не удалось выделить память под таблицу значений";
@@ -21,8 +21,13 @@ ValueTable::ValueTable(MathExpression *expression, double step)
             double var{expression->GetMinimumVarValue()};
             for(int i{0}; i < length; i++)
             {
+                if(qAbs(var-0.0) < 0.0001)
+                {
+                    var = 0.0;
+                }
                 valuesArr[i] = calculator.Calculate(var);
-                var+=singleStep;
+                qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+                var += singleStep;
             }
         }
     }
@@ -39,19 +44,26 @@ void ValueTable::recalculate()
     // Deletes old table of values
     delete[] valuesArr;
 
-    length = qAbs(expression->GetMaximumVarValue()-expression->GetMinimumVarValue())/singleStep+1;
+    length = (expression->GetMaximumVarValue()-expression->GetMinimumVarValue())/singleStep;
     if((valuesArr = new(std::nothrow) double[length])==nullptr)
     {
         qDebug() << "Ну удалось выделить память под таблицу значений";
     }
     else
     {
+        qDebug() << "expression: "<<*expression;
         MathCalculator calculator(*expression);
         double var{expression->GetMinimumVarValue()};
         for(int i{0}; i < length; i++)
         {
+            if(qAbs(var-0.0) < 0.0001)
+            {
+                var = 0.0;
+            }
             valuesArr[i] = calculator.Calculate(var);
+            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
+
         }
     }
 }
@@ -77,9 +89,9 @@ double ValueTable::getSingleStep() const
     return singleStep;
 }
 
-void ValueTable::setDrawn()
+void ValueTable::setDrawn(bool value)
 {
-    drawn = true;
+    drawn = value;
 }
 
 bool ValueTable::isDrawn()
