@@ -36,6 +36,7 @@ public:
 signals:
     void newFunctionAdded(MathExpression*);
     void expressionChanged(MathExpression*);
+    void expressionDeleted(MathExpression*);
 
 public slots:
     /// Updates the content of list

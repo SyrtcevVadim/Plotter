@@ -5,28 +5,31 @@
 class ValueTable
 {
 private:
-    /// Minimum possible variable's value
-    double minimumVariableValue;
-    /// Maximum possible variable's value
-    double maximumVariableValue;
+    MathExpression *expression;
+
     /// Length of table of values
     int length;
     /// Single step of variable in table of values
     double singleStep;
     /// Table of values
     double *valuesArr;
+    /// Shows whether table of values have to be drawn at a plotter object or not
+    bool drawn{false};
 
 public:
-    ValueTable(const MathExpression *expression, double step=0.001);
+    ValueTable(MathExpression *expression, double step=0.01);
     ~ValueTable();
-
+    void recalculate();
     double get(double varValue);
     double getMin()const;
     double getMax()const;
     double getSingleStep()const;
 
-    /// Shows whether table of values have to be drawn at plotter object or not
-    bool hasToBeDrawn;
+    void setDrawn();
+    bool isDrawn();
+
+    MathExpression* getExpression();
+
 };
 
 #endif // VALUETABLE_H

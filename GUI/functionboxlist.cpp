@@ -142,6 +142,7 @@ void FunctionBoxList::addNewWidget()
 
 void FunctionBoxList::removeWidget(FunctionBox *box)
 {
+    emit(expressionDeleted(box->getMathExpression()));
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     delete listLayout->takeAt(listLayout->indexOf(box));
     delete box;

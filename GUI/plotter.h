@@ -23,10 +23,8 @@ private:
     /// Height of the painting area
     int areaHeight;
 
-    /// Stores pointers to function defined inside FunctionBoxList object
-    QList<MathExpression *> functions;
     /// Stores tables of values of functions
-    QList<ValueTable *> valueTables;
+    QList<ValueTable *> graphs;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -71,6 +69,7 @@ public slots:
     void drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,QColor color = Qt::black);
 
     void addFunction(MathExpression *expression);
+    void removeFunction(MathExpression *expression);
     void createTableValue(MathExpression *expression);
 };
 

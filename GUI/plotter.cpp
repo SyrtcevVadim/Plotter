@@ -41,9 +41,9 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawCoordinates(&painter);
 
     // Отрисовываем графики функций
-    for(ValueTable *table: valueTables)
+    for(ValueTable *table: graphs)
     {
-        if(table->hasToBeDrawn)
+        if(table->isDrawn())
         {
             for(double var{table->getMin()}; var <= table->getMax(); var+=table->getSingleStep())
             {
@@ -274,7 +274,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
 void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
 {
-    QPen pen{color, 1.5};
+    QPen pen{color, 1};
     painter ->setPen(pen);
 
     painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleStep),
@@ -307,11 +307,13 @@ void Plotter::dropEvent(QDropEvent *event)
     in >> expression;
     qDebug() <<"Dropped expression: "<< expression;
 
-    for(MathExpression *item: functions)
+    for(ValueTable *item: graphs)
     {
-        if(item->getInitialExpression() == expression.getInitialExpression())
+        qDebug() << "current expression: " << item->getExpression();
+        if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
         {
-            valueTables.at(functions.indexOf(item))->hasToBeDrawn=true;
+            qDebug() << expression << " is found inside plotter!";
+            item->setDrawn();
         }
     }
     repaint();
@@ -320,37 +322,38 @@ void Plotter::dropEvent(QDropEvent *event)
 
 void Plotter::addFunction(MathExpression *expression)
 {
-    functions.append(expression);
+    qDebug() << "Added new expression:\n"<<*expression;
+    ValueTable *newGraph = new ValueTable(expression);
+    graphs.append(newGraph);
+}
 
-    qDebug() << "Functions stored inside plotter: ";
-    for(auto *item: functions)
+void Plotter::removeFunction(MathExpression *expression)
+{
+    for(ValueTable *item: graphs)
     {
-        qDebug() << *item;
+        if(item->getExpression() == expression)
+        {
+            graphs.removeOne(item);
+            delete item;
+            break;
+        }
     }
+    repaint();
 }
 
 void Plotter::createTableValue(MathExpression *expression)
 {
-    int index{0};
-    for(MathExpression *item: functions)
+    qDebug() << "Expression is changed: " << *expression;
+    for(ValueTable *item: graphs)
     {
-        if(item->getInitialExpression() == expression->getInitialExpression())
+        if(item->getExpression() == expression)
         {
+            item->recalculate();
+            if(item->isDrawn())
+            {
+                repaint();
+            }
             break;
         }
-        index++;
     }
-    //Removes old table of values
-    if(index < valueTables.length())
-    {
-        valueTables.removeAt(index);
-    }
-
-    // Creating table of values for this expression
-    if(!expression->GetInfixExpression().isEmpty())
-    {
-        ValueTable *table = new ValueTable(expression);
-        valueTables.insert(index, table);
-    }
-    repaint();
 }

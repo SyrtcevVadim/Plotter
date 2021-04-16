@@ -159,7 +159,7 @@ void FunctionBox::checkCorrectness()
 
 void FunctionBox::changeMathExpression(const QString &str)
 {
-    Q_UNUSED(str);
+    qDebug() << str << " math expression is changed!";
     expression->SetExpression(functionBody->text());
     checkCorrectness();
     if(!errorText->text().isEmpty())
