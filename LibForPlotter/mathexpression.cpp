@@ -1,7 +1,7 @@
-#include "LibForPlotter/mathhelper.h"
-#include "LibForPlotter/mathexpression.h"
-#include "LibForPlotter/mathparser.h"
-#include "LibForPlotter/mathformconverter.h"
+#include "mathhelper.h"
+#include "mathexpression.h"
+#include "mathparser.h"
+#include "mathformconverter.h"
 #include<QMap>
 #include<QDataStream>
 #include<QDebug>
@@ -82,7 +82,6 @@ void MathExpression::SetExpression(QString expression)
 
 QString MathExpression::SubstituteConstants(QString infixExpression)
 {
-    qDebug() << "\nExpression before constant substitution: " << infixExpression;
     QString resultExpression{""};
     for(auto key: MathParser::CreateTokenList(infixExpression))
     {
@@ -99,14 +98,12 @@ QString MathExpression::SubstituteConstants(QString infixExpression)
             resultExpression += key + " ";
         }
     }
-    qDebug() << "Expression after iteration: " << resultExpression;
     if(MathHelper::HasConstants(resultExpression))
     {
         return SubstituteConstants(resultExpression);
     }
     else
     {
-        qDebug() << "Expression after constant substitution: " <<resultExpression;
         return resultExpression;
     }
 }

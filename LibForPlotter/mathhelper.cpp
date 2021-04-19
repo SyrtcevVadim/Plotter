@@ -1,5 +1,5 @@
-#include "LibForPlotter/mathhelper.h"
-#include "LibForPlotter/mathparser.h"
+#include "mathhelper.h"
+#include "mathparser.h"
 #include<utility>
 #include<QDebug>
 
@@ -17,11 +17,11 @@ QStringList MathHelper::correctTokens({"(",")","[","]","{","}",             // B
                                         "pi", "e"                           // Predefined constants
                                       });
 
-QStringList MathHelper::operations({"+","-","*","/","^"});
+QStringList MathHelper::operations({"+","-","*","/","^","un-","un+"});
 
 QStringList MathHelper::functions({"abs", "pow", "sqr", "sqrt",
                                   "sin","cos","tg","ctg",
-                                  "arsin","arccos","arctg", "arcctg",
+                                  "arcsin","arccos","arctg", "arcctg",
                                   "ln","lg","log"});
 
 QMap<QString, QString> MathHelper::predefinedConstants({pair<QString, QString>("e", "2.718281828"),
@@ -74,6 +74,14 @@ bool MathHelper::IsTokenNumber(const QString &token)
     return true;
 }
 
+bool MathHelper::IsTokenSeparator(const QString &token)
+{
+    if(token == "," || token == ";")
+    {
+        return true;
+    }
+    return false;
+}
 
 bool MathHelper::IsTokenVariable(const QString &token)
 {
@@ -163,11 +171,10 @@ bool MathHelper::IsTokenClosingBracket(const QString &token)
     return false;
 }
 
-
 void MathHelper::AddConstant(const QString &constant, const QString &value)
 {
     // Check constant for double entry
-    if(!correctTokens.contains(constant))
+    if(!userDefinedConstants.contains(constant) && !predefinedConstants.contains(constant))
     {
          userDefinedConstants[constant] = value;
     }

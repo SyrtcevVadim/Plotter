@@ -1,7 +1,7 @@
-#include "LibForPlotter/mathchecker.h"
-#include "LibForPlotter/mathhelper.h"
-#include "LibForPlotter/mathparser.h"
-#include "LibForPlotter/mathexpression.h"
+#include "mathchecker.h"
+#include "mathhelper.h"
+#include "mathparser.h"
+#include "mathexpression.h"
 #include<QStack>
 #include<QString>
 #include<QDebug>
@@ -19,7 +19,8 @@ bool MathChecker::AreAllTokensCorrect()
 {
     for(auto token: expression)
     {
-        if(!(MathHelper::correctTokens.contains(token) || MathHelper::userDefinedConstants.contains(token))&& !MathHelper::IsTokenNumber(token))
+        if(!(MathHelper::correctTokens.contains(token) || MathHelper::userDefinedConstants.contains(token) ||
+             MathHelper::IsTokenNumber(token)))
         {
             errorMessage = QString("Получено неизвестное выражение \"%1\"").arg(token);
             return false;
@@ -97,6 +98,7 @@ bool MathChecker::AreBracketsCorrespond()
 
 bool MathChecker::HasEmptyBrackets()
 {
+    qDebug() << expression;
     QString previousToken{""};
     for(auto token: expression)
     {
@@ -104,16 +106,17 @@ bool MathChecker::HasEmptyBrackets()
                 MathHelper::IsTokenClosingBracket(token))
         {
             errorMessage = QString("Пропущено выражение между %1 и %2").arg(previousToken, token);
-            return false;
+            return true;
         }
         previousToken=token;
     }
     errorMessage.clear();
-    return true;
+    return false;
 }
 
 bool MathChecker::HasMissedOperations()
 {
+    qDebug() << expression;
     QString previousToken{""};
     for(auto token: expression)
     {
@@ -129,16 +132,17 @@ bool MathChecker::HasMissedOperations()
             MathHelper::IsTokenConstant(token)))
         {
             errorMessage = QString("Пропущена операция между \"%1\" и \"%2\"").arg(previousToken, token);
-            return false;
+            return true;
         }
 
         previousToken = token;
     }
-    return true;
+    return false;
 }
 
 bool MathChecker::HasMissedOperands()
 {
+    qDebug() << expression;
     QString strExpRepr{""};
     for(auto token: expression)
     {
@@ -147,12 +151,13 @@ bool MathChecker::HasMissedOperands()
     strExpRepr = strExpRepr.trimmed();
     MathExpression mathExp{strExpRepr};
 
-    // Substitute variable value
+    // Substitute variable's value
     QString expressionWithSubstitutedValues(mathExp.SubstituteVariableValue(0));
-    // For intermediate values
+    qDebug() <<expressionWithSubstitutedValues;
+    // Stores intermediate values
     QStack<QString> stack;
-
-    // Iterate through the postfixFormExpression
+    QString previousToken{""};
+    // Iterate through the expression in postfix form
     for(auto token: (expressionWithSubstitutedValues.trimmed()).split(" "))
     {
         if(MathHelper::IsTokenNumber(token))
@@ -161,25 +166,28 @@ bool MathChecker::HasMissedOperands()
         }
         else if(MathHelper::IsTokenFunction(token) || MathHelper::IsTokenOperation(token))
         {
+            double first, second;
             // Checking for necessary operands quantity
             if(!stack.isEmpty() && stack.count() >= MathHelper::operandQuantity[token])
             {
-                stack.pop().toDouble();
+                first = stack.pop().toDouble();
                 if(MathHelper::operandQuantity[token] == 2)
                 {
-                    stack.pop().toDouble();
+                    second = stack.pop().toDouble();
                 }
                 // Pushs result back to stack
                 stack.push("1");
             }
             else
             {
-                errorMessage = QString("Недостаточно операндов для %1").arg(token);
-                return false;
+                errorMessage = QString("Недостаточно операндов для %1:  %2 %3").arg(token, previousToken, token);
+                qDebug() << errorMessage;
+                return true;
             }
         }
+        previousToken = token;
     }
-    return true;
+    return false;
 }
 
 QString MathChecker::GetErrorMessage() const

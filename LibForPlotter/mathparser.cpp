@@ -1,4 +1,4 @@
-#include "LibForPlotter/mathparser.h"
+#include "mathparser.h"
 #include<QFile>
 #include<QCoreApplication>
 #include<QDebug>

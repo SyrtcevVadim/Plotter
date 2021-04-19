@@ -25,6 +25,8 @@ public:
 
     /// Checks whether token is a decimal number or not
     static bool IsTokenNumber(const QString &token);
+    /// Checks whether token is a separator or not
+    static bool IsTokenSeparator(const QString &token);
     /// Checks whether token is a variable or not
     static bool IsTokenVariable(const QString &token);
     /// Checks whether token is a parameter or not

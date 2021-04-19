@@ -1,7 +1,7 @@
-#include"LibForPlotter/mathhelper.h"
-#include"LibForPlotter/mathformconverter.h"
-#include"LibForPlotter/mathparser.h"
-#include"LibForPlotter/mathexpression.h"
+#include"mathhelper.h"
+#include"mathformconverter.h"
+#include"mathparser.h"
+#include"mathexpression.h"
 #include<QStack>
 #include<utility>
 #include<QString>
@@ -24,9 +24,9 @@ QMap<QString, int> MathFormConverter::precedence({pair<QString, int>("abs", 1),
                                                  pair<QString, int>("lg", 1),
                                                  pair<QString, int>("ln", 1),
                                                  pair<QString, int>("log", 1),
-                                                 pair<QString, int>("un-", 1),
-                                                 pair<QString, int>("un+", 1),
-                                                 pair<QString, int>("^", 2),
+                                                 pair<QString, int>("un-", 2),
+                                                 pair<QString, int>("un+", 2),
+                                                 pair<QString, int>("^", 1),
                                                  pair<QString, int>("*", 3),
                                                  pair<QString, int>("/", 3),
                                                  pair<QString, int>("+", 4),
@@ -34,53 +34,29 @@ QMap<QString, int> MathFormConverter::precedence({pair<QString, int>("abs", 1),
                                                  });
 
 
-bool MathFormConverter::IsTokenNumber(QString &token)
-{
-    if(token.isEmpty())
-    {
-        return false;
-    }
-    if(MathHelper::operations.contains(token))
-    {
-        return false;
-    }
-    for(auto symbol: token)
-    {
-        if(symbol != '-' && symbol != '+' && !symbol.isDigit() && symbol != ".")
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-bool MathFormConverter::IsTokenSeparator(QString &token)
-{
-    if(token == "," || token == ";")
-    {
-        return true;
-    }
-    return false;
-}
-
 QString MathFormConverter::InfixToPostfix(const QString &expression)
 {
     // Creates a stack for intermediate values
     QStack<QString> stack;
     QString resultStrExpression{" "};
     QString previousToken{""};
-    //qDebug() << MathParser::CreateTokenList(expression);
     // Iterates through the expression
     for(auto token: MathParser::CreateTokenList(expression))
     {
         // Processing unary plus and minus
-        if((token == "+" || token == "-") && (previousToken.isEmpty() || MathHelper::IsTokenOpeningBracket(previousToken) || IsTokenSeparator(previousToken) ||
+        if((token == "+" || token == "-") && (previousToken.isEmpty() || MathHelper::IsTokenOpeningBracket(previousToken) || MathHelper::IsTokenSeparator(previousToken) ||
                                               MathHelper::IsTokenOperation(previousToken)))
         {
+            // Check the precedence of the function at the stack's top
+            if(!stack.isEmpty() && (MathHelper::IsTokenFunction(stack.top()) || MathHelper::IsTokenOperation(stack.top())) && (precedence[stack.top()] < precedence[token] ||
+                                                                    (precedence[stack.top()] == precedence[token] && token != "^")))
+            {
+                resultStrExpression += stack.pop() + " ";
+            }
             stack.push("un"+token); // un+ or un-
         }
         // If token is a decimal number, we push it to the result string
-        else if(IsTokenNumber(token))
+        else if(MathHelper::IsTokenNumber(token))
         {
             resultStrExpression += token + " ";
         }
@@ -141,7 +117,7 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
                 stack.pop();
             }
         }
-        else if(IsTokenSeparator(token))
+        else if(MathHelper::IsTokenSeparator(token))
         {
             // Pops everything from the stack until we face with opening bracket
             while(!stack.isEmpty() && !MathHelper::IsTokenOpeningBracket(stack.top()))
@@ -171,6 +147,5 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     {
         resultStrExpression += stack.pop() + " ";
     }
-    //qDebug() << resultStrExpression;
     return resultStrExpression.trimmed();
 }

@@ -26,9 +26,9 @@ public:
     bool AreBracketsCorrespond();
     /// Checks whether mathematical expression constists of empty brackets or not
     bool HasEmptyBrackets();
-    /// Checks whether there're missed operations between operands
+    /// Checks whether there're missed operations between operands or not
     bool HasMissedOperations();
-    /// Checks whether every function/operation has enough operands
+    /// Checks whether every function/operation has enough operands or not
     bool HasMissedOperands();
 
     /// Returns the error message if mistake is presented
