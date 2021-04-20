@@ -180,7 +180,11 @@ bool MathChecker::HasMissedOperands()
             }
             else
             {
-                errorMessage = QString("Недостаточно операндов для %1:  %2 %3").arg(token, previousToken, token);
+                if(token.startsWith("un"))
+                {
+                    token = token.remove(0,2);
+                }
+                errorMessage = QString("Недостаточно операндов для %1").arg(token);
                 qDebug() << errorMessage;
                 return true;
             }
@@ -192,5 +196,5 @@ bool MathChecker::HasMissedOperands()
 
 QString MathChecker::GetErrorMessage() const
 {
-    return this->errorMessage;
+    return errorMessage;
 }

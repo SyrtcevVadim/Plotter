@@ -6,8 +6,8 @@
 /// Widget for creating new mathematic expression, setting it's parameters' values and variable's restrictions
 class FunctionBox : public QWidget
 {
-
     Q_OBJECT
+
 private:
     /// User-passed mathematic expression
     MathExpression *expression;
@@ -62,6 +62,8 @@ signals:
     void elementRemoved(FunctionBox*);
     /// Is emmited when user changes any parameter of FunctionBox object
     void expressionChanged(MathExpression*);
+
+
 
 public slots:
     /// Checks the correctness of provided mathematic expression

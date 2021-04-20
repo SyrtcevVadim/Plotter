@@ -1,4 +1,5 @@
 #include "GUI/constantbox.h"
+#include "GUI/constantboxlist.h"
 #include "LibForPlotter/mathhelper.h"
 
 ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
@@ -32,6 +33,7 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     connect(valueBox, SIGNAL(textChanged(const QString)), this, SLOT(setConstantValue(const QString)));
 
 }
+
 
 void ConstantBox::paintEvent(QPaintEvent *event)
 {

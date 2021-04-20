@@ -18,9 +18,9 @@ protected:
     void paintEvent(QPaintEvent *event);
 
 public:
-    /// LineEdit to enter the constant's name
+    /// LineEdit for entering the constant's name
     QLineEdit *constantBox;
-    /// LineEdit to enter the constant's value
+    /// LineEdit for entering the constant's value
     QLineEdit *valueBox;
     /// Removes current ConstantBox object
     QPushButton *removeButton;

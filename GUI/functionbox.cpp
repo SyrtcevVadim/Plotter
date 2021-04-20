@@ -22,25 +22,25 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     aParamBox = new QDoubleSpinBox();
     aParamBox->setRange(-10'000.0, 10'000.0);
-    aParamBox->setSingleStep(0.02);
+    aParamBox->setSingleStep(0.1);
     aParamBox->setDecimals(2);
     aParamBox->setToolTip("Значение параметра a");
 
     bParamBox = new QDoubleSpinBox();
     bParamBox->setRange(-10'000.0, 10'000.0);
-    bParamBox->setSingleStep(0.02);
+    bParamBox->setSingleStep(0.1);
     bParamBox->setDecimals(2);
     bParamBox->setToolTip("Значение параметра b");
 
     cParamBox = new QDoubleSpinBox();
     cParamBox->setRange(-10'000.0, 10'000.0);
-    cParamBox->setSingleStep(0.02);
+    cParamBox->setSingleStep(0.1);
     cParamBox->setDecimals(2);
     cParamBox->setToolTip("Значение параметра c");
 
     dParamBox = new QDoubleSpinBox();
     dParamBox->setRange(-10'000.0, 10'000.0);
-    dParamBox->setSingleStep(0.02);
+    dParamBox->setSingleStep(0.1);
     dParamBox->setDecimals(2);
     dParamBox->setToolTip("Значение параметра d");
 
@@ -131,22 +131,27 @@ void FunctionBox::checkCorrectness()
         MathChecker checker(expression->getInitialExpression());
         if(!checker.AreAllTokensCorrect())
         {
+           qDebug() << "Not all tokens are correct";
            errorText->setText(checker.GetErrorMessage());
         }
         else if(!checker.AreBracketsCorrespond())
         {
+            qDebug() << "Not all brackets correspond";
             errorText->setText(checker.GetErrorMessage());
         }
-        else if(!checker.HasEmptyBrackets())
+        else if(checker.HasEmptyBrackets())
         {
+            qDebug() << "Has empty brackets";
             errorText->setText(checker.GetErrorMessage());
         }
-        else if(!checker.HasMissedOperations())
+        else if(checker.HasMissedOperations())
         {
+            qDebug() << "Has missed operations";
             errorText->setText(checker.GetErrorMessage());
         }
-        else if(!checker.HasMissedOperands())
+        else if(checker.HasMissedOperands())
         {
+            qDebug() << "Has missed operands";
             errorText->setText(checker.GetErrorMessage());
         }
 
@@ -159,7 +164,7 @@ void FunctionBox::checkCorrectness()
 
 void FunctionBox::changeMathExpression(const QString &str)
 {
-    qDebug() << str << " math expression is changed!";
+    qDebug() << " math expression is changed!";
     expression->SetExpression(functionBody->text());
     checkCorrectness();
     if(!errorText->text().isEmpty())

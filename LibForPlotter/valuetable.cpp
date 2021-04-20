@@ -9,18 +9,22 @@ ValueTable::ValueTable(MathExpression *expression, double step)
     if(step != 0)
     {
         singleStep = step;
+        // Calculating a number of values inside the table
         length = (expression->GetMaximumVarValue()-
                       expression->GetMinimumVarValue())/singleStep;
+        // Check the correctness of allocating memory
         if((valuesArr = new(std::nothrow) double[length]) == nullptr)
         {
             qDebug() << "Не удалось выделить память под таблицу значений";
         }
-        else
+        // In case mathematic expression isn't empty we need to calculate the table of values
+        else if(!expression->getInitialExpression().trimmed().isEmpty())
         {
             MathCalculator calculator(*expression);
             double var{expression->GetMinimumVarValue()};
             for(int i{0}; i < length; i++)
             {
+                // It fixes the problem of double number precision near the zero value
                 if(qAbs(var-0.0) < 0.0001)
                 {
                     var = 0.0;
@@ -61,7 +65,7 @@ void ValueTable::recalculate()
                 var = 0.0;
             }
             valuesArr[i] = calculator.Calculate(var);
-            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
 
         }
