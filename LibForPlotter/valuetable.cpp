@@ -65,7 +65,8 @@ void ValueTable::recalculate()
                 var = 0.0;
             }
             valuesArr[i] = calculator.Calculate(var);
-            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+
+            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
 
         }

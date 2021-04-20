@@ -45,9 +45,18 @@ void Plotter::paintEvent(QPaintEvent *event)
     {
         if(table->isDrawn())
         {
-            for(double var{table->getMin()}; var <= table->getMax(); var+=table->getSingleStep())
+            for(double var{table->getMin()+table->getSingleStep()}; var <= table->getMax(); var+=table->getSingleStep())
             {
-                drawLineF(&painter, QPointF(var-table->getSingleStep(), table->get(var-table->getSingleStep())), QPointF(var, table->get(var)));
+                // Drows a point in case if it exists(it isn't a Not A Number or Infinity)
+                if((table->get(var) != qInf()) && (table->get(var) == table->get(var)) && (table->get(var-table->getSingleStep()) != qInf())&&
+                        (table->get(var-table->getSingleStep()) == table->get(var-table->getSingleStep())))
+                {
+                    drawLineF(&painter, QPointF(var-table->getSingleStep(), table->get(var-table->getSingleStep())), QPointF(var, table->get(var)));
+                }
+                else
+                {
+                    qDebug() << table->get(var) << " is a nan or inf";
+                }
             }
         }
     }
@@ -274,7 +283,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
 void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
 {
-    QPen pen{color, 1};
+    QPen pen{color, 1.5};
     painter ->setPen(pen);
 
     painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleStep),

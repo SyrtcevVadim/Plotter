@@ -47,6 +47,7 @@ protected:
 public:
     Plotter(QWidget *parentWidget = nullptr);
     Plotter(QSize *size, QWidget *parentWidget = nullptr);
+
     /// Sets grid cell width
     void setGridCellWidth(int width = 10);
     /// Sets coordinate origin width
