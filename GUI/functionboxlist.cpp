@@ -53,6 +53,7 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     connect(loadFromFileBtn, SIGNAL(pressed()), this, SLOT(loadFunctionListFromFile()));
     connect(addNewWidgetBtn, SIGNAL(pressed()), this, SLOT(addNewWidget()));
     connect(clearAllContentBtn, SIGNAL(pressed()),this, SLOT(clear()));
+
 }
 
 void FunctionBoxList::clear()
@@ -132,6 +133,7 @@ void FunctionBoxList::addNewWidget()
     FunctionBox *newBox = new FunctionBox();
     connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
     connect(newBox, SIGNAL(expressionChanged(MathExpression*)), this, SLOT(onExpressionChanged(MathExpression*)));
+    connect(newBox, SIGNAL(graphColorChanged(MathExpression*, QColor)), this,SLOT(repaintGraphs(MathExpression*, QColor)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
 
     // Adds new FunctionBox object to widget list
@@ -167,4 +169,9 @@ void FunctionBoxList::update()
 void FunctionBoxList::onExpressionChanged(MathExpression *expression)
 {
     emit(expressionChanged(expression));
+}
+
+void FunctionBoxList::repaintGraphs(MathExpression *expression, QColor color)
+{
+    emit(graphColorChanged(expression, color));
 }

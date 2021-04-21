@@ -37,6 +37,7 @@ signals:
     void newFunctionAdded(MathExpression*);
     void expressionChanged(MathExpression*);
     void expressionDeleted(MathExpression*);
+    void graphColorChanged(MathExpression*, QColor);
 
 public slots:
     /// Updates the content of list
@@ -51,6 +52,7 @@ public slots:
     void removeWidget(FunctionBox*);
     /// Clears list's content
     void clear();
+    void repaintGraphs(MathExpression*, QColor);
 
     void onExpressionChanged(MathExpression *expression);
 

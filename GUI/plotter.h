@@ -1,6 +1,6 @@
 #pragma once
 #include"LibForPlotter/mathexpression.h"
-#include"LibForPlotter/valuetable.h"
+#include"LibForPlotter/graph.h"
 #include<QtWidgets>
 
 class Plotter: public QWidget
@@ -24,7 +24,7 @@ private:
     int areaHeight;
 
     /// Stores tables of values of functions
-    QList<ValueTable *> graphs;
+    QList<Graph *> graphs;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -70,6 +70,7 @@ public slots:
     void drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint,QColor color = Qt::black);
 
     void addFunction(MathExpression *expression);
+    void changeGraphColor(MathExpression *expression, QColor color);
     void removeFunction(MathExpression *expression);
     void createTableValue(MathExpression *expression);
 };

@@ -52,6 +52,12 @@ public:
     QLineEdit *maximumVarValueBox;
     /// Removes this object by pressing it
     QPushButton *removeBtn;
+    /// Invokes the standart dialog of choosing the color
+    QPushButton *changeColorBtn;
+    /// Deletes the graph of provided mathematic function from Plotter object
+    QPushButton *clearFromPlotterBtn;
+
+    QColor *graphColor;
 
     FunctionBox(QWidget *parent = nullptr);
     /// Returns the pointer to inner mathematic expression
@@ -62,6 +68,7 @@ signals:
     void elementRemoved(FunctionBox*);
     /// Is emmited when user changes any parameter of FunctionBox object
     void expressionChanged(MathExpression*);
+    void graphColorChanged(MathExpression*, QColor);
 
 
 
@@ -80,6 +87,8 @@ private slots:
     void changeCParamValue(double value);
     /// Changes d parameter value
     void changeDParamValue(double value);
+    /// Changes the color of graph of provided mathematic function
+    void changeGraphColor();
     /// Changes minimum possible variable's value
     void changeMinimumVariableValue(const QString &strValue);
     /// Changes maximum possible variable's value

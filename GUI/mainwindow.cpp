@@ -48,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
     connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), plotter, SLOT(addFunction(MathExpression*)));
     connect(functionBoxList, SIGNAL(expressionDeleted(MathExpression*)), plotter, SLOT(removeFunction(MathExpression*)));
+    connect(functionBoxList, SIGNAL(graphColorChanged(MathExpression*, QColor)), plotter, SLOT(changeGraphColor(MathExpression*, QColor)));
     connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
 }
 

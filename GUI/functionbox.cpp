@@ -22,25 +22,25 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     aParamBox = new QDoubleSpinBox();
     aParamBox->setRange(-10'000.0, 10'000.0);
-    aParamBox->setSingleStep(0.1);
+    aParamBox->setSingleStep(0.05);
     aParamBox->setDecimals(2);
     aParamBox->setToolTip("Значение параметра a");
 
     bParamBox = new QDoubleSpinBox();
     bParamBox->setRange(-10'000.0, 10'000.0);
-    bParamBox->setSingleStep(0.1);
+    bParamBox->setSingleStep(0.05);
     bParamBox->setDecimals(2);
     bParamBox->setToolTip("Значение параметра b");
 
     cParamBox = new QDoubleSpinBox();
     cParamBox->setRange(-10'000.0, 10'000.0);
-    cParamBox->setSingleStep(0.1);
+    cParamBox->setSingleStep(0.05);
     cParamBox->setDecimals(2);
     cParamBox->setToolTip("Значение параметра c");
 
     dParamBox = new QDoubleSpinBox();
     dParamBox->setRange(-10'000.0, 10'000.0);
-    dParamBox->setSingleStep(0.1);
+    dParamBox->setSingleStep(0.05);
     dParamBox->setDecimals(2);
     dParamBox->setToolTip("Значение параметра d");
 
@@ -70,6 +70,13 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     QPixmap removeImage(":/images/Images/RemoveWidgetImage.png");
     removeBtn->setIcon(removeImage);
 
+    changeColorBtn = new QPushButton();
+    changeColorBtn->setAutoFillBackground(true);
+    changeColorBtn->setToolTip("Установить цвет графика функции");
+
+    clearFromPlotterBtn = new QPushButton();
+    clearFromPlotterBtn->setToolTip("Стереть построенный график");
+
     // Соединяем сигналы с обработчиками
     connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(changeMathExpression(const QString)));
     connect(aParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeAParamValue(double)));
@@ -79,6 +86,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMinimumVariableValue(const QString)));
     connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMaximumVariableValue(const QString)));
     connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeFunction()));
+    connect(changeColorBtn, SIGNAL(pressed()), this, SLOT(changeGraphColor()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -86,11 +94,15 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     QGridLayout *grid = new QGridLayout();
 
+    grid->addWidget(clearFromPlotterBtn, 1, 8);
+    grid->addWidget(changeColorBtn, 2, 8);
     grid->addWidget(removeBtn, 3, 8);
+
+
 
     grid->addWidget(functionName, 0,0);
     grid->addWidget(functionBody, 0, 1,1,-1);
-    grid->addWidget(errorText, 1,0, 1, -1);
+    grid->addWidget(errorText, 1,0, 1, 7);
 
     grid->addWidget(aLbl, 2, 0);
     grid->addWidget(aParamBox, 2, 1);
@@ -164,6 +176,7 @@ void FunctionBox::checkCorrectness()
 
 void FunctionBox::changeMathExpression(const QString &str)
 {
+    Q_UNUSED(str);
     qDebug() << " math expression is changed!";
     expression->SetExpression(functionBody->text());
     checkCorrectness();
@@ -264,6 +277,21 @@ MathExpression* FunctionBox::getMathExpression()
 void FunctionBox::removeFunction()
 {
     emit(elementRemoved(this));
+}
+
+void FunctionBox::changeGraphColor()
+{
+    qDebug() << "Меняем цвет графика";
+    QColor color = QColorDialog::getColor().toRgb();
+    if(color.isValid())
+    {
+        QPalette palette = QPalette(QPalette::Button, color);
+        changeColorBtn->setPalette(palette);
+        qDebug() << "Цвет кнопки ДОЛЖЕН измениться на выбранный";
+        emit(graphColorChanged(expression, color));
+    }
+
+
 }
 
 void FunctionBox::mousePressEvent(QMouseEvent *event)

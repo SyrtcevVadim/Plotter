@@ -1,9 +1,10 @@
-#include"LibForPlotter/valuetable.h"
+#include"LibForPlotter/graph.h"
 #include"LibForPlotter/mathcalculator.h"
 #include"LibForPlotter/mathexpression.h"
 #include<qmath.h>
-#include<QDebug>
-ValueTable::ValueTable(MathExpression *expression, double step)
+#include<QtWidgets>
+
+Graph::Graph(MathExpression *expression, double step)
 {
     this->expression = expression;
     if(step != 0)
@@ -18,7 +19,7 @@ ValueTable::ValueTable(MathExpression *expression, double step)
             qDebug() << "Не удалось выделить память под таблицу значений";
         }
         // In case mathematic expression isn't empty we need to calculate the table of values
-        else if(!expression->getInitialExpression().trimmed().isEmpty())
+        else if(!expression->getInitialExpression().isEmpty())
         {
             MathCalculator calculator(*expression);
             double var{expression->GetMinimumVarValue()};
@@ -38,12 +39,12 @@ ValueTable::ValueTable(MathExpression *expression, double step)
 
 }
 
-ValueTable::~ValueTable()
+Graph::~Graph()
 {
     delete[] valuesArr;
 }
 
-void ValueTable::recalculate()
+void Graph::recalculate()
 {
     // Deletes old table of values
     delete[] valuesArr;
@@ -53,7 +54,7 @@ void ValueTable::recalculate()
     {
         qDebug() << "Ну удалось выделить память под таблицу значений";
     }
-    else
+    else if(!expression->getInitialExpression().isEmpty())
     {
         qDebug() << "expression: "<<*expression;
         MathCalculator calculator(*expression);
@@ -73,39 +74,50 @@ void ValueTable::recalculate()
     }
 }
 
-double ValueTable::get(double varValue)
+double Graph::get(double varValue)
 {
     int index{static_cast<int>((qAbs(expression->GetMinimumVarValue()-varValue))/singleStep)};
     return valuesArr[index];
 }
 
-double ValueTable::getMax() const
+double Graph::getMax() const
 {
     return expression->GetMaximumVarValue();
 }
 
-double ValueTable::getMin() const
+double Graph::getMin() const
 {
     return expression->GetMinimumVarValue();
 }
 
-double ValueTable::getSingleStep() const
+double Graph::getSingleStep() const
 {
     return singleStep;
 }
 
-void ValueTable::setDrawn(bool value)
+void Graph::setDrawn(bool value)
 {
     drawn = value;
 }
 
-bool ValueTable::isDrawn()
+bool Graph::isDrawn()
 {
     return drawn;
 }
 
-MathExpression* ValueTable::getExpression()
+QColor Graph::getColor() const
+{
+    return color;
+}
+
+void Graph::setColor(QColor color)
+{
+    this->color = color;
+}
+
+MathExpression* Graph::getExpression()
 {
     qDebug() << "Returning expression: "<< *expression;
     return expression;
 }
+

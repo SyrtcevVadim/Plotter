@@ -1,8 +1,9 @@
-#ifndef VALUETABLE_H
-#define VALUETABLE_H
+#ifndef GRAPH_H
+#define GRAPH_H
 #include"LibForPlotter/mathexpression.h"
+#include<QtWidgets>
 
-class ValueTable
+class Graph
 {
 private:
     MathExpression *expression;
@@ -16,20 +17,30 @@ private:
     /// Shows whether table of values have to be drawn at a plotter object or not
     bool drawn{false};
 
+    /// Color of the graph at plotter object
+    QColor color;
+
 public:
-    ValueTable(MathExpression *expression, double step=0.01);
-    ~ValueTable();
+    Graph(MathExpression *expression, double step=0.01);
+    ~Graph();
+    /// Recalculates the value-table
     void recalculate();
     double get(double varValue);
+    /// Returns the minimum variable's value
     double getMin()const;
+    /// Returns the maximum variable's value
     double getMax()const;
+    /// Returns the single step of variable
     double getSingleStep()const;
-
+    /// Sets the value of drawn
     void setDrawn(bool val = true);
+    /// Returns the value of drawn. If drawn value is true, graph has to be drawn at plotter. False otherwise
     bool isDrawn();
 
     MathExpression* getExpression();
 
+    QColor getColor()const;
+    void setColor(QColor color);
 };
 
-#endif // VALUETABLE_H
+#endif // GRAPH_H

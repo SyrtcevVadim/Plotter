@@ -16,13 +16,13 @@ SOURCES += \
     GUI/functionboxlist.cpp \
     GUI/mainwindow.cpp \
     GUI/plotter.cpp \
+    LibForPlotter/graph.cpp \
     LibForPlotter/mathcalculator.cpp \
     LibForPlotter/mathchecker.cpp \
     LibForPlotter/mathexpression.cpp \
     LibForPlotter/mathformconverter.cpp \
     LibForPlotter/mathhelper.cpp \
     LibForPlotter/mathparser.cpp \
-    LibForPlotter/valuetable.cpp \
     main.cpp \
 
 
@@ -35,13 +35,13 @@ HEADERS += \
     GUI/functionboxlist.h \
     GUI/mainwindow.h \
     GUI/plotter.h \
+    LibForPlotter/graph.h \
     LibForPlotter/mathcalculator.h \
     LibForPlotter/mathchecker.h \
     LibForPlotter/mathexpression.h \
     LibForPlotter/mathformconverter.h \
     LibForPlotter/mathhelper.h \
     LibForPlotter/mathparser.h \
-    LibForPlotter/valuetable.h \
 
 
 # Default rules for deployment.

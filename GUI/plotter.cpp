@@ -1,6 +1,6 @@
 #include"GUI/plotter.h"
 #include"LibForPlotter/mathexpression.h"
-#include"LibForPlotter/valuetable.h"
+#include"LibForPlotter/graph.h"
 #include<QtWidgets>
 
 Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
@@ -41,7 +41,7 @@ void Plotter::paintEvent(QPaintEvent *event)
     drawCoordinates(&painter);
 
     // Отрисовываем графики функций
-    for(ValueTable *table: graphs)
+    for(Graph *table: graphs)
     {
         if(table->isDrawn())
         {
@@ -51,7 +51,7 @@ void Plotter::paintEvent(QPaintEvent *event)
                 if((table->get(var) != qInf()) && (table->get(var) == table->get(var)) && (table->get(var-table->getSingleStep()) != qInf())&&
                         (table->get(var-table->getSingleStep()) == table->get(var-table->getSingleStep())))
                 {
-                    drawLineF(&painter, QPointF(var-table->getSingleStep(), table->get(var-table->getSingleStep())), QPointF(var, table->get(var)));
+                    drawLineF(&painter, QPointF(var-table->getSingleStep(), table->get(var-table->getSingleStep())), QPointF(var, table->get(var)), table->getColor());
                 }
                 else
                 {
@@ -60,9 +60,6 @@ void Plotter::paintEvent(QPaintEvent *event)
             }
         }
     }
-
-    //drawLineF(&painter, QPointF(-3.0, 3.0), QPointF(3.0, 3.0), Qt::darkRed);
-    //drawLineF(&painter, QPointF(-5.0, -5.0), QPointF(1.0, 1.0), Qt::darkYellow);
 
 }
 
@@ -283,7 +280,7 @@ void Plotter::drawPointF(QPainter *painter, QPointF point, QColor color)
 
 void Plotter::drawLineF(QPainter *painter, QPointF startPoint, QPointF endPoint, QColor color)
 {
-    QPen pen{color, 1.5};
+    QPen pen{color, 1.2};
     painter ->setPen(pen);
 
     painter->drawLine(origin.x() +(startPoint.x()*gridCellWidth*singleStep),
@@ -316,7 +313,7 @@ void Plotter::dropEvent(QDropEvent *event)
     in >> expression;
     qDebug() <<"Dropped expression: "<< expression;
 
-    for(ValueTable *item: graphs)
+    for(Graph *item: graphs)
     {
         qDebug() << "current expression: " << *item->getExpression();
         if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
@@ -332,13 +329,13 @@ void Plotter::dropEvent(QDropEvent *event)
 void Plotter::addFunction(MathExpression *expression)
 {
     qDebug() << "Added new expression:\n"<<*expression;
-    ValueTable *newGraph = new ValueTable(expression);
+    Graph *newGraph = new Graph(expression);
     graphs.append(newGraph);
 }
 
 void Plotter::removeFunction(MathExpression *expression)
 {
-    for(ValueTable *item: graphs)
+    for(Graph *item: graphs)
     {
         if(item->getExpression() == expression)
         {
@@ -353,7 +350,7 @@ void Plotter::removeFunction(MathExpression *expression)
 void Plotter::createTableValue(MathExpression *expression)
 {
     qDebug() << "Expression is changed: " << *expression;
-    for(ValueTable *item: graphs)
+    for(Graph *item: graphs)
     {
         if(item->getExpression() == expression)
         {
@@ -362,6 +359,21 @@ void Plotter::createTableValue(MathExpression *expression)
             {
                 repaint();
             }
+            break;
+        }
+    }
+}
+
+void Plotter::changeGraphColor(MathExpression* expression, QColor color)
+{
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression() == expression)
+        {
+            item->setColor(color);
+            qDebug() << "Цвет графика изменился!";
+            // Repaints all graphs at plotter object
+            repaint();
             break;
         }
     }
