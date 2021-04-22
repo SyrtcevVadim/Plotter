@@ -378,3 +378,15 @@ void Plotter::changeGraphColor(MathExpression* expression, QColor color)
         }
     }
 }
+void Plotter::clearGraph(MathExpression *expression)
+{
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression() == expression)
+        {
+            item->setDrawn(false);
+            repaint();
+            break;
+        }
+    }
+}

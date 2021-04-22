@@ -73,5 +73,6 @@ public slots:
     void changeGraphColor(MathExpression *expression, QColor color);
     void removeFunction(MathExpression *expression);
     void createTableValue(MathExpression *expression);
+    void clearGraph(MathExpression *expression);
 };
 

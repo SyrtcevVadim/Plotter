@@ -38,6 +38,7 @@ signals:
     void expressionChanged(MathExpression*);
     void expressionDeleted(MathExpression*);
     void graphColorChanged(MathExpression*, QColor);
+    void graphCleared(MathExpression*);
 
 public slots:
     /// Updates the content of list
@@ -53,8 +54,9 @@ public slots:
     /// Clears list's content
     void clear();
     void repaintGraphs(MathExpression*, QColor);
-
+    void clearGraph(MathExpression*);
     void onExpressionChanged(MathExpression *expression);
+
 
 };
 

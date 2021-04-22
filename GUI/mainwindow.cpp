@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(functionBoxList, SIGNAL(expressionDeleted(MathExpression*)), plotter, SLOT(removeFunction(MathExpression*)));
     connect(functionBoxList, SIGNAL(graphColorChanged(MathExpression*, QColor)), plotter, SLOT(changeGraphColor(MathExpression*, QColor)));
     connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
+    connect(functionBoxList, SIGNAL(graphCleared(MathExpression*)), plotter, SLOT(clearGraph(MathExpression*)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

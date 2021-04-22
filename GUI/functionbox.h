@@ -57,8 +57,6 @@ public:
     /// Deletes the graph of provided mathematic function from Plotter object
     QPushButton *clearFromPlotterBtn;
 
-    QColor *graphColor;
-
     FunctionBox(QWidget *parent = nullptr);
     /// Returns the pointer to inner mathematic expression
     MathExpression* getMathExpression();
@@ -69,6 +67,7 @@ signals:
     /// Is emmited when user changes any parameter of FunctionBox object
     void expressionChanged(MathExpression*);
     void graphColorChanged(MathExpression*, QColor);
+    void graphCleared(MathExpression*);
 
 
 
@@ -95,6 +94,7 @@ private slots:
     void changeMaximumVariableValue(const QString &strValue);
     /// Removes this FunctionBox object
     void removeFunction();
+    void clearGraph();
 
 };
 

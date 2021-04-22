@@ -87,6 +87,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMaximumVariableValue(const QString)));
     connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeFunction()));
     connect(changeColorBtn, SIGNAL(pressed()), this, SLOT(changeGraphColor()));
+    connect(clearFromPlotterBtn, SIGNAL(pressed()), this, SLOT(clearGraph()));
 
     // Set default values
     minimumVarValueBox->setText("-10");
@@ -285,13 +286,13 @@ void FunctionBox::changeGraphColor()
     QColor color = QColorDialog::getColor().toRgb();
     if(color.isValid())
     {
-        QPalette palette = QPalette(QPalette::Button, color);
-        changeColorBtn->setPalette(palette);
-        qDebug() << "Цвет кнопки ДОЛЖЕН измениться на выбранный";
         emit(graphColorChanged(expression, color));
     }
+}
 
-
+void FunctionBox::clearGraph()
+{
+    emit(graphCleared(expression));
 }
 
 void FunctionBox::mousePressEvent(QMouseEvent *event)

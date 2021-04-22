@@ -134,6 +134,7 @@ void FunctionBoxList::addNewWidget()
     connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
     connect(newBox, SIGNAL(expressionChanged(MathExpression*)), this, SLOT(onExpressionChanged(MathExpression*)));
     connect(newBox, SIGNAL(graphColorChanged(MathExpression*, QColor)), this,SLOT(repaintGraphs(MathExpression*, QColor)));
+    connect(newBox, SIGNAL(graphCleared(MathExpression*)), this, SLOT(clearGraph(MathExpression*)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
 
     // Adds new FunctionBox object to widget list
@@ -174,4 +175,9 @@ void FunctionBoxList::onExpressionChanged(MathExpression *expression)
 void FunctionBoxList::repaintGraphs(MathExpression *expression, QColor color)
 {
     emit(graphColorChanged(expression, color));
+}
+
+void FunctionBoxList::clearGraph(MathExpression *expression)
+{
+    emit(graphCleared(expression));
 }
