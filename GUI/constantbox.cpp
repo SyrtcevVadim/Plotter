@@ -12,6 +12,7 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     valueBox = new QLineEdit();
 
     removeButton = new QPushButton();
+    removeButton->setToolTip(tr("Delete constant block"));
     removeButton->setIcon(QPixmap(":/images/Images/RemoveWidgetImage.png"));
 
     QGridLayout *grid = new QGridLayout(this);

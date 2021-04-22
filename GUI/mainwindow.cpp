@@ -59,12 +59,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // If user have worked with several function before closing the application
     if(functionBoxList->getLength() > 0)
     {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение сохранения данных перед выходом",
-                                              "Вы хотите сохранить список функций в файл перед выходом из программы?",
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, tr("Save data before exit"),
+                                              tr("Do you want to save list of functions before exit?"),
                                               QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
-        msgBox->buttons()[0]->setText("Отмена");
-        msgBox->buttons()[1]->setText("Да");
-        msgBox->buttons()[2]->setText("Нет");
+
         int userAnswer = msgBox->exec();
         delete msgBox;
 

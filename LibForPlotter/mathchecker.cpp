@@ -83,7 +83,7 @@ bool MathChecker::AreBracketsCorrespond()
         }
         else if(stack.top() == "[")
         {
-            errorMessage = QObject::tr("Closigng square bracket was missed");
+            errorMessage = QObject::tr("Closing square bracket was missed");
         }
         else if(stack.top() == "{")
         {
@@ -128,7 +128,7 @@ bool MathChecker::HasMissedOperations()
            (MathHelper::IsTokenNumber(token)||MathHelper::IsTokenParameter(token)||MathHelper::IsTokenVariable(token)||
             MathHelper::IsTokenConstant(token)))
         {
-            errorMessage = QObject::tr("Missed operaion between \"%1\" and \"%2\"").arg(previousToken, token);
+            errorMessage = QObject::tr("Missed operation between \"%1\" and \"%2\"").arg(previousToken, token);
             return true;
         }
 

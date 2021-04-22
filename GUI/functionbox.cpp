@@ -231,7 +231,7 @@ void FunctionBox::changeMinimumVariableValue(const QString &strValue)
     // Minimum variable value can't exceeds the maximum one
     if(strValue.toDouble() > expression->GetMaximumVarValue())
     {
-        errorText->setText(QObject::tr("Minimium variable's value exceeds the maximum one"));
+        errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
