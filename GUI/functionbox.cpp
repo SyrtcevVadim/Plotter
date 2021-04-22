@@ -10,10 +10,10 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
     expression = new MathExpression();
     resize(250,100);
-    // Инициализируем все внутренние виджеты
+
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
-    functionBody->setToolTip("Тело функции");
+    functionBody->setToolTip(tr("Function's body"));
 
     aLbl = new QLabel("a");
     bLbl = new QLabel("b");
@@ -24,25 +24,25 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     aParamBox->setRange(-10'000.0, 10'000.0);
     aParamBox->setSingleStep(0.05);
     aParamBox->setDecimals(2);
-    aParamBox->setToolTip("Значение параметра a");
+    aParamBox->setToolTip(tr("a parameter's value"));
 
     bParamBox = new QDoubleSpinBox();
     bParamBox->setRange(-10'000.0, 10'000.0);
     bParamBox->setSingleStep(0.05);
     bParamBox->setDecimals(2);
-    bParamBox->setToolTip("Значение параметра b");
+    bParamBox->setToolTip(tr("b parameter's value"));
 
     cParamBox = new QDoubleSpinBox();
     cParamBox->setRange(-10'000.0, 10'000.0);
     cParamBox->setSingleStep(0.05);
     cParamBox->setDecimals(2);
-    cParamBox->setToolTip("Значение параметра c");
+    cParamBox->setToolTip(tr("c parameter's value"));
 
     dParamBox = new QDoubleSpinBox();
     dParamBox->setRange(-10'000.0, 10'000.0);
     dParamBox->setSingleStep(0.05);
     dParamBox->setDecimals(2);
-    dParamBox->setToolTip("Значение параметра d");
+    dParamBox->setToolTip(tr("d paramter's value"));
 
     // Set default values
     aParamBox->setValue(1.0);
@@ -54,11 +54,11 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     xLbl = new QLabel("X");
 
     minimumVarValueBox = new QLineEdit();
-    minimumVarValueBox->setToolTip("Минимальное значение переменной x");
+    minimumVarValueBox->setToolTip(tr("Minimum variable's value"));
     maximumVarValueBox = new QLineEdit();
-    maximumVarValueBox->setToolTip("Максимальное значение переменной x");
+    maximumVarValueBox->setToolTip(tr("Maximum variable's value"));
 
-    // User can write only numbers as a minimum/maximum value of variable
+    // User can write only numbers as a minimum/maximum variable's value
     QDoubleValidator *restrictionValidator = new QDoubleValidator();
     minimumVarValueBox->setValidator(restrictionValidator);
     maximumVarValueBox->setValidator(restrictionValidator);
@@ -66,16 +66,16 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     errorText = new QLabel();
 
     removeBtn = new QPushButton();
-    removeBtn->setToolTip("Удалить блок функции");
+    removeBtn->setToolTip(tr("Delete function block"));
     QPixmap removeImage(":/images/Images/RemoveWidgetImage.png");
     removeBtn->setIcon(removeImage);
 
     changeColorBtn = new QPushButton();
     changeColorBtn->setAutoFillBackground(true);
-    changeColorBtn->setToolTip("Установить цвет графика функции");
+    changeColorBtn->setToolTip(tr("Set graph's color"));
 
     clearFromPlotterBtn = new QPushButton();
-    clearFromPlotterBtn->setToolTip("Стереть построенный график");
+    clearFromPlotterBtn->setToolTip(tr("Clear graph"));
 
     // Соединяем сигналы с обработчиками
     connect(functionBody, SIGNAL(textChanged(const QString)),this, SLOT(changeMathExpression(const QString)));
@@ -135,42 +135,37 @@ void FunctionBox::paintEvent(QPaintEvent *event)
 
 void FunctionBox::checkCorrectness()
 {
-    // Очищаем все старые записи об ошибках
+    // Clears all previous errors
     errorText->clear();
 
-    // Проверяем введённое математическое выражение на корректность
+    // Checks provided mathematic expression for correctness
     if(!expression->getInitialExpression().isEmpty())
     {
         MathChecker checker(expression->getInitialExpression());
         if(!checker.AreAllTokensCorrect())
         {
-           qDebug() << "Not all tokens are correct";
            errorText->setText(checker.GetErrorMessage());
         }
         else if(!checker.AreBracketsCorrespond())
         {
-            qDebug() << "Not all brackets correspond";
             errorText->setText(checker.GetErrorMessage());
         }
         else if(checker.HasEmptyBrackets())
         {
-            qDebug() << "Has empty brackets";
             errorText->setText(checker.GetErrorMessage());
         }
         else if(checker.HasMissedOperations())
         {
-            qDebug() << "Has missed operations";
             errorText->setText(checker.GetErrorMessage());
         }
         else if(checker.HasMissedOperands())
         {
-            qDebug() << "Has missed operands";
             errorText->setText(checker.GetErrorMessage());
         }
 
         if(maximumVarValueBox->text().toDouble() < minimumVarValueBox->text().toDouble())
         {
-            errorText->setText("Минимальное значение перменной больше максимального");
+            errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
         }
     }
 }
@@ -178,7 +173,6 @@ void FunctionBox::checkCorrectness()
 void FunctionBox::changeMathExpression(const QString &str)
 {
     Q_UNUSED(str);
-    qDebug() << " math expression is changed!";
     expression->SetExpression(functionBody->text());
     checkCorrectness();
     if(!errorText->text().isEmpty())
@@ -237,7 +231,7 @@ void FunctionBox::changeMinimumVariableValue(const QString &strValue)
     // Minimum variable value can't exceeds the maximum one
     if(strValue.toDouble() > expression->GetMaximumVarValue())
     {
-        errorText->setText("Минимальное значение переменной больше максимального");
+        errorText->setText(QObject::tr("Minimium variable's value exceeds the maximum one"));
     }
     else
     {
@@ -257,7 +251,7 @@ void FunctionBox::changeMaximumVariableValue(const QString &strValue)
     // Maximum variable value have to be greater than the minimum one
     if(strValue.toDouble() < expression->GetMinimumVarValue())
     {
-        errorText->setText("Минимальное значение перменной больше максимального");
+        errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
@@ -282,7 +276,6 @@ void FunctionBox::removeFunction()
 
 void FunctionBox::changeGraphColor()
 {
-    qDebug() << "Меняем цвет графика";
     QColor color = QColorDialog::getColor().toRgb();
     if(color.isValid())
     {

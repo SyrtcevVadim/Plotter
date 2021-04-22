@@ -8,7 +8,6 @@
 #include<QVector>
 
 
-
 MathChecker::MathChecker(const QString &expression)
 {
     this->expression = MathParser::CreateTokenList(expression);
@@ -22,7 +21,7 @@ bool MathChecker::AreAllTokensCorrect()
         if(!(MathHelper::correctTokens.contains(token) || MathHelper::userDefinedConstants.contains(token) ||
              MathHelper::IsTokenNumber(token)))
         {
-            errorMessage = QString("Получено неизвестное выражение \"%1\"").arg(token);
+            errorMessage = QObject::tr("Unexpected expression was received: \"%1\"").arg(token);
             return false;
         }
     }
@@ -43,7 +42,7 @@ bool MathChecker::AreBracketsCorrespond()
         {
             if(stack.isEmpty() || stack.top() != "(")
             {
-                errorMessage = "Пропущена открывающая круглая скобка";
+                errorMessage = QObject::tr("Opening parenthesis was missed");
                 return false;
             }
             if(stack.top() == "(")
@@ -55,7 +54,7 @@ bool MathChecker::AreBracketsCorrespond()
         {
             if(stack.isEmpty() || stack.top() != "[")
             {
-                errorMessage = "Пропущена открывающая квадратная скобка";
+                errorMessage = QObject::tr("Opening square bracket was missed");
                 return false;
             }
             if(stack.top() == "[")
@@ -67,7 +66,7 @@ bool MathChecker::AreBracketsCorrespond()
         {
             if(stack.isEmpty() || stack.top() != "{")
             {
-                errorMessage = "Пропущена открывающая фигурная скобка";
+                errorMessage = QObject::tr("Opening curly bracket was missed");
                 return false;
             }
             if(stack.top() == "{")
@@ -80,15 +79,15 @@ bool MathChecker::AreBracketsCorrespond()
     {
         if(stack.top() == "(")
         {
-            errorMessage = "Пропущена закрывающая круглая скобка";
+            errorMessage = QObject::tr("Closing parenthesis was missed");
         }
         else if(stack.top() == "[")
         {
-            errorMessage = "Пропущена закрывающая квадратная скобка";
+            errorMessage = QObject::tr("Closigng square bracket was missed");
         }
         else if(stack.top() == "{")
         {
-            errorMessage = "Пропущена закрывающая фигурная скобка";
+            errorMessage = QObject::tr("Closing curly bracket was missed");
         }
         return false;
     }
@@ -105,7 +104,7 @@ bool MathChecker::HasEmptyBrackets()
         if(MathHelper::IsTokenOpeningBracket(previousToken)&&
                 MathHelper::IsTokenClosingBracket(token))
         {
-            errorMessage = QString("Пропущено выражение между %1 и %2").arg(previousToken, token);
+            errorMessage = QObject::tr("Missed expression between %1 and %2").arg(previousToken, token);
             return true;
         }
         previousToken=token;
@@ -116,14 +115,12 @@ bool MathChecker::HasEmptyBrackets()
 
 bool MathChecker::HasMissedOperations()
 {
-    qDebug() << expression;
     QString previousToken{""};
     for(auto token: expression)
     {
         if((MathHelper::IsTokenNumber(previousToken)||MathHelper::IsTokenParameter(previousToken)||
             MathHelper::IsTokenConstant(previousToken)||MathHelper::IsTokenVariable(previousToken))&&MathHelper::IsTokenOpeningBracket(token))
         {
-            qDebug() << previousToken << " " <<token;
             continue;
         }
         if((MathHelper::IsTokenNumber(previousToken)||MathHelper::IsTokenParameter(previousToken)||MathHelper::IsTokenVariable(previousToken)||
@@ -131,7 +128,7 @@ bool MathChecker::HasMissedOperations()
            (MathHelper::IsTokenNumber(token)||MathHelper::IsTokenParameter(token)||MathHelper::IsTokenVariable(token)||
             MathHelper::IsTokenConstant(token)))
         {
-            errorMessage = QString("Пропущена операция между \"%1\" и \"%2\"").arg(previousToken, token);
+            errorMessage = QObject::tr("Missed operaion between \"%1\" and \"%2\"").arg(previousToken, token);
             return true;
         }
 
@@ -166,14 +163,13 @@ bool MathChecker::HasMissedOperands()
         }
         else if(MathHelper::IsTokenFunction(token) || MathHelper::IsTokenOperation(token))
         {
-            double first, second;
             // Checking for necessary operands quantity
             if(!stack.isEmpty() && stack.count() >= MathHelper::operandQuantity[token])
             {
-                first = stack.pop().toDouble();
+                stack.pop();
                 if(MathHelper::operandQuantity[token] == 2)
                 {
-                    second = stack.pop().toDouble();
+                    stack.pop();
                 }
                 // Pushs result back to stack
                 stack.push("1");
@@ -184,7 +180,7 @@ bool MathChecker::HasMissedOperands()
                 {
                     token = token.remove(0,2);
                 }
-                errorMessage = QString("Недостаточно операндов для %1").arg(token);
+                errorMessage = QObject::tr("Not enough operands for %1").arg(token);
                 qDebug() << errorMessage;
                 return true;
             }

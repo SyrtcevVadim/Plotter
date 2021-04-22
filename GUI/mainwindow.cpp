@@ -12,9 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     topLevelMenu = new QMenuBar(this);
     topLevelMenu->addSeparator();
     // Defining menu items
-    fileMenu = new QMenu("&Файл");
-    settingsMenu = new QMenu("&Настройки");
-    helpMenu = new QMenu("&Справка");
+    fileMenu = new QMenu(tr("&File"));
+    settingsMenu = new QMenu(tr("&Settings"));
+    helpMenu = new QMenu(tr("&Help"));
     topLevelMenu->addMenu(fileMenu);
     topLevelMenu->addMenu(settingsMenu);
     topLevelMenu->addMenu(helpMenu);
@@ -22,18 +22,19 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     topLevelMenu->showNormal();
 
 
-    helpMenu->addAction("&Знакомство");
+    helpMenu->addAction(tr("&Introduction"));
     helpMenu->addSeparator();
-    helpMenu->addAction("&О программе Изюм", this, SLOT(showAboutProgramInfo()));
+    helpMenu->addAction(tr("&About program"), this, SLOT(showAboutProgramInfo()));
 
+    settingsMenu->addAction("&Change language");
 
-    fileMenu->addAction("Загрузить функции", functionBoxList, SLOT(loadFunctionListFromFile()));
-    fileMenu->addAction("Сохранить функции", functionBoxList, SLOT(saveFunctionListToFile()));
+    fileMenu->addAction(tr("Load functions"), functionBoxList, SLOT(loadFunctionListFromFile()));
+    fileMenu->addAction(tr("Save functions"), functionBoxList, SLOT(saveFunctionListToFile()));
     fileMenu->addSeparator();
-    fileMenu->addAction("Загрузить константы", constantBoxList, SLOT(loadConstantListFromFile()));
-    fileMenu->addAction("Сохранить константы", constantBoxList, SLOT(saveConstantListToFile()));
+    fileMenu->addAction(tr("Load constants"), constantBoxList, SLOT(loadConstantListFromFile()));
+    fileMenu->addAction(tr("Save constants"), constantBoxList, SLOT(saveConstantListToFile()));
     fileMenu->addSeparator();
-    fileMenu->addAction("&Выйти", this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
+    fileMenu->addAction(tr("&Exit"), this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
 
     // Sets layout
 

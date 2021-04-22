@@ -18,13 +18,13 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
 
 
     addNewWidgetBtn = new QPushButton();
-    addNewWidgetBtn->setToolTip("Добавить новый блок ввода констант");
+    addNewWidgetBtn->setToolTip(tr("Add new constant box"));
     saveToFileBtn = new QPushButton();
-    saveToFileBtn->setToolTip("Сохранить список констант в файл");
+    saveToFileBtn->setToolTip(tr("Save constants to file"));
     loadFromFileBtn = new QPushButton();
-    loadFromFileBtn->setToolTip("Загрузить список констант из файла");
+    loadFromFileBtn->setToolTip(tr("Load constants from file"));
     clearAllContentBtn = new QPushButton();
-    clearAllContentBtn->setToolTip("Очистить список функций");
+    clearAllContentBtn->setToolTip(tr("Clear list of constant boxes"));
 
     // Sets images to buttons
     QPixmap addNewWidgetIcon(":/images/Images/AddWidgetImage.png");
@@ -72,8 +72,8 @@ void ConstantBoxList::clear()
 {
     if(listOfWidgets.length() > 0)
     {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка констант",
-                                              "Вы точно хотите удалить все константы из списка?",
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, tr("Operation confirmation"),
+                                              tr("Do you really want to clear list of constant boxes?"),
                                               QMessageBox::Yes | QMessageBox::No);
         msgBox->buttons()[0]->setText("Да");
         msgBox->buttons()[1]->setText("Нет");
@@ -98,7 +98,7 @@ int ConstantBoxList::getLength() const
 void ConstantBoxList::saveConstantListToFile()
 {
 
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить константы в файл", "constants.izumc","Izum constants (*.izumc)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, tr("Saving constants to file"), "constants.izumc","Izum constants (*.izumc)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -115,7 +115,7 @@ void ConstantBoxList::saveConstantListToFile()
 
 void ConstantBoxList::loadConstantListFromFile()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","Izum constants *.izumc");
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, tr("Loading constants from file"),"","Izum constants *.izumc");
     if(!pathToInputFile.isEmpty())
     {
         QFile inputFile(pathToInputFile);

@@ -17,13 +17,13 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
 
 
     addNewWidgetBtn = new QPushButton();
-    addNewWidgetBtn->setToolTip("Добавить новый блок ввода функции");
+    addNewWidgetBtn->setToolTip(tr("Add new function block"));
     saveToFileBtn = new QPushButton();
-    saveToFileBtn->setToolTip("Сохранить список функций в файл");
+    saveToFileBtn->setToolTip(tr("Save functions to file"));
     loadFromFileBtn = new QPushButton();
-    loadFromFileBtn->setToolTip("Загрузить список функций из файла");
+    loadFromFileBtn->setToolTip(tr("Load functions from file"));
     clearAllContentBtn = new QPushButton();
-    clearAllContentBtn->setToolTip("Очистить список функций");
+    clearAllContentBtn->setToolTip(tr("Clear list of function boxes"));
 
     // Sets images to buttons
     QPixmap addNewWidgetIcon(":/images/Images/AddWidgetImage.png");
@@ -60,12 +60,10 @@ void FunctionBoxList::clear()
 {
     if(listOfWidgets.length() > 0)
     {
-        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, "Подтверждение очищения списка функций",
-                                              "Вы точно хотите удалить все функции из списка?",
+        QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, tr("Operation confirmation"),
+                                              "Do you really want to clear list of function boxes?",
                                               QMessageBox::Yes | QMessageBox::No);
 
-        msgBox->buttons()[0]->setText("Да");
-        msgBox->buttons()[1]->setText("Нет");
 
         int result = msgBox->exec();
         if(result==QMessageBox::Yes)
@@ -85,7 +83,7 @@ int FunctionBoxList::getLength() const
 
 void FunctionBoxList::saveFunctionListToFile()
 {
-    QString pathToOutputFile = QFileDialog::getSaveFileName(this, "Сохранить функции в файл", "functions.izumf","Izum functions (*.izumf)");
+    QString pathToOutputFile = QFileDialog::getSaveFileName(this, tr("Saving functions to file"), "functions.izumf","Izum functions (*.izumf)");
     QFile outputFile(pathToOutputFile);
     outputFile.open(QIODevice::WriteOnly);
     QDataStream outStream(&outputFile);
@@ -100,7 +98,7 @@ void FunctionBoxList::saveFunctionListToFile()
 
 void FunctionBoxList::loadFunctionListFromFile()
 {
-    QString pathToInputFile = QFileDialog::getOpenFileName(this, "Загрузить функции из файла","","*.izumf");
+    QString pathToInputFile = QFileDialog::getOpenFileName(this, tr("Loading functions from file"),"","*.izumf");
     if(!pathToInputFile.isEmpty())
     {
         QFile inputFile(pathToInputFile);

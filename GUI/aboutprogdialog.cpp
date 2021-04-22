@@ -3,15 +3,15 @@
 
 AboutProgDialog::AboutProgDialog(QWidget *parent): QDialog(parent, Qt::WindowTitleHint)
 {
-    programDescriptionLbl = new QLabel("Программа Izum предназначена для построения графиков функций и изучения их поведения в зависимости от"
-                                        "значений параметров.\nРазработана в качестве курсовой работы за 2.5 месяца.");
-    linkToGithubLbl = new QLabel(R"(<a href="https://github.com/SyrtcevVadim/Plotter">Ссылка на репозиторий проекта</a>)");
+    programDescriptionLbl = new QLabel(tr("This program is designed for drawing functions' plots and for investigating functions' behaviour depending on "
+                                        "its' parameters' values.\nIs developed as a course work for OOP in C++"));
+    linkToGithubLbl = new QLabel(tr(R"(<a href="https://github.com/SyrtcevVadim/Plotter">Link to Github-repository</a>)"));
     linkToGithubLbl->setOpenExternalLinks(true);
-    licenseLbl = new QLabel("Разработчик: Сырцев Вадим Игоревич\nПочта: syrtcevvi@gmail.com\n"
-                            "Приложение свободно для копирования и использования");
-    imageLbl = new QLabel("Здесь должна быть иконка приложения");
+    licenseLbl = new QLabel(tr("Developer: Syrtcev Vadim Igorevich\nE-mail: syrtcevvi@gmail.com\n"
+                            "Application free for copying and use"));
+    imageLbl = new QLabel(tr("Here should be an application's icon"));
 
-    closeBtn = new QPushButton("Закрыть");
+    closeBtn = new QPushButton(tr("Close"));
     connect(closeBtn, SIGNAL(clicked()), SLOT(accept()));
 
     QGridLayout *mainLayout = new QGridLayout();

@@ -5,8 +5,8 @@
 ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
 {
     resize(300, 60);
-    constantNameLbl = new QLabel("Константа:");
-    constantValueLbl = new QLabel("Значение:");
+    constantNameLbl = new QLabel(tr("Name:"));
+    constantValueLbl = new QLabel(tr("Value:"));
 
     constantBox = new QLineEdit();
     valueBox = new QLineEdit();
