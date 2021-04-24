@@ -215,6 +215,11 @@ Application free for copying and use</source>
         <translation>&amp;О программе</translation>
     </message>
     <message>
+        <location filename="GUI/mainwindow.cpp" line="29"/>
+        <source>&amp;Change language</source>
+        <translation type="unfinished">Сменить язык</translation>
+    </message>
+    <message>
         <location filename="GUI/mainwindow.cpp" line="31"/>
         <source>Load functions</source>
         <translation>Загрузить список функций</translation>

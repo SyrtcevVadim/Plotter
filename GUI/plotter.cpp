@@ -13,15 +13,18 @@ Plotter::Plotter(QSize *size, QWidget *parent): QWidget(parent)
     setGridCellWidth(10);
     setOriginWidth(6);
     setAxesWidth(0.5);
-    setSingleStep(2);
+    setSingleStep(3);
 
-    resize(size->width(),size->height());
+
+    resize(size->width(),size->height()+100);
 
     areaWidth = size->width() - 2*gridCellWidth;
     areaHeight = size->height() - 2*gridCellWidth;
 
     origin.setX(areaWidth / 2);
     origin.setY(areaHeight / 2);
+
+
 }
 
 
@@ -128,7 +131,7 @@ void Plotter::drawAreaBorders(QPainter *painter)
     QPen pen(Qt::darkGray, 3);
     painter ->setPen(pen);
     // Отрисовывает прямоугольную границу
-    painter ->drawRect(0, 0, width(), height());
+    painter ->drawRect(0, 0, areaWidth+2*gridCellWidth, areaHeight+2*gridCellWidth);
 }
 
 void Plotter::drawCoordinates(QPainter *painter)

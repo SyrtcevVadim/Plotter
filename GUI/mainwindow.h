@@ -1,6 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include"GUI/plotter.h"
+#include"GUI/paintingarea.h"
 #include"GUI/functionboxlist.h"
 #include"GUI/constantboxlist.h"
 #include<QtWidgets>
@@ -24,7 +24,7 @@ private:
     QMenu *settingsMenu;
 
     /// Painting area
-    Plotter *plotter;
+    PaintingArea *paintingArea;
     /// List of FunctionBox widgets
     FunctionBoxList *functionBoxList;
     /// List of ConstantBox widgets

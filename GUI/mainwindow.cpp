@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 {
     functionBoxList = new FunctionBoxList(500);
     constantBoxList = new ConstantBoxList(500);
-    plotter = new Plotter(new QSize(600,600));
+    paintingArea = new PaintingArea(QSize(600,600));
 
 
     topLevelMenu = new QMenuBar(this);
@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     helpMenu->addSeparator();
     helpMenu->addAction(tr("&About program"), this, SLOT(showAboutProgramInfo()));
 
-    settingsMenu->addAction("&Change language");
+    settingsMenu->addAction(tr("&Change language"));
 
     fileMenu->addAction(tr("Load functions"), functionBoxList, SLOT(loadFunctionListFromFile()));
     fileMenu->addAction(tr("Save functions"), functionBoxList, SLOT(saveFunctionListToFile()));
@@ -42,16 +42,16 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     itemLayout->setContentsMargins(5,50,5,5);
     itemLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
     itemLayout->addWidget(constantBoxList, 1, Qt::AlignTop);
-    itemLayout->addWidget(plotter,1, Qt::AlignTop);
+    itemLayout->addWidget(paintingArea,1, Qt::AlignTop);
 
     setLayout(itemLayout);
 
     connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
-    connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), plotter, SLOT(addFunction(MathExpression*)));
-    connect(functionBoxList, SIGNAL(expressionDeleted(MathExpression*)), plotter, SLOT(removeFunction(MathExpression*)));
-    connect(functionBoxList, SIGNAL(graphColorChanged(MathExpression*, QColor)), plotter, SLOT(changeGraphColor(MathExpression*, QColor)));
-    connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
-    connect(functionBoxList, SIGNAL(graphCleared(MathExpression*)), plotter, SLOT(clearGraph(MathExpression*)));
+    //connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), plotter, SLOT(addFunction(MathExpression*)));
+    //connect(functionBoxList, SIGNAL(expressionDeleted(MathExpression*)), plotter, SLOT(removeFunction(MathExpression*)));
+    //connect(functionBoxList, SIGNAL(graphColorChanged(MathExpression*, QColor)), plotter, SLOT(changeGraphColor(MathExpression*, QColor)));
+    //connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
+    //connect(functionBoxList, SIGNAL(graphCleared(MathExpression*)), plotter, SLOT(clearGraph(MathExpression*)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
