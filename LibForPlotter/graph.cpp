@@ -74,9 +74,9 @@ void Graph::recalculate()
     }
 }
 
-double Graph::get(double varValue)
+double Graph::get(double variableValue)
 {
-    int index{static_cast<int>((qAbs(expression->GetMinimumVarValue()-varValue))/singleStep)};
+    int index{static_cast<int>((qAbs(expression->GetMinimumVarValue()-variableValue))/singleStep)};
     return valuesArr[index];
 }
 
@@ -88,6 +88,11 @@ double Graph::getMax() const
 double Graph::getMin() const
 {
     return expression->GetMinimumVarValue();
+}
+
+void Graph::setSingleStep(double value)
+{
+    singleStep = value;
 }
 
 double Graph::getSingleStep() const
@@ -121,3 +126,7 @@ MathExpression* Graph::getExpression()
     return expression;
 }
 
+double Graph::operator[](double variableValue)
+{
+    return get(variableValue);
+}

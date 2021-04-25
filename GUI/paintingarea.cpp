@@ -4,6 +4,7 @@
 
 PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(parentWidget)
 {
+    setAcceptDrops(true);
     setMouseTracking(true);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setCursor(Qt::CrossCursor);
@@ -48,6 +49,21 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     drawCoordinates(painter);
     drawAxesNames(painter);
 
+    for(Graph *item: graphs)
+    {
+        double step{item->getSingleStep()};
+        for(double x{item->getMin()+step}; x < item->getMax(); x++)
+        {
+            if(((*item)[x-step] != qInf()) &&
+               ((*item)[x-step] == (*item)[x-step])&&
+               ((*item)[x] != qInf()) &&
+               ((*item)[x] == (*item)[x]))
+            {
+                drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
+            }
+        }
+    }
+    /*
     // Tests for drawing points
     drawPointF(painter, QPointF(3, 5), Qt::blue);
     drawPointF(painter, QPointF(4, 6), Qt::red);
@@ -56,6 +72,7 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     // Tests for drawing lines
     drawLineF(painter, QPointF(-1,1),QPointF(7,15.3), Qt::darkRed);
     drawLineF(painter, QPointF(-7,7), QPointF(11.3,15.4), Qt::darkGreen);
+    */
 }
 
 void PaintingArea::setOriginPointThickness(double value)
@@ -246,4 +263,89 @@ void PaintingArea::mouseMoveEvent(QMouseEvent *event)
 QSize PaintingArea::sizeHint() const
 {
     return QSize(areaWidth+leftIndent, areaHeight+bottomIndent);
+}
+
+void PaintingArea::addFunction(MathExpression *function)
+{
+    qDebug() << "Added new function: " << *function;
+    Graph *newGraph = new Graph(function);
+    graphs.append(newGraph);
+}
+
+void PaintingArea::changeGraphColor(MathExpression *function, QColor color)
+{
+    qDebug() << "Color of " << *function << " is changed!";
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression() == function)
+        {
+            item->setColor(color);
+            if(item->isDrawn())
+            {
+                repaint();
+            }
+        }
+    }
+}
+
+void PaintingArea::removeGraph(MathExpression *function)
+{
+    qDebug() << *function << " is deleted!";
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression() == function)
+        {
+            graphs.removeOne(item);
+            delete item;
+            break;
+        }
+    }
+    repaint();
+}
+
+void PaintingArea::changeGraph(MathExpression *function)
+{
+    qDebug() << *function << " is changed! Recalculating of table of values";
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression() == function)
+        {
+            item->recalculate();
+            if(item->isDrawn())
+            {
+                repaint();
+            }
+            break;
+        }
+    }
+}
+
+void PaintingArea::dragEnterEvent(QDragEnterEvent *event)
+{
+    qDebug() << "DRAG ENTER EVENT!";
+    if(event->mimeData()->hasFormat("MathExpression"))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void PaintingArea::dropEvent(QDropEvent *event)
+{
+    qDebug() << "DROP EVENT";
+    QByteArray byteArray(event->mimeData()->data("MathExpression"));
+    QDataStream in(&byteArray, QIODevice::ReadOnly);
+
+    MathExpression expression;
+    in >> expression;
+    qDebug() <<"Dropped expression: "<< expression;
+
+    for(Graph *item: graphs)
+    {
+        qDebug() << "current expression: " << *item->getExpression();
+        if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
+        {
+            item->setDrawn();
+        }
+    }
+    repaint();
 }

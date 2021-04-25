@@ -1,5 +1,6 @@
 #ifndef PAINTINGAREA_H
 #define PAINTINGAREA_H
+#include"LibForPlotter/graph.h"
 #include<QtWidgets>
 
 class PaintingArea: public QWidget
@@ -34,13 +35,16 @@ private:
     double unitSegmentValue;
     /// Thickness of graphs on painting area
     double graphThickness;
+    /// List of user-defined functions
+    QList<Graph *> graphs;
+
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);
 
     void paintEvent(QPaintEvent *event);
-    //void dragEnterEvent(QDragEnterEvent *event);
-    //void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
     QSize sizeHint()const;
 
     void drawOriginPoint(QPainter &painter);
@@ -78,6 +82,15 @@ public slots:
     void setUnitSegmentValue(double value);
     void setUnitSegmentCellQuantity(int cellQuantity);
     void setBorderThickness(double value);
+
+    /// Adds new function to tracked functions
+    void addFunction(MathExpression *function);
+    /// Changes graph color of provided function
+    void changeGraphColor(MathExpression *function, QColor color);
+    /// Removes graph from painting area
+    void removeGraph(MathExpression *function);
+    /// Changes graph of provided function
+    void changeGraph(MathExpression *function);
 };
 
 #endif // PAINTINGAREA_H

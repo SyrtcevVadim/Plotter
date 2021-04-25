@@ -124,6 +124,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     setLayout(grid);
 }
 
+
 void FunctionBox::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

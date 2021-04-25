@@ -61,7 +61,7 @@ void FunctionBoxList::clear()
     if(listOfWidgets.length() > 0)
     {
         QMessageBox *msgBox = new QMessageBox(QMessageBox::Information, tr("Operation confirmation"),
-                                              "Do you really want to clear list of function boxes?",
+                                              tr("Do you really want to clear list of function boxes?"),
                                               QMessageBox::Yes | QMessageBox::No);
 
 
@@ -145,8 +145,9 @@ void FunctionBoxList::removeWidget(FunctionBox *box)
 {
     emit(expressionDeleted(box->getMathExpression()));
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
-    delete listLayout->takeAt(listLayout->indexOf(box));
-    delete box;
+    QLayoutItem *item = listLayout->takeAt(listLayout->indexOf(box));
+    delete item->widget();
+    delete item;
     listBody->adjustSize();
 }
 

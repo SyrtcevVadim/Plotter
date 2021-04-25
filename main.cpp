@@ -8,12 +8,7 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(":/translations/Translations/Language_ru.qm");
     a.installTranslator(&translator);
-    QWidget parent;
-    parent.resize(800,800);
-    PaintingArea *area = new PaintingArea(QSize(600,600), &parent);
-    area->move(30,30);
-    parent.show();
-    //MainWindow window;
-    //window.show();
+    MainWindow window;
+    window.show();
     return a.exec();
 }

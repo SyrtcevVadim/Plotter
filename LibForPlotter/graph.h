@@ -6,6 +6,7 @@
 class Graph
 {
 private:
+    /// Math expression for which table of values is built
     MathExpression *expression;
 
     /// Length of table of values
@@ -14,10 +15,9 @@ private:
     double singleStep;
     /// Table of values
     double *valuesArr;
-    /// Shows whether table of values have to be drawn at a plotter object or not
+    /// Shows whether graph have to be drawn on painting area or not
     bool drawn{false};
-
-    /// Color of the graph at plotter object
+    /// Color of graph
     QColor color;
 
 public:
@@ -25,11 +25,13 @@ public:
     ~Graph();
     /// Recalculates the value-table
     void recalculate();
-    double get(double varValue);
+
+    double get(double variableValue);
     /// Returns the minimum variable's value
     double getMin()const;
     /// Returns the maximum variable's value
     double getMax()const;
+    void setSingleStep(double value);
     /// Returns the single step of variable
     double getSingleStep()const;
     /// Sets the value of drawn
@@ -41,6 +43,8 @@ public:
 
     QColor getColor()const;
     void setColor(QColor color);
+
+    double operator[](double variableValue);
 };
 
 #endif // GRAPH_H
