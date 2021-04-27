@@ -319,7 +319,7 @@ void Plotter::dropEvent(QDropEvent *event)
     for(Graph *item: graphs)
     {
         qDebug() << "current expression: " << *item->getExpression();
-        if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
+        if(item->getExpression()->getInfixExpression() == expression.getInfixExpression())
         {
             qDebug() << expression << " is found inside plotter!";
             item->setDrawn();

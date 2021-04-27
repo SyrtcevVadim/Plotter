@@ -79,6 +79,7 @@ public:
 public slots:
     void drawPointF(QPainter &painter, const QPointF &point, const QColor &color=Qt::black);
     void drawLineF(QPainter &painter, const QPointF &firstPoint, const QPointF &secondPoint, const QColor &color=Qt::black);
+
     void setUnitSegmentValue(double value);
     void setUnitSegmentCellQuantity(int cellQuantity);
     void setBorderThickness(double value);
@@ -86,11 +87,13 @@ public slots:
     /// Adds new function to tracked functions
     void addFunction(MathExpression *function);
     /// Changes graph color of provided function
-    void changeGraphColor(MathExpression *function, QColor color);
-    /// Removes graph from painting area
-    void removeGraph(MathExpression *function);
+    void changeGraphColor(int id, QColor color);
+    /// Removes graph from the painting area
+    void removeGraph(int id);
+    /// Clears graph from the painting area
+    void clearGraph(int id);
     /// Changes graph of provided function
-    void changeGraph(MathExpression *function);
+    void changeGraph(int id);
 };
 
 #endif // PAINTINGAREA_H

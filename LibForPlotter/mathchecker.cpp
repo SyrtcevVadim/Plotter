@@ -149,8 +149,8 @@ bool MathChecker::HasMissedOperands()
     MathExpression mathExp{strExpRepr};
 
     // Substitute variable's value
-    QString expressionWithSubstitutedValues(mathExp.SubstituteVariableValue(0));
-    qDebug() <<expressionWithSubstitutedValues;
+    QString expressionWithSubstitutedValues(mathExp.substituteVariableValue(0));
+    //qDebug() <<expressionWithSubstitutedValues;
     // Stores intermediate values
     QStack<QString> stack;
     QString previousToken{""};

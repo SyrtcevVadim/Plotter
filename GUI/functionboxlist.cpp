@@ -119,8 +119,8 @@ void FunctionBoxList::loadFunctionListFromFile()
             newFunctionBox->bParamBox->setValue(currExp->getParameterValue("b"));
             newFunctionBox->cParamBox->setValue(currExp->getParameterValue("c"));
             newFunctionBox->dParamBox->setValue(currExp->getParameterValue("d"));
-            newFunctionBox->minimumVarValueBox->setText(QString().setNum(currExp->GetMinimumVarValue()));
-            newFunctionBox->maximumVarValueBox->setText(QString().setNum(currExp->GetMaximumVarValue()));
+            newFunctionBox->minimumVarValueBox->setText(QString().setNum(currExp->getMinimumVarValue()));
+            newFunctionBox->maximumVarValueBox->setText(QString().setNum(currExp->getMaximumVarValue()));
         }
         inputFile.close();
     }
@@ -130,9 +130,9 @@ void FunctionBoxList::addNewWidget()
 {
     FunctionBox *newBox = new FunctionBox();
     connect(newBox, SIGNAL(elementRemoved(FunctionBox*)), this, SLOT(removeWidget(FunctionBox*)));
-    connect(newBox, SIGNAL(expressionChanged(MathExpression*)), this, SLOT(onExpressionChanged(MathExpression*)));
-    connect(newBox, SIGNAL(graphColorChanged(MathExpression*, QColor)), this,SLOT(repaintGraphs(MathExpression*, QColor)));
-    connect(newBox, SIGNAL(graphCleared(MathExpression*)), this, SLOT(clearGraph(MathExpression*)));
+    connect(newBox, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
+    connect(newBox, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
+    connect(newBox, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
 
     // Adds new FunctionBox object to widget list
@@ -143,7 +143,7 @@ void FunctionBoxList::addNewWidget()
 
 void FunctionBoxList::removeWidget(FunctionBox *box)
 {
-    emit(expressionDeleted(box->getMathExpression()));
+    emit(expressionDeleted(box->getMathExpression()->getId()));
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     QLayoutItem *item = listLayout->takeAt(listLayout->indexOf(box));
     delete item->widget();
@@ -162,21 +162,21 @@ void FunctionBoxList::update()
     {
         // Updates math expression
         box->changeMathExpression("");
-        emit(expressionChanged(box->getMathExpression()));
+        emit(expressionChanged(box->getMathExpression()->getId()));
     }
 }
 
-void FunctionBoxList::onExpressionChanged(MathExpression *expression)
+void FunctionBoxList::onExpressionChanged(int id)
 {
-    emit(expressionChanged(expression));
+    emit(expressionChanged(id));
 }
 
-void FunctionBoxList::repaintGraphs(MathExpression *expression, QColor color)
+void FunctionBoxList::repaintGraph(int id, QColor color)
 {
-    emit(graphColorChanged(expression, color));
+    emit(graphColorChanged(id, color));
 }
 
-void FunctionBoxList::clearGraph(MathExpression *expression)
+void FunctionBoxList::clearGraph(int id)
 {
-    emit(graphCleared(expression));
+    emit(graphCleared(id));
 }

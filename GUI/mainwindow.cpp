@@ -47,11 +47,11 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     setLayout(itemLayout);
 
     connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
-    //connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), plotter, SLOT(addFunction(MathExpression*)));
-    //connect(functionBoxList, SIGNAL(expressionDeleted(MathExpression*)), plotter, SLOT(removeFunction(MathExpression*)));
-    //connect(functionBoxList, SIGNAL(graphColorChanged(MathExpression*, QColor)), plotter, SLOT(changeGraphColor(MathExpression*, QColor)));
-    //connect(functionBoxList, SIGNAL(expressionChanged(MathExpression*)), plotter, SLOT(createTableValue(MathExpression*)));
-    //connect(functionBoxList, SIGNAL(graphCleared(MathExpression*)), plotter, SLOT(clearGraph(MathExpression*)));
+    connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), paintingArea, SLOT(addFunction(MathExpression*)));
+    connect(functionBoxList, SIGNAL(expressionDeleted(int)), paintingArea, SLOT(removeGraph(int)));
+    connect(functionBoxList, SIGNAL(graphColorChanged(int, QColor)), paintingArea, SLOT(changeGraphColor(int, QColor)));
+    connect(functionBoxList, SIGNAL(expressionChanged(int)), paintingArea, SLOT(changeGraph(int)));
+    connect(functionBoxList, SIGNAL(graphCleared(int)), paintingArea, SLOT(clearGraph(int)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

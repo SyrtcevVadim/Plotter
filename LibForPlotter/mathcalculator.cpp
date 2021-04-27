@@ -161,13 +161,13 @@ MathCalculator::MathCalculator(const MathExpression &expression)
 
 MathCalculator::MathCalculator(QString expression)
 {
-    this->expression.SetExpression(expression);
+    this->expression.setExpression(expression);
 }
 
 double MathCalculator::Calculate(double varValue)
 {
     // Substitute variable value
-    QString expressionWithSubstitutedValues(expression.SubstituteVariableValue(varValue));
+    QString expressionWithSubstitutedValues(expression.substituteVariableValue(varValue));
     // For intermediate values
     QStack<QString> stack;
 

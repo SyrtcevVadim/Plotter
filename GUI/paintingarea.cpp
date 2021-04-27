@@ -1,6 +1,6 @@
 #include "GUI/paintingarea.h"
 #include "LibForPlotter/graph.h"
-#include<QtWidgets>
+#include <QtWidgets>
 
 PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(parentWidget)
 {
@@ -20,10 +20,14 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     setAxesThickness(0.5);
     setGridLineThickness(0.5);
     setBorderThickness(2.5);
-    setGridCellWidth(10.0);
-    setGraphThickness(3.0);
-    setUnitSegmentValue(5);
+    setGridCellWidth(12.0);
+    setGraphThickness(1.5);
+    setUnitSegmentValue(10);
     setUnitSegmentCellQuantity(5);
+
+    // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
+    Graph::setSingleStep((unitSegmentValue*graphThickness)/(2*gridCellWidth*cellQuantityInUnitSegment));
+    qDebug() << "Single step for current scale: " << Graph::getSingleStep();
 
 }
 
@@ -42,6 +46,36 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     QPainter painter(this);
 
+    // Adjusts scale of painting area
+    /*double maxAbsoluteValue;
+    for(auto it{graphs.begin()}; it != graphs.end(); it++)
+    {
+        if(it.i->t()->isDrawn())
+        {
+            qDebug() << *it.i->t()->getExpression() << " has to be drawn";
+            double currentMin{it.i->t()->getMin()};
+            double currentMax{it.i->t()->getMax()};
+            if(it == graphs.begin())
+            {
+                maxAbsoluteValue = (qAbs(currentMin) > qAbs(currentMax))?qAbs(currentMin):qAbs(currentMax);
+            }
+
+
+            if(maxAbsoluteValue < qAbs(currentMin))
+            {
+                maxAbsoluteValue = qAbs(currentMin);
+            }
+            if(maxAbsoluteValue < qAbs(currentMax))
+            {
+                maxAbsoluteValue = qAbs(currentMax);
+            }
+        }
+    }
+
+    qDebug() << "Max absolute value: " << maxAbsoluteValue;
+    // Scaling
+    //setUnitSegmentValue(areaWidth/(2*maxAbsoluteVal*gridCellWidth*cellQuantityInUnitSegment)); */
+
     // Draws the painting area
     drawGrid(painter);
     drawOriginPoint(painter);
@@ -49,17 +83,28 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     drawCoordinates(painter);
     drawAxesNames(painter);
 
+
+
+
+    qDebug() << "new unit segment value: " << unitSegmentValue;
+
+
     for(Graph *item: graphs)
     {
-        double step{item->getSingleStep()};
-        for(double x{item->getMin()+step}; x < item->getMax(); x++)
+        if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
         {
-            if(((*item)[x-step] != qInf()) &&
-               ((*item)[x-step] == (*item)[x-step])&&
-               ((*item)[x] != qInf()) &&
-               ((*item)[x] == (*item)[x]))
+            double step{Graph::getSingleStep()};
+            for(double x{item->getMin()+step}; x < item->getMax(); x+=step)
             {
-                drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
+                if(((*item)[x-step] != qInf()) &&
+                   ((*item)[x-step] == (*item)[x-step])&&
+                   ((*item)[x] != qInf()) &&
+                   ((*item)[x] == (*item)[x]))
+                {
+                    //qDebug() << fromPaintingAreaToWidget(QPointF(x-step, (*item)[x-step])) <<
+                    //            ": " << fromPaintingAreaToWidget(QPointF(x, (*item)[x]));
+                    drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
+                }
             }
         }
     }
@@ -250,14 +295,14 @@ QPointF PaintingArea::fromPaintingAreaToWidget(const QPointF &coord)
 {
     double x = coord.x();
     double y = coord.y();
-    return QPointF(originPoint.x()+x*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue,
-                   originPoint.y()-y*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue);
+    return QPointF(originPoint.x()+(x*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue),
+                   originPoint.y()-(y*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue));
 }
 
 void PaintingArea::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "Мышь движется по виджету!";
-    qDebug() << fromWidgetToPaintingArea(event->pos());
+    //qDebug() << "Мышь движется по виджету!";
+    //qDebug() << fromWidgetToPaintingArea(event->pos());
 }
 
 QSize PaintingArea::sizeHint() const
@@ -267,17 +312,17 @@ QSize PaintingArea::sizeHint() const
 
 void PaintingArea::addFunction(MathExpression *function)
 {
-    qDebug() << "Added new function: " << *function;
+    //qDebug() << "Added new function: " << *function;
     Graph *newGraph = new Graph(function);
     graphs.append(newGraph);
 }
 
-void PaintingArea::changeGraphColor(MathExpression *function, QColor color)
+void PaintingArea::changeGraphColor(int id, QColor color)
 {
-    qDebug() << "Color of " << *function << " is changed!";
+    //qDebug() << "Color of " << *function << " is changed!";
     for(Graph *item: graphs)
     {
-        if(item->getExpression() == function)
+        if(item->getExpression()->getId() == id)
         {
             item->setColor(color);
             if(item->isDrawn())
@@ -288,12 +333,12 @@ void PaintingArea::changeGraphColor(MathExpression *function, QColor color)
     }
 }
 
-void PaintingArea::removeGraph(MathExpression *function)
+void PaintingArea::removeGraph(int id)
 {
-    qDebug() << *function << " is deleted!";
+    //qDebug() << *function << " is deleted!";
     for(Graph *item: graphs)
     {
-        if(item->getExpression() == function)
+        if(item->getExpression()->getId() == id)
         {
             graphs.removeOne(item);
             delete item;
@@ -303,12 +348,26 @@ void PaintingArea::removeGraph(MathExpression *function)
     repaint();
 }
 
-void PaintingArea::changeGraph(MathExpression *function)
+void PaintingArea::clearGraph(int id)
 {
-    qDebug() << *function << " is changed! Recalculating of table of values";
+    //qDebug() << *function << " is cleared from plotter";
     for(Graph *item: graphs)
     {
-        if(item->getExpression() == function)
+        if(item->getExpression()->getId() == id)
+        {
+            item->setDrawn(false);
+            repaint();
+            break;
+        }
+    }
+}
+
+void PaintingArea::changeGraph(int id)
+{
+    //qDebug() << *function << " is changed! Recalculating of table of values";
+    for(Graph *item: graphs)
+    {
+        if(item->getExpression()->getId() == id)
         {
             item->recalculate();
             if(item->isDrawn())
@@ -335,16 +394,16 @@ void PaintingArea::dropEvent(QDropEvent *event)
     QByteArray byteArray(event->mimeData()->data("MathExpression"));
     QDataStream in(&byteArray, QIODevice::ReadOnly);
 
-    MathExpression expression;
-    in >> expression;
-    qDebug() <<"Dropped expression: "<< expression;
+    int mathExpressionIdentificator;
+    in >> mathExpressionIdentificator;
+    qDebug() <<"Dropped expression's identificator: "<< mathExpressionIdentificator;
 
     for(Graph *item: graphs)
     {
-        qDebug() << "current expression: " << *item->getExpression();
-        if(item->getExpression()->GetInfixExpression() == expression.GetInfixExpression())
+        //qDebug() << "current expression: " << *item->getExpression();
+        if(item->getExpression()->getId() == mathExpressionIdentificator)
         {
-            item->setDrawn();
+            item->setDrawn(true);
         }
     }
     repaint();

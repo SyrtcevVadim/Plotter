@@ -7,17 +7,19 @@
 #include<QDebug>
 #include<QString>
 
-
+int MathExpression::counter{0};
 
 MathExpression::MathExpression()
 {
+    // Sets the identificator of the object
+    id = (counter++);
     // Sets 1 as an initial value of the parameters
     for(auto param: MathHelper::parameters)
     {
         parameters[param] = 1.0;
     }
     initialExpression="";
-    infixExpression = "";
+    infixExpression  ="";
     postfixExpression="";
 }
 
@@ -34,19 +36,19 @@ QString MathExpression::getInitialExpression() const
     return initialExpression;
 }
 
-QString MathExpression::GetInfixExpression()const
+QString MathExpression::getInfixExpression()const
 {
     return infixExpression.trimmed();
 }
 
-QString MathExpression::GetPostfixExpression() const
+QString MathExpression::getPostfixExpression() const
 {
     return postfixExpression.trimmed();
 }
 
 void MathExpression::SetParameter(QString parameter, double value)
 {
-    // Проверяем корректность параметра
+    // Checks the correctness of parameter's name
     if(!parameters.contains(parameter))
     {
         throw "Incorrect parameter was passed into SetParameter method";
@@ -63,7 +65,7 @@ double MathExpression::getParameterValue(QString parameter)const
     return parameters[parameter];
 }
 
-void MathExpression::SetParameters(double aValue, double bValue, double cValue, double dValue)
+void MathExpression::setParameters(double aValue, double bValue, double cValue, double dValue)
 {
     parameters["a"] = aValue;
     parameters["b"] = bValue;
@@ -72,7 +74,7 @@ void MathExpression::SetParameters(double aValue, double bValue, double cValue, 
     postfixExpression = SubstituteParameters(MathFormConverter::InfixToPostfix(infixExpression));
 }
 
-void MathExpression::SetExpression(QString expression)
+void MathExpression::setExpression(QString expression)
 {
     initialExpression = expression;
 
@@ -125,7 +127,7 @@ QString MathExpression::SubstituteParameters(QString postfixExpression)
     return resultExpression.trimmed();
 }
 
-QString MathExpression::SubstituteVariableValue(const double varValue)
+QString MathExpression::substituteVariableValue(const double varValue)
 {
     QString resultExpression{""};
     for(auto key: (postfixExpression.trimmed()).split(" "))
@@ -142,24 +144,29 @@ QString MathExpression::SubstituteVariableValue(const double varValue)
     return resultExpression.trimmed();
 }
 
-void MathExpression::SetMinimumVarValue(double value)
+void MathExpression::setMinimumVarValue(double value)
 {
     minimumVarValue = value;
 }
 
-double MathExpression::GetMinimumVarValue()const
+double MathExpression::getMinimumVarValue()const
 {
     return minimumVarValue;
 }
 
-void MathExpression::SetMaximumVarValue(double value)
+void MathExpression::setMaximumVarValue(double value)
 {
     maximumVarValue = value;
 }
 
-double MathExpression::GetMaximumVarValue()const
+double MathExpression::getMaximumVarValue()const
 {
     return maximumVarValue;
+}
+
+int MathExpression::getId()const
+{
+    return id;
 }
 
 QDataStream& operator<<(QDataStream &stream, const MathExpression &expression)
@@ -185,7 +192,7 @@ QDataStream& operator>>(QDataStream &stream,MathExpression &expression)
 
 QDebug operator<<(QDebug stream, const MathExpression &expression)
 {
-    stream << "Infix: " << expression.GetInfixExpression() <<"\nPostfix: " << expression.GetPostfixExpression()<< "\nA: " <<
+    stream << "Infix: " << expression.getInfixExpression() <<"\nPostfix: " << expression.getPostfixExpression()<< "\nA: " <<
               expression.parameters["a"] << "| B: " << expression.parameters["b"] <<"| C: "<<expression.parameters["c"] <<
               "| D: "<<expression.parameters["d"] <<"\nMinXVal: " << expression.minimumVarValue << "| MaxXVal: "<<expression.maximumVarValue;
     return stream;

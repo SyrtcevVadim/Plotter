@@ -6,13 +6,14 @@
 class Graph
 {
 private:
+    /// Single step of variable in table of values
+    static double singleStep;
     /// Math expression for which table of values is built
     MathExpression *expression;
 
     /// Length of table of values
     int length;
-    /// Single step of variable in table of values
-    double singleStep;
+
     /// Table of values
     double *valuesArr;
     /// Shows whether graph have to be drawn on painting area or not
@@ -21,8 +22,14 @@ private:
     QColor color;
 
 public:
-    Graph(MathExpression *expression, double step=0.01);
+    /// Sets the value of single step of variable
+    static void setSingleStep(double value);
+    /// Returns the single step of variable
+    static double getSingleStep();
+
+    Graph(MathExpression *expression);
     ~Graph();
+
     /// Recalculates the value-table
     void recalculate();
 
@@ -31,9 +38,8 @@ public:
     double getMin()const;
     /// Returns the maximum variable's value
     double getMax()const;
-    void setSingleStep(double value);
-    /// Returns the single step of variable
-    double getSingleStep()const;
+
+
     /// Sets the value of drawn
     void setDrawn(bool val = true);
     /// Returns the value of drawn. If drawn value is true, graph has to be drawn at plotter. False otherwise

@@ -37,13 +37,13 @@ protected:
 public:
     /// Fetchs function's body
     QLineEdit *functionBody;
-    /// Fetchs a parameter value
+    /// Fetchs a parameter's value
     QDoubleSpinBox *aParamBox;
-    /// Fetchs b parameter value
+    /// Fetchs b parameter's value
     QDoubleSpinBox *bParamBox;
-    /// Fetches c parameter value
+    /// Fetches c parameter's value
     QDoubleSpinBox *cParamBox;
-    /// Fetches d parameter value
+    /// Fetches d parameter's value
     QDoubleSpinBox *dParamBox;
 
     /// Fetchs minimum possible variable's value
@@ -64,10 +64,12 @@ public:
 signals:
     /// Is emmited when user deletes this functionBox object
     void elementRemoved(FunctionBox*);
-    /// Is emmited when user changes any parameter of FunctionBox object
-    void expressionChanged(MathExpression*);
-    void graphColorChanged(MathExpression*, QColor);
-    void graphCleared(MathExpression*);
+    /// Is emmited when user changes any part of mathematic expression inside a box
+    void functionChanged(int);
+    /// Is emmited when user changes the color of a graph
+    void graphColorChanged(int, QColor);
+    /// Is emmited when user clicks clearFromPlotterBtn
+    void graphCleared(int);
 
 
 

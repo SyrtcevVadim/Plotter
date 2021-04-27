@@ -35,10 +35,10 @@ public:
 
 signals:
     void newFunctionAdded(MathExpression*);
-    void expressionChanged(MathExpression*);
-    void expressionDeleted(MathExpression*);
-    void graphColorChanged(MathExpression*, QColor);
-    void graphCleared(MathExpression*);
+    void expressionChanged(int);
+    void expressionDeleted(int);
+    void graphColorChanged(int, QColor);
+    void graphCleared(int);
 
 public slots:
     /// Updates the content of list
@@ -53,9 +53,9 @@ public slots:
     void removeWidget(FunctionBox*);
     /// Clears list's content
     void clear();
-    void repaintGraphs(MathExpression*, QColor);
-    void clearGraph(MathExpression*);
-    void onExpressionChanged(MathExpression *expression);
+    void repaintGraph(int, QColor);
+    void clearGraph(int);
+    void onExpressionChanged(int);
 
 
 };

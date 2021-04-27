@@ -10,6 +10,11 @@
 class MathExpression
 {
 private:
+    /// Counts the number of created MathExpression objects
+    static int counter;
+
+    /// Identificator of current MathExpression object
+    int id;
     QString initialExpression;
     /// Expression written in infix notation. Every constant inside it is replaced by it's value
     QString infixExpression;
@@ -37,24 +42,26 @@ public:
     double getParameterValue(QString parameter)const;
 
     /// Sets values to the parameters
-    void SetParameters(double aValue=1.0,double bValue=1.0, double cValue=1.0, double dValue=1.0);
+    void setParameters(double aValue=1.0,double bValue=1.0, double cValue=1.0, double dValue=1.0);
     /// Sets a mathematical expression in infix notation
-    void SetExpression(QString expression);
+    void setExpression(QString expression);
     /// Substitutes variables' values into a postfix expression and returns a result
-    QString SubstituteVariableValue(const double varValue = 0.0);
+    QString substituteVariableValue(const double varValue = 0.0);
     QString getInitialExpression()const;
     /// Returns mathematical expression in infix notation
-    QString GetInfixExpression()const;
+    QString getInfixExpression()const;
     /// Returns mathematical expression in postfix notation
-    QString GetPostfixExpression()const;
+    QString getPostfixExpression()const;
     /// Sets the minimum possible value of variable
-    void SetMinimumVarValue(double value);
-    /// Returns the minimum possible value of variable
-    double GetMinimumVarValue()const;
+    void setMinimumVarValue(double value);
     /// Sets the maximum possible value of variable
-    void SetMaximumVarValue(double value);
+    void setMaximumVarValue(double value);
+    /// Returns the minimum possible value of variable
+    double getMinimumVarValue()const;
     /// Returns the maximum possible value of variable
-    double GetMaximumVarValue()const;
+    double getMaximumVarValue()const;
+
+    int getId()const;
 
     friend QDataStream& operator<<(QDataStream &stream, const MathExpression &expression);
     friend QDataStream& operator>>(QDataStream &stream, MathExpression &expression);

@@ -4,38 +4,39 @@
 #include<qmath.h>
 #include<QtWidgets>
 
-Graph::Graph(MathExpression *expression, double step)
+double Graph::singleStep;
+
+
+Graph::Graph(MathExpression *expression)
 {
     this->expression = expression;
-    if(step != 0)
+    drawn = false;
+    // Calculating a number of values inside the table
+    length = (expression->getMaximumVarValue()-
+              expression->getMinimumVarValue())/singleStep;
+    // Check the correctness of allocating memory
+    if((valuesArr = new(std::nothrow) double[length]) == nullptr)
     {
-        singleStep = step;
-        // Calculating a number of values inside the table
-        length = (expression->GetMaximumVarValue()-
-                      expression->GetMinimumVarValue())/singleStep;
-        // Check the correctness of allocating memory
-        if((valuesArr = new(std::nothrow) double[length]) == nullptr)
+        qDebug() << "Не удалось выделить память под таблицу значений";
+    }
+    // In case mathematic expression isn't empty we need to calculate the table of values
+    else if(!expression->getInitialExpression().isEmpty())
+    {
+        MathCalculator calculator(*expression);
+        double var{expression->getMinimumVarValue()};
+        for(int i{0}; i < length; i++)
         {
-            qDebug() << "Не удалось выделить память под таблицу значений";
-        }
-        // In case mathematic expression isn't empty we need to calculate the table of values
-        else if(!expression->getInitialExpression().isEmpty())
-        {
-            MathCalculator calculator(*expression);
-            double var{expression->GetMinimumVarValue()};
-            for(int i{0}; i < length; i++)
+            // It fixes the problem of double number precision near the zero value
+            if(qAbs(var-0.0) < 0.0001)
             {
-                // It fixes the problem of double number precision near the zero value
-                if(qAbs(var-0.0) < 0.0001)
-                {
-                    var = 0.0;
-                }
-                valuesArr[i] = calculator.Calculate(var);
-                qDebug() << "x: "<<var << " |y: " << valuesArr[i];
-                var += singleStep;
+            var = 0.0;
             }
+            valuesArr[i] = calculator.Calculate(var);
+            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+            var += singleStep;
         }
     }
+
 
 }
 
@@ -49,7 +50,7 @@ void Graph::recalculate()
     // Deletes old table of values
     delete[] valuesArr;
 
-    length = (expression->GetMaximumVarValue()-expression->GetMinimumVarValue())/singleStep;
+    length = (expression->getMaximumVarValue()-expression->getMinimumVarValue())/singleStep;
     if((valuesArr = new(std::nothrow) double[length])==nullptr)
     {
         qDebug() << "Ну удалось выделить память под таблицу значений";
@@ -58,7 +59,7 @@ void Graph::recalculate()
     {
         qDebug() << "expression: "<<*expression;
         MathCalculator calculator(*expression);
-        double var{expression->GetMinimumVarValue()};
+        double var{expression->getMinimumVarValue()};
         for(int i{0}; i < length; i++)
         {
             if(qAbs(var-0.0) < 0.0001)
@@ -67,7 +68,7 @@ void Graph::recalculate()
             }
             valuesArr[i] = calculator.Calculate(var);
 
-            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
 
         }
@@ -76,18 +77,18 @@ void Graph::recalculate()
 
 double Graph::get(double variableValue)
 {
-    int index{static_cast<int>((qAbs(expression->GetMinimumVarValue()-variableValue))/singleStep)};
+    int index{static_cast<int>((qAbs(expression->getMinimumVarValue()-variableValue))/singleStep)};
     return valuesArr[index];
 }
 
 double Graph::getMax() const
 {
-    return expression->GetMaximumVarValue();
+    return expression->getMaximumVarValue();
 }
 
 double Graph::getMin() const
 {
-    return expression->GetMinimumVarValue();
+    return expression->getMinimumVarValue();
 }
 
 void Graph::setSingleStep(double value)
@@ -95,7 +96,7 @@ void Graph::setSingleStep(double value)
     singleStep = value;
 }
 
-double Graph::getSingleStep() const
+double Graph::getSingleStep()
 {
     return singleStep;
 }

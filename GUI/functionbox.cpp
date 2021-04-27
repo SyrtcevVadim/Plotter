@@ -174,15 +174,15 @@ void FunctionBox::checkCorrectness()
 void FunctionBox::changeMathExpression(const QString &str)
 {
     Q_UNUSED(str);
-    expression->SetExpression(functionBody->text());
+    expression->setExpression(functionBody->text());
     checkCorrectness();
     if(!errorText->text().isEmpty())
     {
-        expression->SetExpression("");
+        expression->setExpression("");
     }
     else
     {
-        emit(expressionChanged(expression));
+        emit(functionChanged(expression->getId()));
     }
 
 }
@@ -194,7 +194,7 @@ void FunctionBox::changeAParamValue(double value)
         value = 0;
     }
     expression->SetParameter("a", value);
-    emit(expressionChanged(expression));
+    emit(functionChanged(expression->getId()));
 }
 
 void FunctionBox::changeBParamValue(double value)
@@ -204,7 +204,7 @@ void FunctionBox::changeBParamValue(double value)
         value = 0;
     }
     expression->SetParameter("b", value);
-    emit(expressionChanged(expression));
+    emit(functionChanged(expression->getId()));
 }
 
 void FunctionBox::changeCParamValue(double value)
@@ -214,7 +214,7 @@ void FunctionBox::changeCParamValue(double value)
         value = 0;
     }
     expression->SetParameter("c", value);
-    emit(expressionChanged(expression));
+    emit(functionChanged(expression->getId()));
 }
 
 void FunctionBox::changeDParamValue(double value)
@@ -224,24 +224,24 @@ void FunctionBox::changeDParamValue(double value)
         value = 0;
     }
     expression->SetParameter("d", value);
-    emit(expressionChanged(expression));
+    emit(functionChanged(expression->getId()));
 }
 
 void FunctionBox::changeMinimumVariableValue(const QString &strValue)
 {
     // Minimum variable value can't exceeds the maximum one
-    if(strValue.toDouble() > expression->GetMaximumVarValue())
+    if(strValue.toDouble() > expression->getMaximumVarValue())
     {
         errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
-        expression->SetMinimumVarValue(strValue.toDouble());
+        expression->setMinimumVarValue(strValue.toDouble());
         checkCorrectness();
     }
     if(errorText->text().isEmpty())
     {
-        emit(expressionChanged(expression));
+        emit(functionChanged(expression->getId()));
     }
 
 }
@@ -250,18 +250,18 @@ void FunctionBox::changeMaximumVariableValue(const QString &strValue)
 {
 
     // Maximum variable value have to be greater than the minimum one
-    if(strValue.toDouble() < expression->GetMinimumVarValue())
+    if(strValue.toDouble() < expression->getMinimumVarValue())
     {
         errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
-        expression->SetMaximumVarValue(strValue.toDouble());
+        expression->setMaximumVarValue(strValue.toDouble());
         checkCorrectness();
     }
     if(errorText->text().isEmpty())
     {
-        emit(expressionChanged(expression));
+        emit(functionChanged(expression->getId()));
     }
 }
 
@@ -280,13 +280,13 @@ void FunctionBox::changeGraphColor()
     QColor color = QColorDialog::getColor().toRgb();
     if(color.isValid())
     {
-        emit(graphColorChanged(expression, color));
+        emit(graphColorChanged(expression->getId(), color));
     }
 }
 
 void FunctionBox::clearGraph()
 {
-    emit(graphCleared(expression));
+    emit(graphCleared(expression->getId()));
 }
 
 void FunctionBox::mousePressEvent(QMouseEvent *event)
@@ -311,10 +311,10 @@ void FunctionBox::mouseMoveEvent(QMouseEvent *event)
 
 void FunctionBox::startDrag()
 {
-    // Writes MathExpression object to byteArr object
+    // Writes a MathExpression's identificator to byteArr object
     QByteArray byteArr;
     QDataStream stream(&byteArr, QIODevice::WriteOnly);
-    stream << *expression;
+    stream << expression->getId();
 
     // Prepare expression to drag&drop mechanism
     QMimeData *data = new QMimeData;
@@ -325,5 +325,4 @@ void FunctionBox::startDrag()
     drag->setPixmap(QPixmap(":/images/Images/FunctionBoxDragged.png"));
 
     drag->exec();
-
 }
