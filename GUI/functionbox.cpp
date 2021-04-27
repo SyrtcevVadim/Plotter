@@ -130,8 +130,16 @@ void FunctionBox::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     QPainter painter(this);
 
-    // Draws a rectangle border
-    painter.drawRect(0,0, width()-5, height()-5);
+
+    drawBorders(painter, graphColor);
+}
+
+void FunctionBox::drawBorders(QPainter &painter, const QColor &color)
+{
+    QPen pen(color, 2);
+    painter.setPen(pen);
+
+    painter.drawRect(1,1, width()-2, height()-2);
 }
 
 void FunctionBox::checkCorrectness()
@@ -280,6 +288,8 @@ void FunctionBox::changeGraphColor()
     QColor color = QColorDialog::getColor().toRgb();
     if(color.isValid())
     {
+        graphColor = color;
+        repaint();
         emit(graphColorChanged(expression->getId(), color));
     }
 }

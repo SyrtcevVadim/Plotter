@@ -9,6 +9,8 @@ class FunctionBox : public QWidget
     Q_OBJECT
 
 private:
+    /// Color of the graph of stored function
+    QColor graphColor{Qt::black};
     /// User-passed mathematic expression
     MathExpression *expression;
     /// Last left mouse button click position
@@ -78,6 +80,8 @@ public slots:
     void checkCorrectness();
     /// Changes mathematic expression
     void changeMathExpression(const QString &str);
+    /// Draws a rectangle border
+    void drawBorders(QPainter &painter, const QColor &color);
 
 private slots:
     /// Changes a parameter value
