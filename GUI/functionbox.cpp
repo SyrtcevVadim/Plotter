@@ -8,9 +8,11 @@
 
 FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 {
-    expression = new MathExpression();
-    resize(250,100);
+    setCursor(Qt::OpenHandCursor);
 
+    expression = new MathExpression();
+    resize(250, 120);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
     functionBody->setToolTip(tr("Function's body"));
@@ -21,24 +23,28 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     dLbl = new QLabel("d");
 
     aParamBox = new QDoubleSpinBox();
+    aParamBox->setCursor(Qt::ArrowCursor);
     aParamBox->setRange(-10'000.0, 10'000.0);
     aParamBox->setSingleStep(0.05);
     aParamBox->setDecimals(2);
     aParamBox->setToolTip(tr("a parameter's value"));
 
     bParamBox = new QDoubleSpinBox();
+    bParamBox->setCursor(Qt::ArrowCursor);
     bParamBox->setRange(-10'000.0, 10'000.0);
     bParamBox->setSingleStep(0.05);
     bParamBox->setDecimals(2);
     bParamBox->setToolTip(tr("b parameter's value"));
 
     cParamBox = new QDoubleSpinBox();
+    cParamBox->setCursor(Qt::ArrowCursor);
     cParamBox->setRange(-10'000.0, 10'000.0);
     cParamBox->setSingleStep(0.05);
     cParamBox->setDecimals(2);
     cParamBox->setToolTip(tr("c parameter's value"));
 
     dParamBox = new QDoubleSpinBox();
+    dParamBox->setCursor(Qt::ArrowCursor);
     dParamBox->setRange(-10'000.0, 10'000.0);
     dParamBox->setSingleStep(0.05);
     dParamBox->setDecimals(2);
@@ -53,28 +59,33 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
 
     xLbl = new QLabel("X");
 
-    minimumVarValueBox = new QLineEdit();
+    minimumVarValueBox = new QDoubleSpinBox();
+    minimumVarValueBox->setCursor(Qt::ArrowCursor);
+    minimumVarValueBox->setRange(-10'000.0, 10'000.0);
+    minimumVarValueBox->setSingleStep(1.0);
     minimumVarValueBox->setToolTip(tr("Minimum variable's value"));
-    maximumVarValueBox = new QLineEdit();
-    maximumVarValueBox->setToolTip(tr("Maximum variable's value"));
 
-    // User can write only numbers as a minimum/maximum variable's value
-    QDoubleValidator *restrictionValidator = new QDoubleValidator();
-    minimumVarValueBox->setValidator(restrictionValidator);
-    maximumVarValueBox->setValidator(restrictionValidator);
+    maximumVarValueBox = new QDoubleSpinBox();
+    maximumVarValueBox->setCursor(Qt::ArrowCursor);
+    maximumVarValueBox->setRange(-10'000.0, 10'000.0);
+    maximumVarValueBox->setSingleStep(1.0);
+    maximumVarValueBox->setToolTip(tr("Maximum variable's value"));
 
     errorText = new QLabel();
 
     removeBtn = new QPushButton();
+    removeBtn->setCursor(Qt::ArrowCursor);
     removeBtn->setToolTip(tr("Delete function block"));
     QPixmap removeImage(":/images/Images/RemoveWidgetImage.png");
     removeBtn->setIcon(removeImage);
 
     changeColorBtn = new QPushButton();
+    changeColorBtn->setCursor(Qt::ArrowCursor);
     changeColorBtn->setAutoFillBackground(true);
     changeColorBtn->setToolTip(tr("Set graph's color"));
 
     clearFromPlotterBtn = new QPushButton();
+    clearFromPlotterBtn->setCursor(Qt::ArrowCursor);
     clearFromPlotterBtn->setToolTip(tr("Clear graph"));
 
     // Соединяем сигналы с обработчиками
@@ -83,27 +94,28 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     connect(bParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeBParamValue(double)));
     connect(cParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeCParamValue(double)));
     connect(dParamBox, SIGNAL(valueChanged(double)), this, SLOT(changeDParamValue(double)));
-    connect(minimumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMinimumVariableValue(const QString)));
-    connect(maximumVarValueBox, SIGNAL(textChanged(const QString)), this, SLOT(changeMaximumVariableValue(const QString)));
+    connect(minimumVarValueBox, SIGNAL(valueChanged(double)), this, SLOT(changeMinimumVariableValue(double)));
+    connect(maximumVarValueBox, SIGNAL(valueChanged(double)), this, SLOT(changeMaximumVariableValue(double)));
     connect(removeBtn, SIGNAL(pressed()), this, SLOT(removeFunction()));
     connect(changeColorBtn, SIGNAL(pressed()), this, SLOT(changeGraphColor()));
     connect(clearFromPlotterBtn, SIGNAL(pressed()), this, SLOT(clearGraph()));
 
     // Set default values
-    minimumVarValueBox->setText("-10");
-    maximumVarValueBox->setText("10");
+    minimumVarValueBox->setValue(-20.0);
+    maximumVarValueBox->setValue(20.0);
 
     QGridLayout *grid = new QGridLayout();
 
-    grid->addWidget(clearFromPlotterBtn, 1, 8);
+
     grid->addWidget(changeColorBtn, 2, 8);
     grid->addWidget(removeBtn, 3, 8);
+    grid->addWidget(clearFromPlotterBtn, 3, 7);
 
 
 
     grid->addWidget(functionName, 0,0);
     grid->addWidget(functionBody, 0, 1,1,-1);
-    grid->addWidget(errorText, 1,0, 1, 7);
+    grid->addWidget(errorText, 1,0, 1, -1);
 
     grid->addWidget(aLbl, 2, 0);
     grid->addWidget(aParamBox, 2, 1);
@@ -235,16 +247,16 @@ void FunctionBox::changeDParamValue(double value)
     emit(functionChanged(expression->getId()));
 }
 
-void FunctionBox::changeMinimumVariableValue(const QString &strValue)
+void FunctionBox::changeMinimumVariableValue(double value)
 {
     // Minimum variable value can't exceeds the maximum one
-    if(strValue.toDouble() > expression->getMaximumVarValue())
+    if(value > expression->getMaximumVarValue())
     {
         errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
-        expression->setMinimumVarValue(strValue.toDouble());
+        expression->setMinimumVarValue(value);
         checkCorrectness();
     }
     if(errorText->text().isEmpty())
@@ -254,17 +266,17 @@ void FunctionBox::changeMinimumVariableValue(const QString &strValue)
 
 }
 
-void FunctionBox::changeMaximumVariableValue(const QString &strValue)
+void FunctionBox::changeMaximumVariableValue(double value)
 {
 
     // Maximum variable value have to be greater than the minimum one
-    if(strValue.toDouble() < expression->getMinimumVarValue())
+    if(value < expression->getMinimumVarValue())
     {
         errorText->setText(QObject::tr("Minimum variable's value exceeds the maximum one"));
     }
     else
     {
-        expression->setMaximumVarValue(strValue.toDouble());
+        expression->setMaximumVarValue(value);
         checkCorrectness();
     }
     if(errorText->text().isEmpty())
@@ -301,10 +313,17 @@ void FunctionBox::clearGraph()
 
 void FunctionBox::mousePressEvent(QMouseEvent *event)
 {
+    setCursor(Qt::ClosedHandCursor);
     if(event->button() == Qt::LeftButton)
     {
         mouseClickPos = event->pos();
     }
+}
+
+void FunctionBox::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    setCursor(Qt::OpenHandCursor);
 }
 
 void FunctionBox::mouseMoveEvent(QMouseEvent *event)
@@ -335,4 +354,10 @@ void FunctionBox::startDrag()
     drag->setPixmap(QPixmap(":/images/Images/FunctionBoxDragged.png"));
 
     drag->exec();
+    setCursor(Qt::OpenHandCursor);
+}
+
+QSize FunctionBox::sizeHint()const
+{
+    return QSize(width(), height());
 }

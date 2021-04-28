@@ -18,6 +18,7 @@ private:
 
 protected:
     void paintEvent(QPaintEvent *event);
+    QSize sizeHint()const;
 
 public:
     /// LineEdit for entering the constant's name

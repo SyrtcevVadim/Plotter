@@ -178,7 +178,6 @@ bool MathChecker::HasMissedOperands()
                     token = token.remove(0,2);
                 }
                 errorMessage = QObject::tr("Not enough operands for %1").arg(token);
-                qDebug() << errorMessage;
                 return true;
             }
         }

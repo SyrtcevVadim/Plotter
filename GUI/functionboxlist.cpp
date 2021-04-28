@@ -121,8 +121,8 @@ void FunctionBoxList::loadFunctionListFromFile()
             newFunctionBox->bParamBox->setValue(currExp->getParameterValue("b"));
             newFunctionBox->cParamBox->setValue(currExp->getParameterValue("c"));
             newFunctionBox->dParamBox->setValue(currExp->getParameterValue("d"));
-            newFunctionBox->minimumVarValueBox->setText(QString().setNum(currExp->getMinimumVarValue()));
-            newFunctionBox->maximumVarValueBox->setText(QString().setNum(currExp->getMaximumVarValue()));
+            newFunctionBox->minimumVarValueBox->setValue(currExp->getMinimumVarValue());
+            newFunctionBox->maximumVarValueBox->setValue(currExp->getMaximumVarValue());
         }
         inputFile.close();
     }
@@ -135,7 +135,7 @@ void FunctionBoxList::addNewWidget()
     connect(newBox, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
     connect(newBox, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
     connect(newBox, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
-    listBody->resize(listBody->width(), listBody->height()+newBox->height()+40);
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+listLayout->spacing());
 
     // Adds new FunctionBox object to widget list
     listLayout->addWidget(newBox);

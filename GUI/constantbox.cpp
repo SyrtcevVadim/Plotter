@@ -5,7 +5,8 @@
 
 ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
 {
-    resize(300, 60);
+    resize(300, 100);
+    setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     constantNameLbl = new QLabel(tr("Name:"));
     constantValueLbl = new QLabel(tr("Value:"));
     errorText = new QLabel();
@@ -28,10 +29,10 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
 
 
 
-    grid->addWidget(constantValueLbl, 2, 0);
-    grid->addWidget(valueBox, 2, 1, 1, 8);
+    grid->addWidget(constantValueLbl, 1, 0);
+    grid->addWidget(valueBox, 1, 1, 1, 8);
 
-    grid->addWidget(errorText,3,0, 1,-1);
+    grid->addWidget(errorText,2,0, 1,-1);
 
 
     setLayout(grid);
@@ -51,7 +52,7 @@ void ConstantBox::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     // Draws a rectangle border
-    painter.drawRect(0,0, width()-5, height()-5);
+    painter.drawRect(0,0, width()-2, height()-2);
 }
 
 void ConstantBox::removeConstant()
@@ -170,5 +171,10 @@ bool ConstantBox::isCorrect()
 
     return true;
 
+}
+
+QSize ConstantBox::sizeHint()const
+{
+    return QSize(width(), height());
 }
 

@@ -57,7 +57,6 @@ void Graph::recalculate()
     }
     else if(!expression->getInitialExpression().isEmpty())
     {
-        qDebug() << "expression: "<<*expression;
         MathCalculator calculator(*expression);
         double var{expression->getMinimumVarValue()};
         for(int i{0}; i < length; i++)
@@ -123,7 +122,6 @@ void Graph::setColor(QColor color)
 
 MathExpression* Graph::getExpression()
 {
-    qDebug() << "Returning expression: "<< *expression;
     return expression;
 }
 

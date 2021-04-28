@@ -83,12 +83,6 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     drawCoordinates(painter);
     drawAxesNames(painter);
 
-
-
-
-    //qDebug() << "new unit segment value: " << unitSegmentValue;
-
-
     for(Graph *item: graphs)
     {
         if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
@@ -96,28 +90,14 @@ void PaintingArea::paintEvent(QPaintEvent *event)
             double step{Graph::getSingleStep()};
             for(double x{item->getMin()+step}; x < item->getMax(); x+=step)
             {
-                if(((*item)[x-step] != qInf()) &&
-                   ((*item)[x-step] == (*item)[x-step])&&
-                   ((*item)[x] != qInf()) &&
-                   ((*item)[x] == (*item)[x]))
+                if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
                 {
-                    //qDebug() << fromPaintingAreaToWidget(QPointF(x-step, (*item)[x-step])) <<
-                    //            ": " << fromPaintingAreaToWidget(QPointF(x, (*item)[x]));
+
                     drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
                 }
             }
         }
     }
-    /*
-    // Tests for drawing points
-    drawPointF(painter, QPointF(3, 5), Qt::blue);
-    drawPointF(painter, QPointF(4, 6), Qt::red);
-    drawPointF(painter, QPointF(-7.5, -11), Qt::darkMagenta);
-
-    // Tests for drawing lines
-    drawLineF(painter, QPointF(-1,1),QPointF(7,15.3), Qt::darkRed);
-    drawLineF(painter, QPointF(-7,7), QPointF(11.3,15.4), Qt::darkGreen);
-    */
 }
 
 void PaintingArea::setOriginPointThickness(double value)
@@ -312,14 +292,12 @@ QSize PaintingArea::sizeHint() const
 
 void PaintingArea::addFunction(MathExpression *function)
 {
-    //qDebug() << "Added new function: " << *function;
     Graph *newGraph = new Graph(function);
     graphs.append(newGraph);
 }
 
 void PaintingArea::changeGraphColor(int id, QColor color)
 {
-    //qDebug() << "Color of " << *function << " is changed!";
     for(Graph *item: graphs)
     {
         if(item->getExpression()->getId() == id)
@@ -335,7 +313,6 @@ void PaintingArea::changeGraphColor(int id, QColor color)
 
 void PaintingArea::removeGraph(int id)
 {
-    //qDebug() << *function << " is deleted!";
     for(Graph *item: graphs)
     {
         if(item->getExpression()->getId() == id)
@@ -350,7 +327,6 @@ void PaintingArea::removeGraph(int id)
 
 void PaintingArea::clearGraph(int id)
 {
-    //qDebug() << *function << " is cleared from plotter";
     for(Graph *item: graphs)
     {
         if(item->getExpression()->getId() == id)
@@ -364,7 +340,6 @@ void PaintingArea::clearGraph(int id)
 
 void PaintingArea::changeGraph(int id)
 {
-    //qDebug() << *function << " is changed! Recalculating of table of values";
     for(Graph *item: graphs)
     {
         if(item->getExpression()->getId() == id)
@@ -381,7 +356,6 @@ void PaintingArea::changeGraph(int id)
 
 void PaintingArea::dragEnterEvent(QDragEnterEvent *event)
 {
-    qDebug() << "DRAG ENTER EVENT!";
     if(event->mimeData()->hasFormat("MathExpression"))
     {
         event->acceptProposedAction();
@@ -396,15 +370,22 @@ void PaintingArea::dropEvent(QDropEvent *event)
 
     int mathExpressionIdentificator;
     in >> mathExpressionIdentificator;
-    qDebug() <<"Dropped expression's identificator: "<< mathExpressionIdentificator;
 
     for(Graph *item: graphs)
     {
-        //qDebug() << "current expression: " << *item->getExpression();
         if(item->getExpression()->getId() == mathExpressionIdentificator)
         {
             item->setDrawn(true);
         }
     }
     repaint();
+}
+
+bool PaintingArea::isDecimal(double value)
+{
+    if((value == value)&&(value != qInf()))
+    {
+        return true;
+    }
+    return false;
 }

@@ -33,7 +33,10 @@ protected:
     void paintEvent(QPaintEvent *event);
     // Functions for maintaining drag&drop mechanism
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+
+    QSize sizeHint()const;
 
 
 public:
@@ -49,9 +52,9 @@ public:
     QDoubleSpinBox *dParamBox;
 
     /// Fetchs minimum possible variable's value
-    QLineEdit *minimumVarValueBox;
+    QDoubleSpinBox *minimumVarValueBox;
     /// Fetchs maximum possible variable's value
-    QLineEdit *maximumVarValueBox;
+    QDoubleSpinBox *maximumVarValueBox;
     /// Removes this object by pressing it
     QPushButton *removeBtn;
     /// Invokes the standart dialog of choosing the color
@@ -95,9 +98,9 @@ private slots:
     /// Changes the color of graph of provided mathematic function
     void changeGraphColor();
     /// Changes minimum possible variable's value
-    void changeMinimumVariableValue(const QString &strValue);
+    void changeMinimumVariableValue(double value);
     /// Changes maximum possible variable's value
-    void changeMaximumVariableValue(const QString &strValue);
+    void changeMaximumVariableValue(double value);
     /// Removes this FunctionBox object
     void removeFunction();
     void clearGraph();

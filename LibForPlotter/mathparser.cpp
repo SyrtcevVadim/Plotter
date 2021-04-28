@@ -21,7 +21,6 @@ QStringList MathParser::CreateTokenList(QString expression)
         }
         // Deleting useless spaces from the end and from the start of expression
         expression = expression.trimmed();
-        qDebug() << expression.split(QRegExp(R"(\s+)"));
         return expression.split(QRegExp(R"(\s+)"));
 
     }

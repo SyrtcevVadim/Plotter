@@ -38,6 +38,8 @@ private:
     /// List of user-defined functions
     QList<Graph *> graphs;
 
+    bool isDecimal(double value);
+
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);

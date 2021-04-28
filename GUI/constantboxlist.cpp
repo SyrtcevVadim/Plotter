@@ -66,7 +66,7 @@ void ConstantBoxList::addNewWidget()
     connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(update()));
     connect(newBox, SIGNAL(elementChanged()), this, SLOT(update()));
     // Adjust size of list's body to accommodate new item
-    listBody->resize(listBody->width(), listBody->height()+newBox->height()+40);
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+listLayout->spacing());
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
 }
@@ -161,7 +161,7 @@ void ConstantBoxList::removeWidget(ConstantBox *box)
 
 QSize ConstantBoxList::sizeHint() const
 {
-    return QSize(m_width, m_height);
+    return QSize(m_width+10, m_height+10);
 }
 
 void ConstantBoxList::update()

@@ -147,6 +147,5 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     {
         resultStrExpression += stack.pop() + " ";
     }
-    qDebug() << "postfix: "<<resultStrExpression;
     return resultStrExpression.trimmed();
 }
