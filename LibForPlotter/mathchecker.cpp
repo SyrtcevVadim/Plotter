@@ -97,7 +97,6 @@ bool MathChecker::AreBracketsCorrespond()
 
 bool MathChecker::HasEmptyBrackets()
 {
-    qDebug() << expression;
     QString previousToken{""};
     for(auto token: expression)
     {
@@ -139,7 +138,6 @@ bool MathChecker::HasMissedOperations()
 
 bool MathChecker::HasMissedOperands()
 {
-    qDebug() << expression;
     QString strExpRepr{""};
     for(auto token: expression)
     {
@@ -150,7 +148,6 @@ bool MathChecker::HasMissedOperands()
 
     // Substitute variable's value
     QString expressionWithSubstitutedValues(mathExp.substituteVariableValue(0));
-    //qDebug() <<expressionWithSubstitutedValues;
     // Stores intermediate values
     QStack<QString> stack;
     QString previousToken{""};

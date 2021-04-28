@@ -4,6 +4,7 @@
 
 ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
 {
+    setToolTip(tr("List of constants"));
     m_width = 350;
     m_height = height+50;
     listBody = new QWidget();
@@ -34,6 +35,7 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
     QPixmap loadFromFileIcon(":/images/Images/LoadImage.png");
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
+    QLabel *constantListLbl = new QLabel(tr("List of constants"));
 
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
@@ -41,6 +43,7 @@ ConstantBoxList::ConstantBoxList(int height, QWidget *parent) : QWidget(parent)
     QHBoxLayout *btnLayout = new QHBoxLayout();
     btnLayout->setAlignment(Qt::AlignLeft);
     mainLayout->addLayout(btnLayout,1);
+    btnLayout->addWidget(constantListLbl);
     btnLayout->addWidget(addNewWidgetBtn);
     btnLayout->addWidget(saveToFileBtn);
     btnLayout->addWidget(loadFromFileBtn);
@@ -63,7 +66,7 @@ void ConstantBoxList::addNewWidget()
     connect(newBox, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(update()));
     connect(newBox, SIGNAL(elementChanged()), this, SLOT(update()));
     // Adjust size of list's body to accommodate new item
-    listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+40);
     listLayout->addWidget(newBox);
     listOfWidgets.append(newBox);
 }
@@ -106,8 +109,8 @@ void ConstantBoxList::saveConstantListToFile()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        QString constantName = expression->GetConstantName();
-        QString constantValue = expression->GetConstantValue();
+        QString constantName = expression->getConstantName();
+        QString constantValue = expression->getConstantValue();
         outStream << constantName << constantValue;
     }
     outputFile.close();
@@ -142,13 +145,18 @@ void ConstantBoxList::loadConstantListFromFile()
 
 void ConstantBoxList::removeWidget(ConstantBox *box)
 {
+    qDebug() << "\nУдаляем коробку ввода константы";
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
+    qDebug() << "Удалили из контейнера";
     QLayoutItem *item =  listLayout->takeAt(listLayout->indexOf(box));
+    qDebug() << "Удалили из списка";
     delete item->widget();
     delete item;
-
+    qDebug() << "Освободили память";
     listBody->adjustSize();
+    qDebug() << "Подгоняем размер списка";
     emit(constantsUpdated());
+    qDebug() << "Отправляем сигнал";
 }
 
 QSize ConstantBoxList::sizeHint() const

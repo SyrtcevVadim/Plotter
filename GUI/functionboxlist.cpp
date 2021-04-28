@@ -3,6 +3,7 @@
 
 FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
 {
+    setToolTip(tr("List of functions"));
     m_height = height+50;
     m_width = 370;
     listBody = new QWidget();
@@ -33,13 +34,14 @@ FunctionBoxList::FunctionBoxList(int height, QWidget *parent): QWidget(parent)
     QPixmap loadFromFileIcon(":/images/Images/LoadImage.png");
     loadFromFileBtn->setIcon(loadFromFileIcon);
 
-
+    QLabel *functionListLbl = new QLabel(tr("List of functions"));
     // Setting appropriate layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
     mainLayout->setAlignment(Qt::AlignTop);
     QHBoxLayout *btnLayout = new QHBoxLayout();
     btnLayout->setAlignment(Qt::AlignLeft);
     mainLayout->addLayout(btnLayout, 1);
+    btnLayout->addWidget(functionListLbl);
     btnLayout->addWidget(addNewWidgetBtn);
     btnLayout->addWidget(saveToFileBtn);
     btnLayout->addWidget(loadFromFileBtn);
@@ -133,7 +135,7 @@ void FunctionBoxList::addNewWidget()
     connect(newBox, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
     connect(newBox, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
     connect(newBox, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
-    listBody->resize(listBody->width(), listBody->height()+newBox->height()+20);
+    listBody->resize(listBody->width(), listBody->height()+newBox->height()+40);
 
     // Adds new FunctionBox object to widget list
     listLayout->addWidget(newBox);

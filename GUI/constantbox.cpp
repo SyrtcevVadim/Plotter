@@ -1,14 +1,18 @@
 #include "GUI/constantbox.h"
 #include "GUI/constantboxlist.h"
 #include "LibForPlotter/mathhelper.h"
+#include "LibForPlotter/mathchecker.h"
 
 ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
 {
     resize(300, 60);
     constantNameLbl = new QLabel(tr("Name:"));
     constantValueLbl = new QLabel(tr("Value:"));
+    errorText = new QLabel();
 
     constantBox = new QLineEdit();
+    QRegExpValidator *boxValidator  = new QRegExpValidator(QRegExp("[a-zA-Z]*"));
+    constantBox->setValidator(boxValidator);
     valueBox = new QLineEdit();
 
     removeButton = new QPushButton();
@@ -22,8 +26,12 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     grid->addWidget(constantNameLbl, 0,0);
     grid->addWidget(constantBox, 0,1,1,8);
 
+
+
     grid->addWidget(constantValueLbl, 2, 0);
     grid->addWidget(valueBox, 2, 1, 1, 8);
+
+    grid->addWidget(errorText,3,0, 1,-1);
 
 
     setLayout(grid);
@@ -33,6 +41,7 @@ ConstantBox::ConstantBox(QWidget *parent) : QWidget(parent)
     connect(constantBox, SIGNAL(textChanged(const QString)), this, SLOT(setConstantName(const QString)));
     connect(valueBox, SIGNAL(textChanged(const QString)), this, SLOT(setConstantValue(const QString)));
 
+    isCorrect();
 }
 
 
@@ -56,37 +65,110 @@ void ConstantBox::setConstantName(const QString &str)
 {
     // Constant's name is changed, it have to be removed from the list with correct constants
     MathHelper::RemoveConstant(constantName);
-
-    qDebug() << "Constant name: " << str;
-
-    if(!str.isEmpty())
+    constantName = str;
+    qDebug() << "New constant's name: " << str;
+    if(isCorrect())
     {
         // New constant is added to the list with correct constants
-        MathHelper::AddConstant(str, constantValue);
-        qDebug() << str << ":"<< MathHelper::userDefinedConstants[str];
-        constantName = str;
+        MathHelper::AddConstant(constantName, constantValue);
+        qDebug() << "User-defined constants: "<< MathHelper::userDefinedConstants;
     }
+    qDebug() << "Constant's name: "<<constantName <<"| value: " << constantValue;
     emit(elementChanged());
 }
 
 void ConstantBox::setConstantValue(const QString &str)
 {
-    qDebug() << "Constant value: " << str;
-    if(!constantName.isEmpty())
-    {
-        MathHelper::AlterConstantValue(constantName, str);
-        qDebug()<< constantName << ": " << MathHelper::userDefinedConstants[constantName];
-    }
+    MathHelper::RemoveConstant(constantName);
     constantValue = str;
+    qDebug() << "New constant's value: "<<str;
+    if(isCorrect())
+    {
+        MathHelper::AddConstant(constantName, constantValue);
+        qDebug() << "User-defined constants: "<<MathHelper::userDefinedConstants;       
+    }
+    qDebug() << "Constant's name: "<<constantName <<"| value: " << constantValue;
     emit(elementChanged());
 }
 
-QString ConstantBox::GetConstantName() const
+QString ConstantBox::getConstantName() const
 {
     return constantName;
 }
 
-QString ConstantBox::GetConstantValue() const
+QString ConstantBox::getConstantValue() const
 {
     return constantValue;
 }
+
+bool ConstantBox::isCorrect()
+{
+    errorText->clear();
+
+    QString userConstantName{constantBox->text()};
+    QString constantValue{valueBox->text()};
+
+    if(!userConstantName.isEmpty())
+    {
+        // Checks a constant's name. It can't equals to the predefined names
+        if(MathHelper::IsTokenCorrect(userConstantName))
+        {
+            errorText->setText(tr("You can't redefine \"%1\"").arg(userConstantName));
+        }
+    }
+    else
+    {
+        errorText->setText(tr("Constant's name is empty"));
+    }
+
+    if(!errorText->text().isEmpty())
+    {
+        return false;
+    }
+
+    //Checks a correctness of a constant's value
+    if(!constantValue.isEmpty())
+    {
+        MathChecker checker(constantValue);
+        if(!checker.AreAllTokensCorrect())
+        {
+           errorText->setText(checker.GetErrorMessage());
+        }
+        else if(!checker.AreBracketsCorrespond())
+        {
+            errorText->setText(checker.GetErrorMessage());
+        }
+        else if(checker.HasEmptyBrackets())
+        {
+            errorText->setText(checker.GetErrorMessage());
+        }
+        else if(checker.HasMissedOperations())
+        {
+            errorText->setText(checker.GetErrorMessage());
+        }
+        else if(checker.HasMissedOperands())
+        {
+            errorText->setText(checker.GetErrorMessage());
+        }
+    }
+    else
+    {
+        errorText->setText(tr("Constant's value is empty"));
+    }
+
+    if(!errorText->text().isEmpty())
+    {
+        return false;
+    }
+
+   // Check for recursion
+    if((userConstantName == constantValue)&&!userConstantName.isEmpty()&&!constantValue.isEmpty())
+    {
+        errorText->setText(tr(R"(Value of constant can't equals to the constant's name)"));
+        return false;
+    }
+
+    return true;
+
+}
+

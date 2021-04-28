@@ -40,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
 
     QHBoxLayout *itemLayout = new QHBoxLayout();
     itemLayout->setContentsMargins(5,50,5,5);
-    itemLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
     itemLayout->addWidget(constantBoxList, 1, Qt::AlignTop);
+    itemLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
     itemLayout->addWidget(paintingArea,1, Qt::AlignTop);
 
     setLayout(itemLayout);

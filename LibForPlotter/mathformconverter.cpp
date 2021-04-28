@@ -48,7 +48,7 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
                                               MathHelper::IsTokenOperation(previousToken)))
         {
             // Check the precedence of the function at the stack's top
-            if(!stack.isEmpty() && (MathHelper::IsTokenFunction(stack.top()) || MathHelper::IsTokenOperation(stack.top())) && (precedence[stack.top()] < precedence[token] ||
+            if(!stack.isEmpty() && (MathHelper::IsTokenFunction(stack.top()) || MathHelper::IsTokenOperation(stack.top())) && (precedence[stack.top()] < precedence["un"+token] ||
                                                                     (precedence[stack.top()] == precedence[token] && token != "^")))
             {
                 resultStrExpression += stack.pop() + " ";
@@ -147,5 +147,6 @@ QString MathFormConverter::InfixToPostfix(const QString &expression)
     {
         resultStrExpression += stack.pop() + " ";
     }
+    qDebug() << "postfix: "<<resultStrExpression;
     return resultStrExpression.trimmed();
 }

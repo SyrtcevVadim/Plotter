@@ -86,7 +86,7 @@ void PaintingArea::paintEvent(QPaintEvent *event)
 
 
 
-    qDebug() << "new unit segment value: " << unitSegmentValue;
+    //qDebug() << "new unit segment value: " << unitSegmentValue;
 
 
     for(Graph *item: graphs)

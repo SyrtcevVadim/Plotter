@@ -13,6 +13,8 @@ private:
 
     QLabel *constantNameLbl;
     QLabel *constantValueLbl;
+    /// Label for displaying errors of declaring a constant
+    QLabel *errorText;
 
 protected:
     void paintEvent(QPaintEvent *event);
@@ -27,9 +29,11 @@ public:
 
     explicit ConstantBox(QWidget *parent = nullptr);
     /// Returns constant's name
-    QString GetConstantName()const;
+    QString getConstantName()const;
     /// Return constant's value
-    QString GetConstantValue()const;
+    QString getConstantValue()const;
+
+    bool isCorrect();
 
 public slots:
     /// Removes this ConstantBox object
@@ -38,6 +42,8 @@ public slots:
     void setConstantName(const QString&);
     /// Sets the constant's value
     void setConstantValue(const QString&);
+
+
 
 signals:
     /// Is emmited when user changes constant inside constantBox object

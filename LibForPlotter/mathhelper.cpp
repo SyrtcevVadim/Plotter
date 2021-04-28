@@ -174,9 +174,11 @@ bool MathHelper::IsTokenClosingBracket(const QString &token)
 void MathHelper::AddConstant(const QString &constant, const QString &value)
 {
     // Check constant for double entry
-    if(!userDefinedConstants.contains(constant) && !predefinedConstants.contains(constant))
+    if(!userDefinedConstants.contains(constant)&&!constant.isEmpty()&&!value.isEmpty())
     {
-         userDefinedConstants[constant] = value;
+
+        qDebug() << "Creating of new constant: "<< constant << "-> "<< value;
+        userDefinedConstants[constant] = value;
     }
 }
 
