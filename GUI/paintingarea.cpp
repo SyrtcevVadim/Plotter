@@ -17,13 +17,15 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     resize(areaWidth+leftIndent, areaHeight+bottomIndent);
     moveOriginPoint(QPointF(width()/2, (areaHeight)/2));
     setOriginPointThickness(5.0);
-    setAxesThickness(0.5);
+    setAxisThickness(0.5);
     setGridLineThickness(0.5);
     setBorderThickness(2.5);
     setGridCellWidth(15.0);
     setGraphThickness(1.5);
-    setUnitSegmentValue(10.0);
+    setUnitSegmentOXValue(10.0);
+    setUnitSegmentOYValue(10.0);
     setUnitSegmentCellQuantity(2);
+    cellQuantityInUnitSegmentOY = 4;
 
     // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
     adjustSingleStep();
@@ -31,16 +33,10 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
 
 }
 
-void PaintingArea::setUnitSegmentValue(double value)
-{
-    unitSegmentValue = value;
-    adjustSingleStep();
-    recalculateGraphs();
-}
 
 void PaintingArea::setUnitSegmentCellQuantity(int cellQuantity)
 {
-    cellQuantityInUnitSegment = cellQuantity;
+    cellQuantityInUnitSegmentOX = cellQuantity;
     adjustSingleStep();
     recalculateGraphs();
     repaint();
@@ -52,6 +48,7 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     adjustOXUnitSegmentValue();
+    adjustOYUnitSegmentValue();
 
     // Draws the painting area
     drawGrid(painter);
@@ -65,7 +62,7 @@ void PaintingArea::paintEvent(QPaintEvent *event)
         if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
         {
             double step{Graph::getSingleStep()};
-            for(double x{item->getMin()+step}; x < item->getMax(); x+=step)
+            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder(); x+=step)
             {
                 if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
                 {
@@ -81,9 +78,9 @@ void PaintingArea::setOriginPointThickness(double value)
     originPointThickness = value;
 }
 
-void PaintingArea::setAxesThickness(double value)
+void PaintingArea::setAxisThickness(double value)
 {
-    axesThickness = value;
+    axisThickness = value;
 }
 
 void PaintingArea::setGridLineThickness(double value)
@@ -151,7 +148,7 @@ void PaintingArea::drawGrid(QPainter &painter)
 
 void PaintingArea::drawAxes(QPainter &painter)
 {
-    QPen pen(Qt::black, axesThickness);
+    QPen pen(Qt::black, axisThickness);
     painter.setPen(pen);
 
     // Draws vertical coordinate axe
@@ -189,29 +186,29 @@ void PaintingArea::drawCoordinates(QPainter &painter)
     painter.setPen(pen);
 
     double currentValue{0.0};
-    int precision = (QString().setNum(unitSegmentValue).contains("."))?(1):(0);
+    int precision = (QString().setNum(unitSegmentOXValue).contains("."))?(1):(0);
     // Draws serifs after every unit segment on vertical axe
     // From origin point in positive direction
-    for(double y{originPoint.y()}; y >= gridCellWidth; y-=gridCellWidth*cellQuantityInUnitSegment)
+    for(double y{originPoint.y()}; y >= gridCellWidth; y-=gridCellWidth*cellQuantityInUnitSegmentOY)
     {
         painter.drawLine(QPoint(originPoint.x()-3, y), QPoint(originPoint.x()+3, y));
         painter.drawText(0, y+4, QString().setNum(currentValue, 'f', precision));
-        currentValue+= unitSegmentValue;
+        currentValue+= unitSegmentOYValue;
     }
-    currentValue = -unitSegmentValue;
+    currentValue = -unitSegmentOYValue;
     // From origin point in negative direction
-    for(double y{originPoint.y()+gridCellWidth*cellQuantityInUnitSegment}; y <= areaHeight; y+= gridCellWidth*cellQuantityInUnitSegment)
+    for(double y{originPoint.y()+gridCellWidth*cellQuantityInUnitSegmentOY}; y <= areaHeight; y+= gridCellWidth*cellQuantityInUnitSegmentOY)
     {
         painter.drawLine(QPoint(originPoint.x()-3, y), QPoint(originPoint.x()+3, y));
         painter.drawText(0, y+4, QString().setNum(currentValue, 'f', precision));
-        currentValue -= unitSegmentValue;
+        currentValue -= unitSegmentOYValue;
     }
 
     currentValue = 0.0;
     // Draws serifs after every unit segment on horizontal axe
     // From origin point in positive direction
     int i{0};
-    for(double x{originPoint.x()}; x < areaWidth+leftIndent-gridCellWidth; x+=gridCellWidth*cellQuantityInUnitSegment, i++)
+    for(double x{originPoint.x()}; x < areaWidth+leftIndent-gridCellWidth; x+=gridCellWidth*cellQuantityInUnitSegmentOX, i++)
     {
         painter.drawLine(QPoint(x, originPoint.y()+3), QPoint(x, originPoint.y()-3));
         if(i %2 == 0)
@@ -222,12 +219,12 @@ void PaintingArea::drawCoordinates(QPainter &painter)
         {
             painter.drawText(x-3, areaHeight+18,QString().setNum(currentValue, 'f', precision));
         }
-        currentValue += unitSegmentValue;
+        currentValue += unitSegmentOXValue;
     }
-    currentValue = -unitSegmentValue;
+    currentValue = -unitSegmentOXValue;
     // From origin point in negative direction
     i = 0;
-    for(double x{originPoint.x()-gridCellWidth*cellQuantityInUnitSegment}; x >= leftIndent; x-= gridCellWidth*cellQuantityInUnitSegment,i++)
+    for(double x{originPoint.x()-gridCellWidth*cellQuantityInUnitSegmentOX}; x >= leftIndent; x-= gridCellWidth*cellQuantityInUnitSegmentOX,i++)
     {
         painter.drawLine(QPoint(x, originPoint.y()+3), QPoint(x, originPoint.y()-3));
         if(i % 2 ==1)
@@ -238,7 +235,7 @@ void PaintingArea::drawCoordinates(QPainter &painter)
         {
             painter.drawText(x-7, areaHeight+18,QString().setNum(currentValue, 'f', precision));
         }
-        currentValue -= unitSegmentValue;
+        currentValue -= unitSegmentOXValue;
     }
 }
 
@@ -262,16 +259,16 @@ QPointF PaintingArea::fromWidgetToPaintingArea(const QPointF &coord)
 {
     double x = coord.x();
     double y = coord.y();
-    return QPointF(((x-originPoint.x())*unitSegmentValue)/(gridCellWidth*cellQuantityInUnitSegment),
-                   ((originPoint.y()-y)*unitSegmentValue)/(gridCellWidth*cellQuantityInUnitSegment));
+    return QPointF(((x-originPoint.x())*unitSegmentOXValue)/(gridCellWidth*cellQuantityInUnitSegmentOX),
+                   ((originPoint.y()-y)*unitSegmentOYValue)/(gridCellWidth*cellQuantityInUnitSegmentOY));
 }
 
 QPointF PaintingArea::fromPaintingAreaToWidget(const QPointF &coord)
 {
     double x = coord.x();
     double y = coord.y();
-    return QPointF(originPoint.x()+(x*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue),
-                   originPoint.y()-(y*gridCellWidth*cellQuantityInUnitSegment/unitSegmentValue));
+    return QPointF(originPoint.x()+(x*gridCellWidth*cellQuantityInUnitSegmentOX/unitSegmentOXValue),
+                   originPoint.y()-(y*gridCellWidth*cellQuantityInUnitSegmentOY/unitSegmentOYValue));
 }
 
 void PaintingArea::mouseMoveEvent(QMouseEvent *event)
@@ -333,7 +330,7 @@ void PaintingArea::clearGraph(int id)
     }
 }
 
-void PaintingArea::changeGraph(int id)
+void PaintingArea::recalculateGraph(int id)
 {
     for(Graph *item: graphs)
     {
@@ -406,7 +403,7 @@ bool PaintingArea::isInsidePaintingArea(const QPointF &point)
 
 void PaintingArea::adjustSingleStep()
 {
-    Graph::setSingleStep((unitSegmentValue*graphThickness)/(gridCellWidth*cellQuantityInUnitSegment));
+    Graph::setSingleStep((unitSegmentOXValue*graphThickness)/(gridCellWidth*cellQuantityInUnitSegmentOX));
 }
 
 void PaintingArea::adjustOXUnitSegmentValue()
@@ -417,16 +414,16 @@ void PaintingArea::adjustOXUnitSegmentValue()
     {
         if(it.i->t()->isDrawn())
         {
-            double currentMin{qAbs(it.i->t()->getMin())};
-            double currentMax{qAbs(it.i->t()->getMax())};
+            double currentMin{qAbs(it.i->t()->getLeftBorder())};
+            double currentMax{qAbs(it.i->t()->getRightBorder())};
             if(it == graphs.begin())
             {
-                maxAbsoluteValue = max(currentMin, currentMax);
+                maxAbsoluteValue = qMax(currentMin, currentMax);
             }
 
 
-            maxAbsoluteValue = max(currentMin, maxAbsoluteValue);
-            maxAbsoluteValue = max(currentMax ,maxAbsoluteValue);
+            maxAbsoluteValue = qMax(currentMin, maxAbsoluteValue);
+            maxAbsoluteValue = qMax(currentMax ,maxAbsoluteValue);
         }
     }
 
@@ -434,29 +431,58 @@ void PaintingArea::adjustOXUnitSegmentValue()
     // Scaling on OX axis
     if(maxAbsoluteValue == 0)
     {
-        setUnitSegmentValue((2*20.0*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step corresponding to the max abs val " << (2*20.0*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth-4*gridCellWidth);
+        setUnitSegmentOXValue((2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth));
+        qDebug() << "Single step of OX axis " << (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
     else
     {
-        setUnitSegmentValue((2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step corresponding to the max abs val " << (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth-4*gridCellWidth);
+        setUnitSegmentOXValue((2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth));
+        qDebug() << "Single step of OX axis " << (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
-
-
-
+    qDebug() << maxAbsoluteValue;
 }
+
+void PaintingArea::setUnitSegmentOXValue(double value)
+{
+    unitSegmentOXValue = value;
+    adjustSingleStep();
+    recalculateGraphs();
+}
+
+void PaintingArea::setUnitSegmentOYValue(double value)
+{
+    unitSegmentOYValue = value;
+    adjustSingleStep();
+    recalculateGraphs();
+}
+
 
 void PaintingArea::adjustOYUnitSegmentValue()
 {
-
-}
-
-double PaintingArea::max(double first, double second)
-{
-    if(first > second)
+    double maxAbsoluteValue{0.0};
+    for(auto it{graphs.begin()}; it != graphs.end(); it++)
     {
-        return first;
+        if(it.i->t()->isDrawn())
+        {
+            double currMaxValue{it.i->t()->getMaxAbsoluteValue()};
+            if(it == graphs.begin())
+            {
+                maxAbsoluteValue = currMaxValue;
+            }
+            maxAbsoluteValue = qMax(currMaxValue, maxAbsoluteValue);
+        }
     }
-    return second;
+    if(maxAbsoluteValue == 0)
+    {
+        setUnitSegmentOYValue((2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth));
+        qDebug() << "Single step of OY axis " << (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+    }
+    else
+    {
+        setUnitSegmentOYValue((2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth));
+        qDebug() << "Single step of OY axis " << (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+    }
+    qDebug() << maxAbsoluteValue;
 }
+
+

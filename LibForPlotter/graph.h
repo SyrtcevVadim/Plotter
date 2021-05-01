@@ -16,6 +16,8 @@ private:
 
     /// Table of values
     double *valuesArr;
+    /// Stores the maximum absolute value inside the valuesArr
+    double maxAbsoluteValue;
     /// Shows whether graph have to be drawn on painting area or not
     bool drawn{false};
     /// Color of graph
@@ -35,9 +37,12 @@ public:
 
     double get(double variableValue);
     /// Returns the minimum variable's value
-    double getMin()const;
+    double getLeftBorder()const;
     /// Returns the maximum variable's value
-    double getMax()const;
+    double getRightBorder()const;
+
+    /// Retuns the maximum absolute value stored inside table of values
+    double getMaxAbsoluteValue()const;
 
 
     /// Sets the value of drawn

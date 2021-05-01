@@ -62,13 +62,13 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     minimumVarValueBox = new QDoubleSpinBox();
     minimumVarValueBox->setCursor(Qt::ArrowCursor);
     minimumVarValueBox->setRange(-10'000.0, 10'000.0);
-    minimumVarValueBox->setSingleStep(1.0);
+    minimumVarValueBox->setSingleStep(0.1);
     minimumVarValueBox->setToolTip(tr("Minimum variable's value"));
 
     maximumVarValueBox = new QDoubleSpinBox();
     maximumVarValueBox->setCursor(Qt::ArrowCursor);
     maximumVarValueBox->setRange(-10'000.0, 10'000.0);
-    maximumVarValueBox->setSingleStep(1.0);
+    maximumVarValueBox->setSingleStep(0.1);
     maximumVarValueBox->setToolTip(tr("Maximum variable's value"));
 
     errorText = new QLabel();

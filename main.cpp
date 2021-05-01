@@ -1,6 +1,5 @@
 #include<QtWidgets>
 #include"GUI/paintingarea.h"
-#include"GUI/scaler.h"
 #include"GUI/mainwindow.h"
 
 int main(int argc, char *argv[])

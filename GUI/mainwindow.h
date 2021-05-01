@@ -1,7 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include"GUI/paintingarea.h"
-#include"GUI/scaler.h"
 #include"GUI/functionboxlist.h"
 #include"GUI/constantboxlist.h"
 #include<QtWidgets>
@@ -24,8 +23,6 @@ private:
 
     /// Painting area
     PaintingArea *paintingArea;
-    /// Scaler object
-    Scaler *scaler;
     /// List of FunctionBox widgets
     FunctionBoxList *functionBoxList;
     /// List of ConstantBox widgets

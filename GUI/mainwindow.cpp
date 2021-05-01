@@ -1,6 +1,5 @@
 #include "GUI/mainwindow.h"
 #include "GUI/aboutprogdialog.h"
-#include "GUI/scaler.h"
 #include<QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
@@ -8,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     functionBoxList = new FunctionBoxList(500);
     constantBoxList = new ConstantBoxList(500);
     paintingArea = new PaintingArea(QSize(600,600));
-    scaler = new Scaler();
 
 
     topLevelMenu = new QMenuBar(this);
@@ -48,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     QHBoxLayout *settingsLayout = new QHBoxLayout();
     settingsLayout->setAlignment(Qt::AlignLeft);
 
-    settingsLayout->addWidget(scaler);
-
     QVBoxLayout *paintingAreaLayout= new QVBoxLayout();
     paintingAreaLayout->setAlignment(Qt::AlignTop);
     paintingAreaLayout->addLayout(settingsLayout);
@@ -63,10 +59,9 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), paintingArea, SLOT(addFunction(MathExpression*)));
     connect(functionBoxList, SIGNAL(expressionDeleted(int)), paintingArea, SLOT(removeGraph(int)));
     connect(functionBoxList, SIGNAL(graphColorChanged(int, QColor)), paintingArea, SLOT(changeGraphColor(int, QColor)));
-    connect(functionBoxList, SIGNAL(expressionChanged(int)), paintingArea, SLOT(changeGraph(int)));
+    connect(functionBoxList, SIGNAL(expressionChanged(int)), paintingArea, SLOT(recalculateGraph(int)));
     connect(functionBoxList, SIGNAL(graphCleared(int)), paintingArea, SLOT(clearGraph(int)));
 
-    connect(scaler, SIGNAL(scaleChanged(int)), paintingArea, SLOT(setUnitSegmentCellQuantity(int)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

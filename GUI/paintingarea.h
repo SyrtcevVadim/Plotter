@@ -26,13 +26,17 @@ private:
     /// Thickness of coordinate grid's lines
     double gridLineThickness;
     /// Thickness of coordinate axes
-    double axesThickness;
+    double axisThickness;
     /// Thickness of borders
     double borderThickness;
-    /// Number of cells inside a unit segment
-    int cellQuantityInUnitSegment;
-    /// The value taken as a unit segment value
-    double unitSegmentValue;
+    /// Number of cells inside a unit segment of OX axis
+    int cellQuantityInUnitSegmentOX;
+    /// Number of cells inside a unit segment of OY axis
+    int cellQuantityInUnitSegmentOY;
+    /// The value taken as a unit segment value of OX axis
+    double unitSegmentOXValue;
+    /// The value taken as a unit segment value of OY axis
+    double unitSegmentOYValue;
     /// Thickness of graphs on painting area
     double graphThickness;
     /// List of user-defined functions
@@ -65,7 +69,6 @@ protected:
 
     /// Checks whether point is inside painting area
     bool isInsidePaintingArea(const QPointF &point);
-    double max(double first, double second);
     void adjustSingleStep();
     /// Adjusts the unit segment value of OX axis
     void adjustOXUnitSegmentValue();
@@ -77,7 +80,7 @@ public:
     /// Sets width of origin point
     void setOriginPointThickness(double thickness);
     /// Sets the coordinate axes thickness
-    void setAxesThickness(double thickness);
+    void setAxisThickness(double thickness);
     /// Sets the grid's line thickness
     void setGridLineThickness(double thickness);
     /// Sets the width of grid's cells
@@ -90,7 +93,8 @@ public slots:
     void drawPointF(QPainter &painter, const QPointF &point, const QColor &color=Qt::black);
     void drawLineF(QPainter &painter, const QPointF &firstPoint, const QPointF &secondPoint, const QColor &color=Qt::black);
     void recalculateGraphs();
-    void setUnitSegmentValue(double value);
+    void setUnitSegmentOXValue(double value);
+    void setUnitSegmentOYValue(double value);
     void setUnitSegmentCellQuantity(int cellQuantity);
     void setBorderThickness(double value);
 
@@ -103,7 +107,7 @@ public slots:
     /// Clears graph from the painting area
     void clearGraph(int id);
     /// Changes graph of provided function
-    void changeGraph(int id);
+    void recalculateGraph(int id);
 };
 
 #endif // PAINTINGAREA_H

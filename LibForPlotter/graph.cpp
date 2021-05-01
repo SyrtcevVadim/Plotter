@@ -11,34 +11,36 @@ Graph::Graph(MathExpression *expression)
 {
     this->expression = expression;
     drawn = false;
-    // Calculating a number of values inside the table
-    length = (expression->getMaximumVarValue()-
-              expression->getMinimumVarValue())/singleStep;
-    // Check the correctness of allocating memory
-    if((valuesArr = new(std::nothrow) double[length]) == nullptr)
+    maxAbsoluteValue=0.0;
+    if(!expression->getInfixExpression().isEmpty())
     {
-        qDebug() << "Не удалось выделить память под таблицу значений";
-    }
-    // In case mathematic expression isn't empty we need to calculate the table of values
-    else if(!expression->getInitialExpression().isEmpty())
-    {
-        qDebug() << "length: "<< length;
-        MathCalculator calculator(*expression);
-        double var{expression->getMinimumVarValue()};
-        for(int i{0}; i < length; i++)
+        // Calculating a number of values inside the table
+        length = (expression->getMaximumVarValue()-
+                  expression->getMinimumVarValue())/singleStep;
+        // Check the correctness of allocating memory
+        if((valuesArr = new(std::nothrow) double[length]) == nullptr)
         {
-            // It fixes the problem of double number precision near the zero value
-            if(qAbs(var-0.0) < 0.0001)
+            qDebug() << "Не удалось выделить память под таблицу значений";
+        }
+        else
+        {
+            //qDebug() << "length: "<< length;
+            MathCalculator calculator(*expression);
+            double var{expression->getMinimumVarValue()};
+            for(int i{0}; i < length; i++)
             {
-            var = 0.0;
+                // It fixes the problem of double number precision near the zero value
+                if(qAbs(var-0.0) < 0.0001)
+                {
+                var = 0.0;
+                }
+                valuesArr[i] = calculator.Calculate(var);
+                maxAbsoluteValue = qMax(maxAbsoluteValue, qAbs(valuesArr[i]));
+                //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+                var += singleStep;
             }
-            valuesArr[i] = calculator.Calculate(var);
-            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
-            var += singleStep;
         }
     }
-
-
 }
 
 Graph::~Graph()
@@ -50,28 +52,30 @@ void Graph::recalculate()
 {
     // Deletes old table of values
     delete[] valuesArr;
-
-    length = (expression->getMaximumVarValue()-expression->getMinimumVarValue())/singleStep;
-    if((valuesArr = new(std::nothrow) double[length])==nullptr)
+    maxAbsoluteValue = 0.0;
+    if(!expression->getInitialExpression().isEmpty())
     {
-        qDebug() << "Ну удалось выделить память под таблицу значений";
-    }
-    else if(!expression->getInitialExpression().isEmpty())
-    {
-        qDebug() << "Length: "<< length;
-        MathCalculator calculator(*expression);
-        double var{expression->getMinimumVarValue()};
-        for(int i{0}; i < length; i++)
+        length = (expression->getMaximumVarValue()-expression->getMinimumVarValue())/singleStep;
+        if((valuesArr = new(std::nothrow) double[length])==nullptr)
         {
-            if(qAbs(var-0.0) < 0.0001)
+            qDebug() << "Ну удалось выделить память под таблицу значений";
+        }
+        else
+        {
+            qDebug() << "Length: "<< length;
+            MathCalculator calculator(*expression);
+            double var{expression->getMinimumVarValue()};
+            for(int i{0}; i < length; i++)
             {
-                var = 0.0;
+                if(qAbs(var-0.0) < 0.0001)
+                {
+                    var = 0.0;
+                }
+                valuesArr[i] = calculator.Calculate(var);
+                maxAbsoluteValue = qMax(maxAbsoluteValue, qAbs(valuesArr[i]));
+                //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+                var += singleStep;
             }
-            valuesArr[i] = calculator.Calculate(var);
-
-            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
-            var += singleStep;
-
         }
     }
 }
@@ -82,14 +86,19 @@ double Graph::get(double variableValue)
     return valuesArr[index];
 }
 
-double Graph::getMax() const
+double Graph::getRightBorder() const
 {
     return expression->getMaximumVarValue();
 }
 
-double Graph::getMin() const
+double Graph::getLeftBorder() const
 {
     return expression->getMinimumVarValue();
+}
+
+double Graph::getMaxAbsoluteValue() const
+{
+    return maxAbsoluteValue;
 }
 
 void Graph::setSingleStep(double value)
