@@ -96,10 +96,13 @@ void PaintingArea::paintEvent(QPaintEvent *event)
             double step{Graph::getSingleStep()};
             for(double x{item->getMin()+step}; x < item->getMax(); x+=step)
             {
-                if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
+                if(isInsidePaintingArea(QPointF(x-step, (*item)[x-step]))&&(isInsidePaintingArea(QPointF(x, (*item)[x]))))
                 {
+                    if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
+                    {
 
-                    drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
+                        drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
+                    }
                 }
             }
         }
@@ -423,4 +426,13 @@ void PaintingArea::recalculateGraphs()
     {
         graph->recalculate();
     }
+}
+
+bool PaintingArea::isInsidePaintingArea(const QPointF &point)
+{
+    if((leftIndent <= fromPaintingAreaToWidget(point).x()) &&(fromPaintingAreaToWidget(point).y() <= areaHeight))
+    {
+        return true;
+    }
+    return false;
 }

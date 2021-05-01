@@ -62,6 +62,9 @@ protected:
     QPointF fromWidgetToPaintingArea(const QPointF &coord);
     /// Convert painting area coordinates to widget coordinates
     QPointF fromPaintingAreaToWidget(const QPointF &coord);
+
+    /// Checks whether point is inside painting area
+    bool isInsidePaintingArea(const QPointF &point);
 public:
     PaintingArea(const QSize &size, QWidget *parentWidget=nullptr);
 
