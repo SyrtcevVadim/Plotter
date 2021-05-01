@@ -22,6 +22,7 @@ Graph::Graph(MathExpression *expression)
     // In case mathematic expression isn't empty we need to calculate the table of values
     else if(!expression->getInitialExpression().isEmpty())
     {
+        qDebug() << "length: "<< length;
         MathCalculator calculator(*expression);
         double var{expression->getMinimumVarValue()};
         for(int i{0}; i < length; i++)
@@ -32,7 +33,7 @@ Graph::Graph(MathExpression *expression)
             var = 0.0;
             }
             valuesArr[i] = calculator.Calculate(var);
-            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
         }
     }
@@ -57,6 +58,7 @@ void Graph::recalculate()
     }
     else if(!expression->getInitialExpression().isEmpty())
     {
+        qDebug() << "Length: "<< length;
         MathCalculator calculator(*expression);
         double var{expression->getMinimumVarValue()};
         for(int i{0}; i < length; i++)
@@ -67,7 +69,7 @@ void Graph::recalculate()
             }
             valuesArr[i] = calculator.Calculate(var);
 
-            //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
+            qDebug() << "x: "<<var << " |y: " << valuesArr[i];
             var += singleStep;
 
         }

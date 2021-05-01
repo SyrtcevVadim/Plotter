@@ -65,6 +65,12 @@ protected:
 
     /// Checks whether point is inside painting area
     bool isInsidePaintingArea(const QPointF &point);
+    double max(double first, double second);
+    void adjustSingleStep();
+    /// Adjusts the unit segment value of OX axis
+    void adjustOXUnitSegmentValue();
+    /// Adjusts the unit segment value of OY axis
+    void adjustOYUnitSegmentValue();
 public:
     PaintingArea(const QSize &size, QWidget *parentWidget=nullptr);
 
