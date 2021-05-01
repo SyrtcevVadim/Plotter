@@ -1,15 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include"GUI/paintingarea.h"
+#include"GUI/scaler.h"
 #include"GUI/functionboxlist.h"
 #include"GUI/constantboxlist.h"
 #include<QtWidgets>
 
-///
-/// \brief The MainWindow class
+/// The MainWindow class
 /// Class of main window of Izum program.
 /// Consist of every necessary object for creating functions' graphs
-///
 class MainWindow : public QWidget
 {
     Q_OBJECT
@@ -25,6 +24,8 @@ private:
 
     /// Painting area
     PaintingArea *paintingArea;
+    /// Scaler object
+    Scaler *scaler;
     /// List of FunctionBox widgets
     FunctionBoxList *functionBoxList;
     /// List of ConstantBox widgets

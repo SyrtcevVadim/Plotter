@@ -9,10 +9,7 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(":/translations/Translations/Language_ru.qm");
     a.installTranslator(&translator);
-//    MainWindow window;
-//    window.show();
-    QWidget parent;
-    Scaler *scaler = new Scaler(&parent);
-    parent.show();
+    MainWindow window;
+    window.show();
     return a.exec();
 }

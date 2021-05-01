@@ -16,7 +16,6 @@ SOURCES += \
     GUI/functionboxlist.cpp \
     GUI/mainwindow.cpp \
     GUI/paintingarea.cpp \
-    GUI/plotter.cpp \
     GUI/scaler.cpp \
     LibForPlotter/graph.cpp \
     LibForPlotter/mathcalculator.cpp \
@@ -37,7 +36,6 @@ HEADERS += \
     GUI/functionboxlist.h \
     GUI/mainwindow.h \
     GUI/paintingarea.h \
-    GUI/plotter.h \
     GUI/scaler.h \
     LibForPlotter/graph.h \
     LibForPlotter/mathcalculator.h \

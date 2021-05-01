@@ -38,6 +38,8 @@ Scaler::Scaler(QWidget *parent): QWidget(parent)
     setLayout(layout);
 
     connect(radioButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(changeScale(int)));
+
+    scaleTwoBtn->setChecked(true);
 }
 
 void Scaler::paintEvent(QPaintEvent *event)

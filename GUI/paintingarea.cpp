@@ -20,10 +20,10 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     setAxesThickness(0.5);
     setGridLineThickness(0.5);
     setBorderThickness(2.5);
-    setGridCellWidth(12.0);
+    setGridCellWidth(15.0);
     setGraphThickness(1.5);
     setUnitSegmentValue(10);
-    setUnitSegmentCellQuantity(5);
+    setUnitSegmentCellQuantity(2);
 
     // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
     Graph::setSingleStep((unitSegmentValue*graphThickness)/(2*gridCellWidth*cellQuantityInUnitSegment));
@@ -39,6 +39,7 @@ void PaintingArea::setUnitSegmentValue(double value)
 void PaintingArea::setUnitSegmentCellQuantity(int cellQuantity)
 {
     cellQuantityInUnitSegment = cellQuantity;
+    repaint();
 }
 
 void PaintingArea::paintEvent(QPaintEvent *event)
@@ -213,7 +214,7 @@ void PaintingArea::drawCoordinates(QPainter &painter)
 
     // Draws serifs after every unit segment on vertical axe
     // From origin point in positive direction
-    for(double y{originPoint.y()}; y >= gridCellWidth*cellQuantityInUnitSegment; y-=gridCellWidth*cellQuantityInUnitSegment)
+    for(double y{originPoint.y()}; y >= gridCellWidth; y-=gridCellWidth*cellQuantityInUnitSegment)
     {
         painter.drawLine(QPoint(originPoint.x()-3, y), QPoint(originPoint.x()+3, y));
         painter.drawText(0, y+4, QString().setNum(currentValue));
@@ -231,19 +232,38 @@ void PaintingArea::drawCoordinates(QPainter &painter)
     currentValue = 0.0;
     // Draws serifs after every unit segment on horizontal axe
     // From origin point in positive direction
-    for(double x{originPoint.x()}; x < areaWidth+leftIndent - gridCellWidth*cellQuantityInUnitSegment; x+=gridCellWidth*cellQuantityInUnitSegment)
+    int i{0};
+    for(double x{originPoint.x()}; x < areaWidth+leftIndent-gridCellWidth; x+=gridCellWidth*cellQuantityInUnitSegment, i++)
     {
         painter.drawLine(QPoint(x, originPoint.y()+3), QPoint(x, originPoint.y()-3));
-        painter.drawText(x-3, areaHeight+12,QString().setNum(currentValue));
-        currentValue += unitSegmentValue;
+        if(i %2 == 0)
+        {
+            painter.drawText(x-3, areaHeight+12,QString().setNum(currentValue));
+            currentValue += unitSegmentValue;
+        }
+        else
+        {
+            painter.drawText(x-3, areaHeight+18,QString().setNum(currentValue));
+            currentValue += unitSegmentValue;
+        }
     }
     currentValue = -unitSegmentValue;
     // From origin point in negative direction
-    for(double x{originPoint.x()-gridCellWidth*cellQuantityInUnitSegment}; x >= leftIndent; x-= gridCellWidth*cellQuantityInUnitSegment)
+    i = 0;
+    for(double x{originPoint.x()-gridCellWidth*cellQuantityInUnitSegment}; x >= leftIndent; x-= gridCellWidth*cellQuantityInUnitSegment,i++)
     {
         painter.drawLine(QPoint(x, originPoint.y()+3), QPoint(x, originPoint.y()-3));
-        painter.drawText(x-7, areaHeight+12,QString().setNum(currentValue));
-        currentValue -= unitSegmentValue;
+        if(i % 2 ==1)
+        {
+            painter.drawText(x-7, areaHeight+12,QString().setNum(currentValue));
+            currentValue -= unitSegmentValue;
+        }
+        else
+        {
+            painter.drawText(x-7, areaHeight+18,QString().setNum(currentValue));
+            currentValue -= unitSegmentValue;
+        }
+
     }
 }
 

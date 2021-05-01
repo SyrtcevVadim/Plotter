@@ -1,5 +1,6 @@
 #include "GUI/mainwindow.h"
 #include "GUI/aboutprogdialog.h"
+#include "GUI/scaler.h"
 #include<QtWidgets>
 
 MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
@@ -7,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     functionBoxList = new FunctionBoxList(500);
     constantBoxList = new ConstantBoxList(500);
     paintingArea = new PaintingArea(QSize(600,600));
+    scaler = new Scaler();
 
 
     topLevelMenu = new QMenuBar(this);
@@ -37,14 +39,25 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     fileMenu->addAction(tr("&Exit"), this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
 
     // Sets layout
+    QHBoxLayout *mainLayout = new QHBoxLayout();
+    mainLayout->setContentsMargins(5,50,5,5);
+    mainLayout->addWidget(constantBoxList, 1, Qt::AlignTop);
+    mainLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
 
-    QHBoxLayout *itemLayout = new QHBoxLayout();
-    itemLayout->setContentsMargins(5,50,5,5);
-    itemLayout->addWidget(constantBoxList, 1, Qt::AlignTop);
-    itemLayout->addWidget(functionBoxList, 1, Qt::AlignTop);
-    itemLayout->addWidget(paintingArea,1, Qt::AlignTop);
+    // Stores widgets for adjusting settings of painting area
+    QHBoxLayout *settingsLayout = new QHBoxLayout();
+    settingsLayout->setAlignment(Qt::AlignLeft);
 
-    setLayout(itemLayout);
+    settingsLayout->addWidget(scaler);
+
+    QVBoxLayout *paintingAreaLayout= new QVBoxLayout();
+    paintingAreaLayout->setAlignment(Qt::AlignTop);
+    paintingAreaLayout->addLayout(settingsLayout);
+    paintingAreaLayout->addWidget(paintingArea);
+
+    mainLayout->addLayout(paintingAreaLayout, 1);
+
+    setLayout(mainLayout);
 
     connect(constantBoxList, SIGNAL(constantsUpdated()), functionBoxList, SLOT(update()));
     connect(functionBoxList, SIGNAL(newFunctionAdded(MathExpression*)), paintingArea, SLOT(addFunction(MathExpression*)));
@@ -52,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(functionBoxList, SIGNAL(graphColorChanged(int, QColor)), paintingArea, SLOT(changeGraphColor(int, QColor)));
     connect(functionBoxList, SIGNAL(expressionChanged(int)), paintingArea, SLOT(changeGraph(int)));
     connect(functionBoxList, SIGNAL(graphCleared(int)), paintingArea, SLOT(clearGraph(int)));
+
+    connect(scaler, SIGNAL(scaleChanged(int)), paintingArea, SLOT(setUnitSegmentCellQuantity(int)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
