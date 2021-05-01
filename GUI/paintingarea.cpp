@@ -34,11 +34,16 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
 void PaintingArea::setUnitSegmentValue(double value)
 {
     unitSegmentValue = value;
+    Graph::setSingleStep((unitSegmentValue*graphThickness)/(2*gridCellWidth*cellQuantityInUnitSegment));
+    recalculateGraphs();
+    repaint();
 }
 
 void PaintingArea::setUnitSegmentCellQuantity(int cellQuantity)
 {
     cellQuantityInUnitSegment = cellQuantity;
+    Graph::setSingleStep((unitSegmentValue*graphThickness)/(2*gridCellWidth*cellQuantityInUnitSegment));
+    recalculateGraphs();
     repaint();
 }
 
@@ -124,6 +129,9 @@ void PaintingArea::setBorderThickness(double value)
 void PaintingArea::setGridCellWidth(double width)
 {
     gridCellWidth = width;
+    Graph::setSingleStep((unitSegmentValue*graphThickness)/(2*gridCellWidth*cellQuantityInUnitSegment));
+    recalculateGraphs();
+    repaint();
 }
 
 void PaintingArea::setGraphThickness(double value)
@@ -384,7 +392,6 @@ void PaintingArea::dragEnterEvent(QDragEnterEvent *event)
 
 void PaintingArea::dropEvent(QDropEvent *event)
 {
-    qDebug() << "DROP EVENT";
     QByteArray byteArray(event->mimeData()->data("MathExpression"));
     QDataStream in(&byteArray, QIODevice::ReadOnly);
 
@@ -408,4 +415,12 @@ bool PaintingArea::isDecimal(double value)
         return true;
     }
     return false;
+}
+
+void PaintingArea::recalculateGraphs()
+{
+    for(Graph *graph: graphs)
+    {
+        graph->recalculate();
+    }
 }

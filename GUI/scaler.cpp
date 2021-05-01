@@ -52,7 +52,6 @@ void Scaler::paintEvent(QPaintEvent *event)
 
 void Scaler::changeScale(int id)
 {
-    qDebug() << id;
     emit(scaleChanged(id));
 }
 

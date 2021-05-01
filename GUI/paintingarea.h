@@ -43,7 +43,6 @@ private:
 
 protected:
     void mouseMoveEvent(QMouseEvent *event);
-
     void paintEvent(QPaintEvent *event);
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
@@ -81,7 +80,7 @@ public:
 public slots:
     void drawPointF(QPainter &painter, const QPointF &point, const QColor &color=Qt::black);
     void drawLineF(QPainter &painter, const QPointF &firstPoint, const QPointF &secondPoint, const QColor &color=Qt::black);
-
+    void recalculateGraphs();
     void setUnitSegmentValue(double value);
     void setUnitSegmentCellQuantity(int cellQuantity);
     void setBorderThickness(double value);
