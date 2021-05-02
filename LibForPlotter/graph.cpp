@@ -65,7 +65,7 @@ void Graph::recalculate()
     if(!expression->getInitialExpression().isEmpty())
     {
 
-        length = (expression->getMaximumVarValue()-expression->getMinimumVarValue())/singleStep;
+        length = (expression->getMaximumVarValue()+10f-expression->getMinimumVarValue())/singleStep;
         if((valuesArr = new(std::nothrow) double[length])==nullptr)
         {
             qDebug() << "Ну удалось выделить память под таблицу значений";

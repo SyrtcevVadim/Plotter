@@ -63,10 +63,14 @@ void PaintingArea::paintEvent(QPaintEvent *event)
         if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
         {
             double step{Graph::getSingleStep()};
-            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder()-2*step; x+=step)
+            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder(); x+=step)
             {
                 if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
                 {
+                    if(qAbs(item->getRightBorder()-(*item)[x]) <= 1)
+                    {
+                        qDebug() << "x: " << x << "| y: " << (*item)[x];
+                    }
                     drawLineF(painter, QPointF(x-step, (*item)[x-step]), QPointF(x, (*item)[x]), item->getColor());
                 }
             }
@@ -311,6 +315,8 @@ void PaintingArea::removeGraph(int id)
         if(item->getExpression()->getId() == id)
         {
             graphs.removeOne(item);
+            adjustOXUnitSegmentValue();
+            adjustOYUnitSegmentValue();
             repaint();
             break;
         }
@@ -324,6 +330,8 @@ void PaintingArea::clearGraph(int id)
         if(item->getExpression()->getId() == id)
         {
             item->setDrawn(false);
+            adjustOXUnitSegmentValue();
+            adjustOYUnitSegmentValue();
             repaint();
             break;
         }
@@ -339,6 +347,7 @@ void PaintingArea::recalculateGraph(int id)
             item->recalculate();
             if(item->isDrawn())
             {
+                adjustOXUnitSegmentValue();
                 adjustOYUnitSegmentValue();
                 repaint();
             }
@@ -368,10 +377,13 @@ void PaintingArea::dropEvent(QDropEvent *event)
         if(item->getExpression()->getId() == mathExpressionIdentificator)
         {
             item->setDrawn(true);
+            adjustOXUnitSegmentValue();
             adjustOYUnitSegmentValue();
+            item->recalculate();
+            repaint();
         }
     }
-    repaint();
+
 }
 
 bool PaintingArea::isDecimal(double value)
@@ -406,7 +418,7 @@ bool PaintingArea::isInsidePaintingArea(const QPointF &point)
 
 void PaintingArea::adjustSingleStep()
 {
-    Graph::setSingleStep((5*unitSegmentOXValue*graphThickness)/(gridCellWidth*cellQuantityInUnitSegmentOX));
+    Graph::setSingleStep((unitSegmentOXValue*graphThickness)/(3*gridCellWidth*cellQuantityInUnitSegmentOX));
     qDebug() << "single step: "<< Graph::getSingleStep();
 }
 
@@ -416,20 +428,16 @@ void PaintingArea::adjustOXUnitSegmentValue()
     double maxAbsoluteValue{0.0};
     for(auto it{graphs.begin()}; it != graphs.end(); it++)
     {
-        if(it.i->t()->isDrawn())
+        double currentMin{qAbs(it.i->t()->getLeftBorder())};
+        double currentMax{qAbs(it.i->t()->getRightBorder())};
+        if(it == graphs.begin())
         {
-            double currentMin{qAbs(it.i->t()->getLeftBorder())};
-            double currentMax{qAbs(it.i->t()->getRightBorder())};
-            if(it == graphs.begin())
-            {
-                maxAbsoluteValue = qMax(currentMin, currentMax);
-            }
-
-
-            maxAbsoluteValue = qMax(currentMin, maxAbsoluteValue);
-            maxAbsoluteValue = qMax(currentMax ,maxAbsoluteValue);
+        maxAbsoluteValue = qMax(currentMin, currentMax);
         }
+        maxAbsoluteValue = qMax(currentMin, maxAbsoluteValue);
+        maxAbsoluteValue = qMax(currentMax ,maxAbsoluteValue);
     }
+
     qDebug() << "Max x value: " << maxAbsoluteValue;
     // Scaling on OX axis
     if(maxAbsoluteValue == 0.0)
@@ -438,6 +446,7 @@ void PaintingArea::adjustOXUnitSegmentValue()
     }
     else
     {
+        maxAbsoluteValue += 10.0;
         unitSegmentOXValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
     adjustSingleStep();
@@ -449,16 +458,15 @@ void PaintingArea::adjustOYUnitSegmentValue()
     double maxAbsoluteValue{0.0};
     for(auto it{graphs.begin()}; it != graphs.end(); it++)
     {
-        if(it.i->t()->isDrawn())
+        double currMaxValue{it.i->t()->getMaxAbsoluteValue()};
+        if(it == graphs.begin())
         {
-            double currMaxValue{it.i->t()->getMaxAbsoluteValue()};
-            if(it == graphs.begin())
-            {
-                maxAbsoluteValue = currMaxValue;
-            }
-            maxAbsoluteValue = qMax(currMaxValue, maxAbsoluteValue);
+        maxAbsoluteValue = currMaxValue;
         }
+        maxAbsoluteValue = qMax(currMaxValue, maxAbsoluteValue);
+
     }
+
     qDebug() << "Max OY: " << maxAbsoluteValue;
     if(maxAbsoluteValue == 0)
     {
@@ -466,6 +474,7 @@ void PaintingArea::adjustOYUnitSegmentValue()
     }
     else
     {
+        maxAbsoluteValue += 10.0;
         unitSegmentOYValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth);
     }
     adjustSingleStep();
