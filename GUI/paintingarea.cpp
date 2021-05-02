@@ -22,15 +22,17 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     setBorderThickness(2.5);
     setGridCellWidth(15.0);
     setGraphThickness(1.5);
-    unitSegmentOXValue = 10.0;
-    unitSegmentOYValue = 10.0;
     setUnitSegmentCellQuantity(2);
     cellQuantityInUnitSegmentOY = 2;
 
+    unitSegmentOXValue = 10.0;
+    unitSegmentOYValue = 10.0;
+    unitSegmentOXValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
+    unitSegmentOYValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth);
+
+
     // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
     adjustSingleStep();
-    qDebug() << "Single step for current scale: " << Graph::getSingleStep();
-
 }
 
 
@@ -61,7 +63,7 @@ void PaintingArea::paintEvent(QPaintEvent *event)
         if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
         {
             double step{Graph::getSingleStep()};
-            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder(); x+=step)
+            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder()-2*step; x+=step)
             {
                 if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]))
                 {
@@ -366,6 +368,7 @@ void PaintingArea::dropEvent(QDropEvent *event)
         if(item->getExpression()->getId() == mathExpressionIdentificator)
         {
             item->setDrawn(true);
+            adjustOYUnitSegmentValue();
         }
     }
     repaint();
@@ -403,7 +406,8 @@ bool PaintingArea::isInsidePaintingArea(const QPointF &point)
 
 void PaintingArea::adjustSingleStep()
 {
-    Graph::setSingleStep((unitSegmentOXValue*graphThickness)/(gridCellWidth*cellQuantityInUnitSegmentOX));
+    Graph::setSingleStep((5*unitSegmentOXValue*graphThickness)/(gridCellWidth*cellQuantityInUnitSegmentOX));
+    qDebug() << "single step: "<< Graph::getSingleStep();
 }
 
 void PaintingArea::adjustOXUnitSegmentValue()
@@ -430,7 +434,7 @@ void PaintingArea::adjustOXUnitSegmentValue()
     // Scaling on OX axis
     if(maxAbsoluteValue == 0.0)
     {
-        unitSegmentOXValue = (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
+        unitSegmentOXValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
     else
     {
@@ -458,11 +462,11 @@ void PaintingArea::adjustOYUnitSegmentValue()
     qDebug() << "Max OY: " << maxAbsoluteValue;
     if(maxAbsoluteValue == 0)
     {
-        unitSegmentOYValue = (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+        unitSegmentOYValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth);
     }
     else
     {
-        unitSegmentOYValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+        unitSegmentOYValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth);
     }
     adjustSingleStep();
 }

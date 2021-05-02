@@ -145,18 +145,12 @@ void FunctionBoxList::addNewWidget()
 
 void FunctionBoxList::removeWidget(FunctionBox *box)
 {
-    qDebug() << "Отправляем сигнал об удалении";
     emit(expressionDeleted(box->getMathExpression()->getId()));
-    qDebug() << "Удаляем блок из контейнера";
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
-    qDebug() << "Удаляем блок из списка виджетов";
     QLayoutItem *item = listLayout->takeAt(listLayout->indexOf(box));
-    qDebug() << "Очищаем память блока";
     delete item->widget();
     delete item;
-    qDebug() << "Подгоняем размеры";
     listBody->adjustSize();
-    qDebug() << "Подогнали";
 }
 
 QSize FunctionBoxList::sizeHint() const
