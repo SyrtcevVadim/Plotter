@@ -10,6 +10,7 @@ double Graph::singleStep;
 Graph::Graph(MathExpression *expression)
 {
     this->expression = expression;
+    valuesArr = nullptr;
     drawn = false;
     maxAbsoluteValue=0.0;
     if(!expression->getInfixExpression().isEmpty())
@@ -45,16 +46,25 @@ Graph::Graph(MathExpression *expression)
 
 Graph::~Graph()
 {
-    delete[] valuesArr;
+    if(valuesArr != nullptr)
+    {
+        delete[] valuesArr;
+    }
 }
 
 void Graph::recalculate()
 {
-    // Deletes old table of values
-    delete[] valuesArr;
     maxAbsoluteValue = 0.0;
+    if(valuesArr != nullptr)
+    {
+        // Deletes old table of values
+        delete[] valuesArr;
+        valuesArr =nullptr;
+    }
+
     if(!expression->getInitialExpression().isEmpty())
     {
+
         length = (expression->getMaximumVarValue()-expression->getMinimumVarValue())/singleStep;
         if((valuesArr = new(std::nothrow) double[length])==nullptr)
         {

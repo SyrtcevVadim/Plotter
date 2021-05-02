@@ -93,8 +93,6 @@ public slots:
     void drawPointF(QPainter &painter, const QPointF &point, const QColor &color=Qt::black);
     void drawLineF(QPainter &painter, const QPointF &firstPoint, const QPointF &secondPoint, const QColor &color=Qt::black);
     void recalculateGraphs();
-    void setUnitSegmentOXValue(double value);
-    void setUnitSegmentOYValue(double value);
     void setUnitSegmentCellQuantity(int cellQuantity);
     void setBorderThickness(double value);
 

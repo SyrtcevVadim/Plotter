@@ -22,10 +22,10 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     setBorderThickness(2.5);
     setGridCellWidth(15.0);
     setGraphThickness(1.5);
-    setUnitSegmentOXValue(10.0);
-    setUnitSegmentOYValue(10.0);
+    unitSegmentOXValue = 10.0;
+    unitSegmentOYValue = 10.0;
     setUnitSegmentCellQuantity(2);
-    cellQuantityInUnitSegmentOY = 4;
+    cellQuantityInUnitSegmentOY = 2;
 
     // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
     adjustSingleStep();
@@ -48,7 +48,6 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 
     adjustOXUnitSegmentValue();
-    adjustOYUnitSegmentValue();
 
     // Draws the painting area
     drawGrid(painter);
@@ -310,11 +309,10 @@ void PaintingArea::removeGraph(int id)
         if(item->getExpression()->getId() == id)
         {
             graphs.removeOne(item);
-            delete item;
+            repaint();
             break;
         }
     }
-    repaint();
 }
 
 void PaintingArea::clearGraph(int id)
@@ -339,6 +337,7 @@ void PaintingArea::recalculateGraph(int id)
             item->recalculate();
             if(item->isDrawn())
             {
+                adjustOYUnitSegmentValue();
                 repaint();
             }
             break;
@@ -387,6 +386,7 @@ void PaintingArea::recalculateGraphs()
     {
         graph->recalculate();
     }
+
 }
 
 bool PaintingArea::isInsidePaintingArea(const QPointF &point)
@@ -426,34 +426,17 @@ void PaintingArea::adjustOXUnitSegmentValue()
             maxAbsoluteValue = qMax(currentMax ,maxAbsoluteValue);
         }
     }
-
-
+    qDebug() << "Max x value: " << maxAbsoluteValue;
     // Scaling on OX axis
-    if(maxAbsoluteValue == 0)
+    if(maxAbsoluteValue == 0.0)
     {
-        setUnitSegmentOXValue((2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step of OX axis " << (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
+        unitSegmentOXValue = (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
     else
     {
-        setUnitSegmentOXValue((2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step of OX axis " << (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
+        unitSegmentOXValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOX)/(areaWidth-4*gridCellWidth);
     }
-    qDebug() << maxAbsoluteValue;
-}
-
-void PaintingArea::setUnitSegmentOXValue(double value)
-{
-    unitSegmentOXValue = value;
     adjustSingleStep();
-    recalculateGraphs();
-}
-
-void PaintingArea::setUnitSegmentOYValue(double value)
-{
-    unitSegmentOYValue = value;
-    adjustSingleStep();
-    recalculateGraphs();
 }
 
 
@@ -472,17 +455,16 @@ void PaintingArea::adjustOYUnitSegmentValue()
             maxAbsoluteValue = qMax(currMaxValue, maxAbsoluteValue);
         }
     }
+    qDebug() << "Max OY: " << maxAbsoluteValue;
     if(maxAbsoluteValue == 0)
     {
-        setUnitSegmentOYValue((2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step of OY axis " << (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+        unitSegmentOYValue = (2*20.0*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
     }
     else
     {
-        setUnitSegmentOYValue((2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth));
-        qDebug() << "Single step of OY axis " << (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
+        unitSegmentOYValue = (2*maxAbsoluteValue*gridCellWidth*cellQuantityInUnitSegmentOY)/(areaWidth-4*gridCellWidth);
     }
-    qDebug() << maxAbsoluteValue;
+    adjustSingleStep();
 }
 
 

@@ -13,6 +13,7 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     expression = new MathExpression();
     resize(250, 120);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
     functionName = new QLabel("y=");
     functionBody = new QLineEdit();
     functionBody->setToolTip(tr("Function's body"));
