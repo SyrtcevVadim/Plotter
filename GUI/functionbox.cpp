@@ -102,8 +102,8 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     connect(clearFromPlotterBtn, SIGNAL(pressed()), this, SLOT(clearGraph()));
 
     // Set default values
-    minimumVarValueBox->setValue(-20.0);
-    maximumVarValueBox->setValue(20.0);
+    minimumVarValueBox->setValue(-10.0);
+    maximumVarValueBox->setValue(10.0);
 
     QGridLayout *grid = new QGridLayout();
 

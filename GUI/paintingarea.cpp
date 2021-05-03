@@ -26,10 +26,10 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     setGraphThickness(1.5);
     setUnitSegmentCellQuantity(2);
 
-    unitSegmentOXValue = 10.0;
-    unitSegmentOYValue = 10.0;
     unitSegmentOXValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth-4*gridCellWidth);
     unitSegmentOYValue = (2*10.0*gridCellWidth*cellQuantityInUnitSegment)/(areaWidth);
+
+    Graph::setBorders(-10.0, 10.0);
 
 
     // Adjusts the single step of a variable inside table of variables in dependence of the scale factor
@@ -50,8 +50,6 @@ void PaintingArea::paintEvent(QPaintEvent *event)
     Q_UNUSED(event);
     QPainter painter(this);
 
-    adjustOXUnitSegmentValue();
-
     // Draws the painting area
     drawGrid(painter);
     drawOriginPoint(painter);
@@ -64,7 +62,9 @@ void PaintingArea::paintEvent(QPaintEvent *event)
         if(item->isDrawn() && !item->getExpression()->getInitialExpression().isEmpty())
         {
             double step{Graph::getSingleStep()};
-            for(double x{item->getLeftBorder()+step}; x < item->getRightBorder(); x+=step)
+            double left{qMax(-10.0, item->getLeftBorder())};
+            double right{qMin(10.0, item->getRightBorder())};
+            for(double x{left+step}; x < right; x+=step)
             {
                 if(isDecimal((*item)[x-step])&&isDecimal((*item)[x]) && isCorrect((*item)[x-step], (*item)[x]))
                 {
@@ -205,8 +205,6 @@ void PaintingArea::drawCoordinates(QPainter &painter)
     painter.setPen(pen);
 
     double currentValue{originPointYValue};
-    qDebug() << "Unit segment value OX: " << unitSegmentOXValue;
-    qDebug() << "Unit segment value OY: " << unitSegmentOYValue;
     QString unitSegmentValueXStr = QString().setNum(unitSegmentOXValue);
     QString unitSegmentValueYStr = QString().setNum(unitSegmentOYValue);
     int precisionOX{0};
@@ -443,7 +441,6 @@ bool PaintingArea::isInsidePaintingArea(const QPointF &point)
 void PaintingArea::adjustSingleStep()
 {
     Graph::setSingleStep((unitSegmentOXValue*graphThickness)/(3*gridCellWidth*cellQuantityInUnitSegment));
-    qDebug() << "single step: "<< Graph::getSingleStep();
 }
 
 void PaintingArea::setOXRestriction(double min, double max)
@@ -508,5 +505,4 @@ bool PaintingArea::isCorrect(double y1, double y2)
         return false;
     }
     return true;
-
 }

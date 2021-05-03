@@ -11,6 +11,7 @@ private:
 
     /// Minimum possible x variable's value
     static double minimumXValue;
+
     /// Maximum possible x variables' value
     static double maximumXValue;
     /// Math expression for which table of values is built

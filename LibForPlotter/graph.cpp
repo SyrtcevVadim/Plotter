@@ -6,6 +6,8 @@
 
 double Graph::singleStep;
 
+double Graph::minimumXValue;
+double Graph::maximumXValue;
 
 Graph::Graph(MathExpression *expression)
 {
@@ -15,8 +17,10 @@ Graph::Graph(MathExpression *expression)
     if(!expression->getInfixExpression().isEmpty())
     {
         // Calculating a number of values inside the table
-        length = (expression->getMaximumVarValue()-
-                  expression->getMinimumVarValue())/singleStep;
+
+        qDebug() << "max: " << maximumXValue;
+        qDebug() << "min: " << minimumXValue;
+        length = qAbs((maximumXValue+10-minimumXValue))/singleStep;
         // Check the correctness of allocating memory
         if((valuesArr = new(std::nothrow) double[length]) == nullptr)
         {
@@ -32,7 +36,7 @@ Graph::Graph(MathExpression *expression)
                 // It fixes the problem of double number precision near the zero value
                 if(qAbs(var-0.0) < 0.0001)
                 {
-                var = 0.0;
+                    var = 0.0;
                 }
                 valuesArr[i] = calculator.Calculate(var);
 
@@ -51,6 +55,12 @@ Graph::~Graph()
     }
 }
 
+void Graph::setBorders(double leftBorder, double rightBorder)
+{
+    minimumXValue = leftBorder;
+    maximumXValue = rightBorder;
+}
+
 void Graph::recalculate()
 {
     if(valuesArr != nullptr)
@@ -62,8 +72,9 @@ void Graph::recalculate()
 
     if(!expression->getInitialExpression().isEmpty())
     {
-
-        length = (expression->getMaximumVarValue()+10-expression->getMinimumVarValue())/singleStep;
+        qDebug() << "max: " << maximumXValue;
+        qDebug() << "min: " << minimumXValue;
+        length = qAbs((maximumXValue+10-minimumXValue))/singleStep;
         if((valuesArr = new(std::nothrow) double[length])==nullptr)
         {
             qDebug() << "Ну удалось выделить память под таблицу значений";
