@@ -1,4 +1,4 @@
-#ifndef GRAPH_H
+ #ifndef GRAPH_H
 #define GRAPH_H
 #include"LibForPlotter/mathexpression.h"
 #include<QtWidgets>
@@ -8,6 +8,11 @@ class Graph
 private:
     /// Single step of variable in table of values
     static double singleStep;
+
+    /// Minimum possible x variable's value
+    static double minimumXValue;
+    /// Maximum possible x variables' value
+    static double maximumXValue;
     /// Math expression for which table of values is built
     MathExpression *expression;
 
@@ -16,8 +21,6 @@ private:
 
     /// Table of values
     double *valuesArr;
-    /// Stores the maximum absolute value inside the valuesArr
-    double maxAbsoluteValue;
     /// Shows whether graph have to be drawn on painting area or not
     bool drawn{false};
     /// Color of graph
@@ -36,15 +39,14 @@ public:
     void recalculate();
 
     double get(double variableValue);
+
+    /// Sets the restrictions for graphs
+    static void setBorders(double leftBorder, double rightBorder);
+
     /// Returns the minimum variable's value
-    double getLeftBorder()const;
+    double getLeftBorder();
     /// Returns the maximum variable's value
-    double getRightBorder()const;
-
-    /// Retuns the maximum absolute value stored inside table of values
-    double getMaxAbsoluteValue()const;
-
-
+    double getRightBorder();
     /// Sets the value of drawn
     void setDrawn(bool val = true);
     /// Returns the value of drawn. If drawn value is true, graph has to be drawn at plotter. False otherwise

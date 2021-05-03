@@ -12,7 +12,6 @@ Graph::Graph(MathExpression *expression)
     this->expression = expression;
     valuesArr = nullptr;
     drawn = false;
-    maxAbsoluteValue=0.0;
     if(!expression->getInfixExpression().isEmpty())
     {
         // Calculating a number of values inside the table
@@ -36,7 +35,7 @@ Graph::Graph(MathExpression *expression)
                 var = 0.0;
                 }
                 valuesArr[i] = calculator.Calculate(var);
-                maxAbsoluteValue = qMax(maxAbsoluteValue, qAbs(valuesArr[i]));
+
                 //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
                 var += singleStep;
             }
@@ -54,7 +53,6 @@ Graph::~Graph()
 
 void Graph::recalculate()
 {
-    maxAbsoluteValue = 0.0;
     if(valuesArr != nullptr)
     {
         // Deletes old table of values
@@ -65,7 +63,7 @@ void Graph::recalculate()
     if(!expression->getInitialExpression().isEmpty())
     {
 
-        length = (expression->getMaximumVarValue()+10f-expression->getMinimumVarValue())/singleStep;
+        length = (expression->getMaximumVarValue()+10-expression->getMinimumVarValue())/singleStep;
         if((valuesArr = new(std::nothrow) double[length])==nullptr)
         {
             qDebug() << "Ну удалось выделить память под таблицу значений";
@@ -82,7 +80,6 @@ void Graph::recalculate()
                     var = 0.0;
                 }
                 valuesArr[i] = calculator.Calculate(var);
-                maxAbsoluteValue = qMax(maxAbsoluteValue, qAbs(valuesArr[i]));
                 //qDebug() << "x: "<<var << " |y: " << valuesArr[i];
                 var += singleStep;
             }
@@ -96,19 +93,14 @@ double Graph::get(double variableValue)
     return valuesArr[index];
 }
 
-double Graph::getRightBorder() const
+double Graph::getRightBorder()
 {
     return expression->getMaximumVarValue();
 }
 
-double Graph::getLeftBorder() const
+double Graph::getLeftBorder()
 {
     return expression->getMinimumVarValue();
-}
-
-double Graph::getMaxAbsoluteValue() const
-{
-    return maxAbsoluteValue;
 }
 
 void Graph::setSingleStep(double value)

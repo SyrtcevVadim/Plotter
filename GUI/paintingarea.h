@@ -21,28 +21,44 @@ private:
     /// Offset from the bottom coordinte side
     double bottomIndent;
 
+    /// The x coordinate of origin point
+    double originPointXValue;
+    /// The y coordinate of origin point
+    double originPointYValue;
+
+    /// The minimum value of x coordinate on OX axis
+    double lowestXValue;
+    /// The maximum value of x coordinate on OX axis
+    double highestXValue;
+
+    /// The minimum value of y coordinate on OY axis
+    double lowestYValue;
+    /// The maximum value of y coordinate on OY axis
+    double highestYValue;
+
     /// Width of cells in the coordinate grid
     double gridCellWidth;
     /// Thickness of coordinate grid's lines
     double gridLineThickness;
     /// Thickness of coordinate axes
     double axisThickness;
-    /// Thickness of borders
-    double borderThickness;
-    /// Number of cells inside a unit segment of OX axis
-    int cellQuantityInUnitSegmentOX;
-    /// Number of cells inside a unit segment of OY axis
-    int cellQuantityInUnitSegmentOY;
+    /// Number of cells inside a unit segment for both OX and OY axis
+    int cellQuantityInUnitSegment;
+
     /// The value taken as a unit segment value of OX axis
     double unitSegmentOXValue;
     /// The value taken as a unit segment value of OY axis
     double unitSegmentOYValue;
-    /// Thickness of graphs on painting area
+    /// Thickness of graphs' lines on painting area
     double graphThickness;
     /// List of user-defined functions
     QList<Graph *> graphs;
 
+    /// Checks whether number is deimal or not
     bool isDecimal(double value);
+
+    /// Supports the correctness of asymptotes
+    bool isCorrect(double y1, double y2);
 
 
 protected:
@@ -52,6 +68,7 @@ protected:
     void dropEvent(QDropEvent *event);
     QSize sizeHint()const;
 
+    /// Draws origin point
     void drawOriginPoint(QPainter &painter);
     /// Draws coordinate grid
     void drawGrid(QPainter &painter);
@@ -90,11 +107,14 @@ public:
     void moveOriginPoint(const QPointF &pos);
 
 public slots:
+    ///
     void drawPointF(QPainter &painter, const QPointF &point, const QColor &color=Qt::black);
+    ///
     void drawLineF(QPainter &painter, const QPointF &firstPoint, const QPointF &secondPoint, const QColor &color=Qt::black);
+    ///
     void recalculateGraphs();
+    ///
     void setUnitSegmentCellQuantity(int cellQuantity);
-    void setBorderThickness(double value);
 
     /// Adds new function to tracked functions
     void addFunction(MathExpression *function);
@@ -106,6 +126,11 @@ public slots:
     void clearGraph(int id);
     /// Changes graph of provided function
     void recalculateGraph(int id);
+
+    /// Sets the range of x coordinates
+    void setOXRestriction(double min, double max);
+    /// Sets the range of y coordinates
+    void setOYRestriction(double min, double max);
 };
 
 #endif // PAINTINGAREA_H
