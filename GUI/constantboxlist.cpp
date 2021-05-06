@@ -145,18 +145,15 @@ void ConstantBoxList::loadConstantListFromFile()
 
 void ConstantBoxList::removeWidget(ConstantBox *box)
 {
-    qDebug() << "\nУдаляем коробку ввода константы";
+    disconnect(box, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(removeWidget(ConstantBox*)));
+    disconnect(box, SIGNAL(elementRemoved(ConstantBox*)), this, SLOT(update()));
+    disconnect(box, SIGNAL(elementChanged()), this, SLOT(update()));
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
-    qDebug() << "Удалили из контейнера";
     QLayoutItem *item =  listLayout->takeAt(listLayout->indexOf(box));
-    qDebug() << "Удалили из списка";
     delete item->widget();
     delete item;
-    qDebug() << "Освободили память";
     listBody->adjustSize();
-    qDebug() << "Подгоняем размер списка";
     emit(constantsUpdated());
-    qDebug() << "Отправляем сигнал";
 }
 
 QSize ConstantBoxList::sizeHint() const

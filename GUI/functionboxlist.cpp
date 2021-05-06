@@ -146,6 +146,13 @@ void FunctionBoxList::addNewWidget()
 void FunctionBoxList::removeWidget(FunctionBox *box)
 {
     emit(expressionDeleted(box->getMathExpression()->getId()));
+
+    // Unlinking FunctionBox object from FunctionBoxList object
+    disconnect(box, SIGNAL(elementRemoved(FunctionBox*)),this, SLOT(removeWidget(FunctionBox*)));
+    disconnect(box, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
+    disconnect(box, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
+    disconnect(box, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
+
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     QLayoutItem *item = listLayout->takeAt(listLayout->indexOf(box));
     delete item->widget();
