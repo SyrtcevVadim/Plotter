@@ -137,6 +137,16 @@ FunctionBox::FunctionBox(QWidget *parent) : QWidget(parent)
     setLayout(grid);
 }
 
+QColor FunctionBox::getGraphColor() const
+{
+    return graphColor;
+}
+
+void FunctionBox::setGraphColor(QColor color)
+{
+    graphColor = color;
+    repaint();
+}
 
 void FunctionBox::paintEvent(QPaintEvent *event)
 {

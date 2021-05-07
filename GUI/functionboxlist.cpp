@@ -93,7 +93,7 @@ void FunctionBoxList::saveFunctionListToFile()
     outStream << listOfWidgets.length();
     for(auto *expression: listOfWidgets)
     {
-        outStream << *expression->getMathExpression();
+        outStream << *expression->getMathExpression() << expression->getGraphColor();
     }
     outputFile.close();
 }
@@ -116,6 +116,9 @@ void FunctionBoxList::loadFunctionListFromFile()
             FunctionBox *newFunctionBox = listOfWidgets.last();
             MathExpression *currExp = newFunctionBox->getMathExpression();
             in >> *currExp;
+            QColor graphColor;
+            in >> graphColor;
+            newFunctionBox->setGraphColor(graphColor);
             newFunctionBox->functionBody->setText(currExp->getInitialExpression());
             newFunctionBox->aParamBox->setValue(currExp->getParameterValue("a"));
             newFunctionBox->bParamBox->setValue(currExp->getParameterValue("b"));

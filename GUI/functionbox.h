@@ -66,6 +66,8 @@ public:
     /// Returns the pointer to inner mathematic expression
     MathExpression* getMathExpression();
 
+    QColor getGraphColor()const;
+
 signals:
     /// Is emmited when user deletes this functionBox object
     void elementRemoved(FunctionBox*);
@@ -85,7 +87,7 @@ public slots:
     void changeMathExpression(const QString &str);
     /// Draws a rectangle border
     void drawBorders(QPainter &painter, const QColor &color);
-
+    void setGraphColor(QColor color);
 private slots:
     /// Changes a parameter value
     void changeAParamValue(double value);
