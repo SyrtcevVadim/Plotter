@@ -116,8 +116,12 @@ public slots:
     ///
     void setUnitSegmentCellQuantity(int cellQuantity);
 
+    /// Makes a picture of painted graphs on the painting area object
+    void makePicture();
+
     /// Adds new function to tracked functions
     void addFunction(MathExpression *function);
+    void drawGraph(int id);
     /// Changes graph color of provided function
     void changeGraphColor(int id, QColor color);
     /// Removes graph from the painting area

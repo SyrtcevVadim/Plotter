@@ -36,6 +36,17 @@ PaintingArea::PaintingArea(const QSize &size, QWidget *parentWidget): QWidget(pa
     adjustSingleStep();
 }
 
+void PaintingArea::makePicture()
+{
+
+    QPixmap pictureOfPaintingArea =  this->grab();
+    QString outputPictureName = QFileDialog::getSaveFileName(this, tr("Saving an image"),"graphs.png","Images (*.png, *.jpg, *.jpeg)");
+    if(!outputPictureName.isEmpty())
+    {
+        pictureOfPaintingArea.save(outputPictureName);
+    }
+
+}
 
 void PaintingArea::setUnitSegmentCellQuantity(int cellQuantity)
 {
@@ -505,4 +516,16 @@ bool PaintingArea::isCorrect(double y1, double y2)
         return false;
     }
     return true;
+}
+
+void PaintingArea::drawGraph(int id)
+{
+    for(Graph *graph: graphs)
+    {
+        if(graph->getExpression()->getId() == id)
+        {
+            graph->setDrawn(true);
+            repaint();
+        }
+    }
 }

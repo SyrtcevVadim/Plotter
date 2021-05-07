@@ -77,7 +77,7 @@ signals:
     void graphColorChanged(int, QColor);
     /// Is emmited when user clicks clearFromPlotterBtn
     void graphCleared(int);
-
+    void drawGraph(int);
 
 
 public slots:

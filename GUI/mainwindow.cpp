@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     helpMenu->addSeparator();
     helpMenu->addAction(tr("&About program"), this, SLOT(showAboutProgramInfo()));
 
-    settingsMenu->addAction(tr("&Change language"));
+    settingsMenu->addAction(tr("&Make picture"), paintingArea, SLOT(makePicture()));
 
     fileMenu->addAction(tr("Load functions"), functionBoxList, SLOT(loadFunctionListFromFile()));
     fileMenu->addAction(tr("Save functions"), functionBoxList, SLOT(saveFunctionListToFile()));
@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent) : QWidget(parent)
     connect(functionBoxList, SIGNAL(graphColorChanged(int, QColor)), paintingArea, SLOT(changeGraphColor(int, QColor)));
     connect(functionBoxList, SIGNAL(expressionChanged(int)), paintingArea, SLOT(recalculateGraph(int)));
     connect(functionBoxList, SIGNAL(graphCleared(int)), paintingArea, SLOT(clearGraph(int)));
-
+    connect(functionBoxList, SIGNAL(drawGraph(int)), paintingArea, SLOT(drawGraph(int)));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

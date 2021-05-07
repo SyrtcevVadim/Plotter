@@ -37,6 +37,7 @@ signals:
     void newFunctionAdded(MathExpression*);
     void expressionChanged(int);
     void expressionDeleted(int);
+    void drawGraph(int);
     void graphColorChanged(int, QColor);
     void graphCleared(int);
 

@@ -126,6 +126,7 @@ void FunctionBoxList::loadFunctionListFromFile()
             newFunctionBox->dParamBox->setValue(currExp->getParameterValue("d"));
             newFunctionBox->minimumVarValueBox->setValue(currExp->getMinimumVarValue());
             newFunctionBox->maximumVarValueBox->setValue(currExp->getMaximumVarValue());
+            emit(drawGraph(currExp->getId()));
         }
         inputFile.close();
     }
@@ -138,6 +139,7 @@ void FunctionBoxList::addNewWidget()
     connect(newBox, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
     connect(newBox, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
     connect(newBox, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
+    connect(newBox, SIGNAL(drawGraph(int)), this, SLOT(emit(drawGraph(int))));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+listLayout->spacing());
 
     // Adds new FunctionBox object to widget list

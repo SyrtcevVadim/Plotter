@@ -145,6 +145,7 @@ QColor FunctionBox::getGraphColor() const
 void FunctionBox::setGraphColor(QColor color)
 {
     graphColor = color;
+    emit(graphColorChanged(expression->getId(), color));
     repaint();
 }
 
