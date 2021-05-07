@@ -57,6 +57,7 @@ public slots:
     void repaintGraph(int, QColor);
     void clearGraph(int);
     void onExpressionChanged(int);
+    void onDrawGraph(int);
 
 
 };

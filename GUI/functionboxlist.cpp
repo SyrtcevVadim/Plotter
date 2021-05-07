@@ -139,7 +139,7 @@ void FunctionBoxList::addNewWidget()
     connect(newBox, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
     connect(newBox, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
     connect(newBox, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
-    connect(newBox, SIGNAL(drawGraph(int)), this, SLOT(emit(drawGraph(int))));
+    connect(newBox, SIGNAL(drawGraph(int)), this, SLOT(onDrawGraph(int)));
     listBody->resize(listBody->width(), listBody->height()+newBox->height()+listLayout->spacing());
 
     // Adds new FunctionBox object to widget list
@@ -157,7 +157,7 @@ void FunctionBoxList::removeWidget(FunctionBox *box)
     disconnect(box, SIGNAL(functionChanged(int)), this, SLOT(onExpressionChanged(int)));
     disconnect(box, SIGNAL(graphColorChanged(int, QColor)), this,SLOT(repaintGraph(int, QColor)));
     disconnect(box, SIGNAL(graphCleared(int)), this, SLOT(clearGraph(int)));
-
+    disconnect(box, SIGNAL(drawGraph(int)), this, SLOT(onDrawGraph(int)));
     listOfWidgets.takeAt(listOfWidgets.indexOf(box));
     QLayoutItem *item = listLayout->takeAt(listLayout->indexOf(box));
     delete item->widget();
@@ -194,3 +194,9 @@ void FunctionBoxList::clearGraph(int id)
 {
     emit(graphCleared(id));
 }
+
+void FunctionBoxList::onDrawGraph(int id)
+{
+    emit(drawGraph(id));
+}
+
